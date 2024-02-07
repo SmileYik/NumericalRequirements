@@ -1,0 +1,12 @@
+thirst:
+  name: ThirstExtension
+  author: SmileYik
+  version: ${thirstVersion}
+  main: "org.eu.smileyik.numericalrequirements.thirst.ThirstExtension"
+  description: "口渴拓展能引入一个令人口渴的世界."
+lua-effect:
+  name: LuaEffect
+  author: SmileYik
+  version: ${luaEffectVersion}
+  main: org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectExtension
+  description: "可以用Lua编写效果逻辑"

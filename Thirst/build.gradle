@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.eu.smileyik'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    // spigotmc
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.1'
+
+    implementation project(':Core')
+    implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+}

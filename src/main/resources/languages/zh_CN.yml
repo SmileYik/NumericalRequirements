@@ -1,0 +1,88 @@
+prefix:
+  command: "&2[数字化需求] &r"
+command:
+  NumericalRequirements:
+    color: "&e"
+    description: "指令"
+    reload:
+      color: "&a"
+      description: "重新加载插件"
+  item:
+    color: "&9"
+    description: "与物品有关的指令"
+    add:
+      color: "&2"
+      tag: "&9词条ID"
+      values: "&7词条值"
+      description: "给手中的物品增加一个词条"
+    remove:
+      color: "&6"
+      tag: "&9词条ID"
+      description: "删除手中的物品的指定词条"
+    merge:
+      color: "&3"
+      description: "将手中物品的词条进行融合"
+    error:
+      no-item-in-hand: "你手上好像没有物品哦！"
+      no-tag-id: "你还没有输入词条ID嘞！"
+      not-valid-tag: "你输入的词条ID[{0}]好像有点错误嘞！"
+      wrong-tag-value: "你输入的词条参数好像有点问题哦！"
+  effect:
+    color: "&2"
+    description: "数字化效果"
+    add:
+      color: "&b"
+      description: "给玩家一个指定类型的效果"
+      player: "&5玩家名"
+      effect: "&9效果ID"
+      values: "&7效果值"
+  error:
+    not-found: "&e没有找到这个指令捏！"
+    not-found-with-suggest: "&4啊哦，没有找到这个指令！&b你是不是要找这些指令呢：\n&r{0}"
+    command-error: "&e指令有误！"
+    command-error-with-suggest: "&4指令好像敲错了呢！&b你是不是要找这些指令呢：\n&r{0}"
+    not-player: "&2只有玩家才能使用这个指令哦！"
+    no-permission: "&4啊嘞？看样子你没有权限去执行这个指令哦～"
+  extension:
+    color: "&b"
+    description: "拓展相关指令"
+    run:
+      color: "&d"
+      description: "运行拓展任务"
+      task: "任务ID"
+      values: "参数"
+    taskInfo:
+      color: "&9"
+      description: "拓展任务信息"
+      task: "任务ID"
+      info: "{1}({0}): {2}; 在拓展{4}({3})中注册."
+    tasks:
+      color: "&2"
+      description: "拓展任务信息列表"
+      page: "页码"
+      list-page: "----------- 拓展任务 [{0}/{1}] ----------------\n{2}\n----------------------------------------------"
+
+    error:
+      no-valid-args: "至少需要提供参数ID"
+      not-found-task: "没有发现ID为 {0} 的拓展任务"
+  tab-suggest:
+    seconds: "[输入持续时间(秒)]"
+    amplifier: "[输入药水强度(正数)]"
+log:
+  info:
+    on-enable: "NumericalRequirements 启动！"
+    lua-effect:
+      enabled: "Lua 脚本效果拓展加载完毕！"
+  warning:
+    language-not-fount: "没有找到有关 [{0}] 地域的语言文件！"
+    failed-create-directors: "创建文件夹失败！"
+extension:
+  lua-effect:
+    lua-effect-reload:
+      name: "重载LuaEffect脚本"
+      description: "提供【LuaEffectId】以重载脚本"
+      no-valid-args: "没有提供【LuaEffectId】！"
+    error:
+      not-found-id: "没有找到ID为【{0}】的LuaEffect脚本！"
+      failed-load-id: "加载ID为【{0}】的LuaEffect脚本失败！"
+

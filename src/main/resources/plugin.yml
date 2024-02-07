@@ -1,0 +1,12 @@
+name: NumericalRequirements
+main: org.eu.smileyik.numericalrequirements.core.NumericalRequirements
+author: SmileYik
+version: ${pluginVersion}
+api-version: 1.13
+commands:
+  NumericalRequirements:
+    aliases: nr
+  nradd:
+softdepend:
+  - PlaceholderAPI
+  - LuaInMinecraftBukkit

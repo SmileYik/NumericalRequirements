@@ -1,0 +1,8 @@
+language: zh_CN
+effect:
+  bundle:
+    test1:
+      PotionEffect:
+        a:
+          potion-type: "SPEED"
+          amplifier: 10

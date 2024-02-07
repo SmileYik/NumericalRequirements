@@ -1,0 +1,112 @@
+import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
+import java.util.zip.ZipEntry
+
+plugins {
+    id 'java'
+}
+
+group = 'org.eu.smileyik'
+version = '1.0.0-SNAPSHOT'
+
+def pluginVersions() {
+    [
+        plugin: version,
+        thirst: "1.0.0",
+        luaEffect: "1.0.0"
+    ]
+}
+
+repositories {
+    mavenCentral()
+
+    // spigotmc
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+    // placeholder api
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.1'
+
+    implementation project(":Core:Command")
+    implementation project(":Core")
+    implementation project(":Thirst")
+    implementation project(":LuaEffect")
+}
+
+def getModelClass(model) {
+    return new String[] {
+        "${project(model).buildDir}/classes/java/main/",
+        "${project(model).projectDir}/src/main/resources/"
+    }
+}
+
+jar {
+    from getModelClass(":Core:Command")
+    from getModelClass(":Core")
+    from getModelClass(":Thirst")
+    from getModelClass(":LuaEffect")
+
+    doLast {
+        delete "${buildDir}/libs/${archivesBaseName}-${version}-ori.jar"
+        copy {
+            from file("${buildDir}/libs/${archivesBaseName}-${version}.jar")
+            into file("${buildDir}/libs/")
+            rename "${archivesBaseName}-${version}.jar", "${archivesBaseName}-${version}-ori.jar"
+        }
+
+        JarFile inFile = new JarFile(new File("${buildDir}/libs/${archivesBaseName}-${version}-ori.jar"))
+        JarOutputStream jos = new JarOutputStream(new FileOutputStream(new File("${buildDir}/libs/${archivesBaseName}-${version}.jar")))
+        def entries = inFile.entries()
+        while (entries.hasMoreElements()) {
+            def element = entries.nextElement()
+            jos.putNextEntry(new ZipEntry(element.getName()))
+            def stream = inFile.getInputStream(element)
+            if (element.getName().toLowerCase().endsWith(".yml")) {
+                def lines = stream.newReader().readLines()
+                for (int i = 0; i < lines.size(); ++i) {
+                    def line = lines.get(i)
+                    for (final def entry in pluginVersions()) {
+                        line = line.replace(String.format("\${%sVersion}", entry.key), entry.value)
+                    }
+                    lines.set(i, line)
+                }
+                def content = lines.join("\n").getBytes()
+                jos.write(content, 0, content.length)
+            } else {
+                byte[] bytes = new byte[8196]
+                int len = 0
+                while ((len = stream.read(bytes)) != -1) {
+                    jos.write(bytes, 0, len)
+                }
+            }
+            jos.flush()
+            stream.close()
+        }
+        jos.close()
+        inFile.close()
+    }
+}
+
+// 删除plugins文件夹中以前构建的文件.
+task deleteOldBuilds(type: Delete) {
+    for (final def f in file("${projectDir}/server/plugins/").listFiles()) {
+        if (f.isFile() && f.getName().startsWith("${archivesBaseName}")) {
+            printf("Remove old build: %s\n", f.toString())
+            delete f
+        }
+    }
+}
+
+// 复制当前版本到plugins文件夹中z
+task copyTask(type: Copy) {
+    dependsOn(jar)
+    dependsOn(deleteOldBuilds)
+    from "${buildDir}/libs/${archivesBaseName}-${version}.jar"
+    into "${projectDir}/server/plugins/"
+}
