@@ -85,4 +85,3 @@ extension:
     error:
       not-found-id: "没有找到ID为【{0}】的LuaEffect脚本！"
       failed-load-id: "加载ID为【{0}】的LuaEffect脚本失败！"
-

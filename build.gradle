@@ -7,32 +7,42 @@ plugins {
 }
 
 group = 'org.eu.smileyik'
-version = '1.0.0-SNAPSHOT'
+version = 'PREVIEW-SNAPSHOT'
 
 def pluginVersions() {
     [
         plugin: version,
-        thirst: "1.0.0",
-        luaEffect: "1.0.0"
+        thirst: version,
+        luaEffect: version
     ]
 }
 
 repositories {
+
+    allprojects {
+        repositories {
+            // spigotmc
+            maven {
+                url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+            }
+            // placeholder api
+            maven {
+                url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+            }
+            flatDir {
+                dirs "${rootProject.projectDir}/libs/"
+            }
+        }
+    }
+
     mavenCentral()
 
-    // spigotmc
-    maven {
-        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
-    }
-    // placeholder api
-    maven {
-        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
-    }
 }
 
 dependencies {
     testImplementation 'junit:junit:4.13.1'
 
+    implementation name: 'LuaInMinecraftBukkit-1.7.2'
     implementation project(":Core:Command")
     implementation project(":Core")
     implementation project(":Thirst")

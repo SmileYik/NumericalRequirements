@@ -20,6 +20,7 @@ import org.eu.smileyik.numericalrequirements.core.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.item.ItemServiceImpl;
 import org.eu.smileyik.numericalrequirements.core.player.service.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.player.service.impl.YamlPlayerService;
+import org.eu.smileyik.numericalrequirements.core.util.Metrics;
 
 import java.io.File;
 import java.io.InvalidClassException;
@@ -37,6 +38,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
     private ItemService itemService;
     private PlaceholderApiExtension placeholderApiExtension;
     private CommandService commandService;
+    private Metrics metrics;
 
     @Override
     public void onLoad() {
@@ -83,6 +85,10 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                 extensionService.loadExtensions();
                 playerService.loadOnlinePlayers();
                 I18N.info("on-enable");
+                if (getConfig().getBoolean("bStats", true)) {
+                    metrics = new Metrics(this, 20934);
+                }
+
             }
         });
     }
@@ -97,6 +103,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
             effectService.shutdown();
             elementService.shutdown();
             itemService.shutdown();
+            metrics.shutdown();
             I18N.clear();
             extensionService = null;
             commandService = null;
@@ -104,6 +111,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
             elementService = null;
             itemService = null;
             playerService = null;
+            metrics = null;
         }
     }
 

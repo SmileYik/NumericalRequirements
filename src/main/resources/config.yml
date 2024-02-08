@@ -1,8 +1,31 @@
 language: zh_CN
+bStats: true
 effect:
-  bundle:
+  bundle:               # 设定效果捆绑包
+    "速度升级":           # 效果捆绑包ID，同时作为效果名字的存在
+      type: "增益"
+      EffectBundle:             # 效果类型ID/ EffectBundle(效果捆绑包),PotionEffect(药水效果), ThirstElement-NaturalDepletionEffect(操纵口渴元素自然消减值效果)
+        a:                      # 任意字符作为键值，键值下面为【效果类型ID】对应的效果所需要的参数
+          bundle-id: test2      # 效果类型参数
+    "速度升级2":
+      type: "增益"
+      EffectBundle:
+        a:
+          bundle-id: test2
     test1:
+      type: "增益"
       PotionEffect:
         a:
           potion-type: "SPEED"
-          amplifier: 10
+          amplifier: 0
+        b:
+          potion-type: "JUMP"
+          amplifier: 1
+      ThirstElement-NaturalDepletionEffect:
+        a:
+          data: -0.9
+    test2:
+      type: "增益"
+      EffectBundle:
+        a:
+          bundle-id: test1
