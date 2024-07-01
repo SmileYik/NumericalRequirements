@@ -30,14 +30,6 @@ public abstract class ItemTag implements BiFunction<LoreTagTypeValue, LoreTagTyp
         return tagId;
     }
 
-    public abstract void handlePlayer(NumericalPlayer player, LoreTagValue value);
-
-    public void handlePlayer(NumericalPlayer player, List<LoreTagValue> valueList) {
-        valueList.forEach(it -> {
-            handlePlayer(player, it);;
-        });
-    }
-
     public abstract boolean canMerge();
 
     public boolean isValidValues(List<String> values) {

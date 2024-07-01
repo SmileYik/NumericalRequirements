@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.api;
 
+import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.core.command.CommandService;
 import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
 import org.eu.smileyik.numericalrequirements.core.element.service.ElementService;
@@ -13,6 +14,9 @@ public interface NumericalRequirements {
         return org.eu.smileyik.numericalrequirements.core.NumericalRequirements.getInstance();
     }
 
+    static Plugin getPlugin() {
+        return org.eu.smileyik.numericalrequirements.core.NumericalRequirements.getInstance();
+    }
 
     ElementService getElementService();
 

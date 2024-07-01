@@ -4,4 +4,5 @@ include 'Core'
 include 'Core:Command'
 findProject(':Core:Command')?.name = 'Command'
 include 'LuaEffect'
+include 'MultiBlockCraft'
 

@@ -126,7 +126,7 @@ public class ItemServiceImpl implements Listener, ItemService {
             return false;
         }
         consumeItemTagListMap.forEach((key, value) -> {
-            key.handlePlayer(player, value);
+            ((ConsumeItemTag) key).handlePlayer(player, value);
         });
         return true;
     }

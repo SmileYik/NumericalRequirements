@@ -70,4 +70,32 @@ public class LoreTagTest {
             }
         }
     }
+
+    @Test
+    public void test3() {
+        List<String> testStringList = Arrays.asList(
+                "&4服用后将在未来&babc&4秒内减轻&b吃饭的效果！",
+                "&4服用后将在未来&b吧唧吧唧合成时不被消耗&4秒内减轻&b吃饭的效果！",
+                "&4服用后将在未来&b1合成时不被消耗&4秒内减轻&b啊吧啊吧的效果！",
+                "&4将在未来&b吧唧吧唧&4秒内减轻&合成时不被消耗b吃饭的效果如果你服用的话！",
+                "&4将在未来&b1&4秒内减轻&b吃饭的效果如果你服用的话！",
+                "&4服用后将在未来&b1.2&4秒内减轻&b啊吧啊吧的效果！",
+                "&4服用后将在未来&b.2&4秒内减轻&b啊吧啊吧的效果！",
+                "&4服用合成时不被消耗后将在未来&b1.&4秒内减轻&b啊吧啊吧的效果！",
+                "合成时不被消耗"
+        );
+        LoreTagPattern pattern = service.compile("合成时不被消耗");
+        for (String test : testStringList) {
+            if (pattern.matches(test)) {
+                LoreTagValue valueList = pattern.getValue(test);
+                List<String> strings = new ArrayList<>();
+                for (LoreTagTypeValue value : valueList) {
+                    strings.add(value.getValueString());
+                }
+                System.out.println(strings);
+            } else {
+                System.out.println("Not Matches!");
+            }
+        }
+    }
 }

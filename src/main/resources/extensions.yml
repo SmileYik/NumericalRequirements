@@ -10,3 +10,9 @@ lua-effect:
   version: ${luaEffectVersion}
   main: org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectExtension
   description: "可以用Lua编写效果逻辑"
+multi-block-craft:
+  name: MultiBlockCraft
+  author: SmileYik
+  version: ${luaEffectVersion}
+  main: org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension
+  description: "可以用Lua编写效果逻辑"

@@ -47,6 +47,7 @@ dependencies {
     implementation project(":Core")
     implementation project(":Thirst")
     implementation project(":LuaEffect")
+    implementation project(":MultiBlockCraft")
 }
 
 def getModelClass(model) {
@@ -61,6 +62,7 @@ jar {
     from getModelClass(":Core")
     from getModelClass(":Thirst")
     from getModelClass(":LuaEffect")
+    from getModelClass(":MultiBlockCraft")
 
     doLast {
         delete "${buildDir}/libs/${archivesBaseName}-${version}-ori.jar"
