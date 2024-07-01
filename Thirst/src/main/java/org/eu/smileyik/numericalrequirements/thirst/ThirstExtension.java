@@ -18,7 +18,7 @@ public class ThirstExtension extends Extension {
         effectService.registerEffect(new ElementNaturalDepletionEffect(element));
         effectService.registerEffect(new ElementBoundedEffect(element));
         effectService.registerEffect(new ElementRateEffect(element));
-        System.out.println("Be enabled!");
+        saveResource("config.yml", false);
     }
 
     @Override

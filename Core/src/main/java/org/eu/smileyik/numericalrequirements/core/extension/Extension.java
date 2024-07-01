@@ -26,9 +26,6 @@ public abstract class Extension {
         if (this.plugin == null) {
             this.plugin = (NumericalRequirements) plugin;
             this.dataFolder = new File(this.plugin.getDataFolder(), info.getId());
-            if (this.dataFolder.exists()) {
-                this.dataFolder.mkdirs();
-            }
         }
     }
 
@@ -41,7 +38,19 @@ public abstract class Extension {
     }
 
     public File getDataFolder() {
+        if (!this.dataFolder.exists()) {
+            this.dataFolder.mkdirs();
+        }
         return dataFolder;
+    }
+
+    /**
+     * 保存资源文件。
+     * @param path 路径。
+     * @param replace 是否替换。
+     */
+    public void saveResource(String path, boolean replace) {
+        plugin.saveResource(String.format("%s/%s", info.getId(), path), replace);
     }
 
     protected abstract void onEnable();
