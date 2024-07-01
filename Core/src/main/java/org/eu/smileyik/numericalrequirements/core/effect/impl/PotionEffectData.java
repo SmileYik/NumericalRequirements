@@ -5,6 +5,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.eu.smileyik.numericalrequirements.core.AbstractUpdatable;
 import org.eu.smileyik.numericalrequirements.core.effect.AbstractEffectData;
+import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
+
+import java.util.Objects;
 
 public class PotionEffectData extends AbstractEffectData {
     private String potionType;
@@ -63,5 +66,11 @@ public class PotionEffectData extends AbstractEffectData {
     @Override
     public long period() {
         return 1000;
+    }
+
+    @Override
+    public boolean isSimilar(EffectData other) {
+        return (other instanceof PotionEffectData) &&
+                Objects.equals(((PotionEffectData) other).potionType, this.potionType);
     }
 }

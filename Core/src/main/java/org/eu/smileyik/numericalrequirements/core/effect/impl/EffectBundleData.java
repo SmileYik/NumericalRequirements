@@ -9,10 +9,7 @@ import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
 import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EffectBundleData extends AbstractEffectData {
     private final EffectService effectService;
@@ -140,5 +137,11 @@ public class EffectBundleData extends AbstractEffectData {
             map.values().forEach(list -> list.forEach(Updatable::update));
         }
         return true;
+    }
+
+    @Override
+    public boolean isSimilar(EffectData other) {
+        return (other instanceof EffectBundleData) &&
+                Objects.equals(((EffectBundleData) other).bundleId, this.bundleId);
     }
 }

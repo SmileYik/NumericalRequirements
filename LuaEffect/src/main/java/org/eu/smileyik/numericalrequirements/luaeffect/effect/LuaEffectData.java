@@ -2,6 +2,7 @@ package org.eu.smileyik.numericalrequirements.luaeffect.effect;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.effect.AbstractEffectData;
+import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
 import org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectEntity;
 import tk.smileyik.luainminecraftbukkit.api.luaconfig.LuaConfig;
 
@@ -64,6 +65,12 @@ public class LuaEffectData extends AbstractEffectData {
     @Override
     public synchronized void setDuration(double duration) {
         super.setDuration(duration);
+    }
+
+    @Override
+    public boolean isSimilar(EffectData other) {
+        return other instanceof LuaEffectData &&
+                ((LuaEffectData) other).entity == this.entity;
     }
 }
 
