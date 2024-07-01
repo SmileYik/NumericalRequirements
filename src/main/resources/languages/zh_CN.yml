@@ -78,6 +78,7 @@ log:
     failed-create-directors: "创建文件夹失败！"
 extension:
   lua-effect:
+    lua-in-minecraft-bukkit-not-enabled: "未检测到 LuaInMinecraftBukkit 前置， LuaEffect 拓展将被自动禁用！"
     lua-effect-reload:
       name: "重载所有 LuaEffect 脚本"
       description: "重载所有的 LuaEffect 脚本"
