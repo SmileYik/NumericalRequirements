@@ -79,8 +79,13 @@ log:
 extension:
   lua-effect:
     lua-effect-reload:
-      name: "重载LuaEffect脚本"
-      description: "提供【LuaEffectId】以重载脚本"
+      name: "重载所有 LuaEffect 脚本"
+      description: "重载所有的 LuaEffect 脚本"
+      unregistered-scripts: "所有 LuaEffect 脚本已被卸载。"
+      reload-scripts-finished: "重新加载所有 LuaEffect 脚本完成。"
+    lua-effect-reload-by-id:
+      name: "重载指定【LuaEffectId】的 LuaEffect 脚本"
+      description: "提供【LuaEffectId】以重载该脚本"
       no-valid-args: "没有提供【LuaEffectId】！"
     error:
       not-found-id: "没有找到ID为【{0}】的LuaEffect脚本！"

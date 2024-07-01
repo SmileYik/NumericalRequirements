@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.eu.smileyik'
+version = 'PREVIEW-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":Core")
+    implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}

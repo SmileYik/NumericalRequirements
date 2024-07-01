@@ -15,9 +15,9 @@ public class ReloadByIdTask extends AbstractTask implements DefaultTabSuggest {
 
     public ReloadByIdTask(LuaEffectExtension extension) {
         super(
-                "lua-effect-reload",
-                I18N.tr("extension.lua-effect.lua-effect-reload.name"),
-                I18N.tr("extension.lua-effect.lua-effect-reload.description"),
+                "lua-effect-reload-by-id",
+                I18N.tr("extension.lua-effect.lua-effect-reload-by-id.name"),
+                I18N.tr("extension.lua-effect.lua-effect-reload-by-id.description"),
                 extension
         );
     }

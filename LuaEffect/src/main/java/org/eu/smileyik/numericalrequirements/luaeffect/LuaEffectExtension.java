@@ -4,6 +4,7 @@ import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.extension.Extension;
 import org.eu.smileyik.numericalrequirements.luaeffect.effect.LuaEffect;
 import org.eu.smileyik.numericalrequirements.luaeffect.task.ReloadByIdTask;
+import org.eu.smileyik.numericalrequirements.luaeffect.task.ReloadTasks;
 import org.keplerproject.luajava.LuaException;
 import tk.smileyik.luainminecraftbukkit.LuaInMinecraftBukkit;
 import tk.smileyik.luainminecraftbukkit.api.luaconfig.LuaConfig;
@@ -26,7 +27,26 @@ public class LuaEffectExtension extends Extension {
             return;
         }
 
+        ReloadByIdTask reloadByIdTask = new ReloadByIdTask(this);
+        getApi().getExtensionService().registerTask(reloadByIdTask);
+        getApi().getCommandService().registerTabSuggest(reloadByIdTask);
+        ReloadTasks reloadTasks = new ReloadTasks(this);
+        getApi().getExtensionService().registerTask(reloadTasks);
 
+        discoverScripts();
+
+        I18N.info("lua-effect.enabled");
+    }
+
+    @Override
+    protected void onDisable() {
+        unregisterScripts();
+    }
+
+    /**
+     * 发现脚本文件夹内的脚本并加载。不会对脚本是否已经加载加以判断。
+     */
+    public void discoverScripts() {
         File dataFolder = getDataFolder();
         File javaLuaFolder = new File(dataFolder, "inside");
         File nativeLuaFolder = new File(dataFolder, "outside");
@@ -58,20 +78,6 @@ public class LuaEffectExtension extends Extension {
                 e.printStackTrace();
             }
         }
-
-        ReloadByIdTask reloadByIdTask = new ReloadByIdTask(this);
-        getApi().getExtensionService().registerTask(reloadByIdTask);
-        getApi().getCommandService().registerTabSuggest(reloadByIdTask);
-
-        I18N.info("lua-effect.enabled");
-    }
-
-    @Override
-    protected void onDisable() {
-        for (LuaEffect luaEffect : luaEffectList) {
-            unregisterScript(luaEffect);
-        }
-        luaEffectList.clear();
     }
 
     private synchronized void registerScript(LuaEffect luaEffect) {
@@ -86,6 +92,15 @@ public class LuaEffectExtension extends Extension {
             return;
         }
         unregisterScript(luaEffect);
+    }
+
+    /**
+     * 取消注册所有的脚本。
+     */
+    public void unregisterScripts() {
+        for (LuaEffect luaEffect : new ArrayList<>(luaEffectList)) {
+            unregisterScript(luaEffect);
+        }
     }
 
     private synchronized void unregisterScript(LuaEffect luaEffect) {
