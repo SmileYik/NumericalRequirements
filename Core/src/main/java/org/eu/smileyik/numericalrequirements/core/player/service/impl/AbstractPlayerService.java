@@ -117,7 +117,11 @@ public abstract class AbstractPlayerService implements PlayerService {
 
     @Override
     public boolean update() {
-        players.forEachValue(players.mappingCount(), NumericalPlayer::update);
+        players.forEachValue(players.mappingCount(), player -> {
+            if (org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements.isAvailableWorld(player.getPlayer())) {
+                player.update();
+            }
+        });
         return true;
     }
 

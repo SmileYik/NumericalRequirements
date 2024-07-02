@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.api;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.core.command.CommandService;
 import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
@@ -18,6 +19,10 @@ public interface NumericalRequirements {
         return org.eu.smileyik.numericalrequirements.core.NumericalRequirements.getInstance();
     }
 
+    static boolean isAvailableWorld(Player player) {
+        return getInstance().isAvailableWorld(player.getWorld().getName());
+    }
+
     ElementService getElementService();
 
     EffectService getEffectService();
@@ -33,4 +38,6 @@ public interface NumericalRequirements {
     CommandService getCommandService();
 
     void runTask(Runnable task);
+
+    boolean isAvailableWorld(String worldName);
 }

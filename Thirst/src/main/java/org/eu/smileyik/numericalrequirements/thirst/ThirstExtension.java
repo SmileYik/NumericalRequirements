@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.thirst;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementBoundedEffect;
@@ -9,6 +10,7 @@ import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
 import org.eu.smileyik.numericalrequirements.core.element.handler.ElementHandler;
 import org.eu.smileyik.numericalrequirements.core.element.handler.RangeHandler;
 import org.eu.smileyik.numericalrequirements.core.extension.Extension;
+import org.eu.smileyik.numericalrequirements.thirst.listener.DeathPunishment;
 
 import java.io.File;
 
@@ -22,6 +24,8 @@ public class ThirstExtension extends Extension {
     private ElementBoundedEffect elementBoundedEffect;
 
     private ElementHandler elementHandler;
+
+    private DeathPunishment deathPunishment;
 
     @Override
     protected void onEnable() {
@@ -51,6 +55,16 @@ public class ThirstExtension extends Extension {
 
         elementRateEffect = new ElementRateEffect(thirstElement);
         effectService.registerEffect(elementRateEffect);
+
+        if (config.getBoolean("thirst.death-punishment.enable")) {
+            ConfigurationSection section = config.getConfigurationSection("thirst.death-punishment");
+            deathPunishment = new DeathPunishment(section, thirstElement);
+            NumericalRequirements
+                    .getPlugin()
+                    .getServer()
+                    .getPluginManager()
+                    .registerEvents(deathPunishment, NumericalRequirements.getPlugin());
+        }
     }
 
     @Override
@@ -65,5 +79,7 @@ public class ThirstExtension extends Extension {
         config = null;
         thirstTag = null;
         thirstElement = null;
+        elementHandler = null;
+        deathPunishment = null;
     }
 }

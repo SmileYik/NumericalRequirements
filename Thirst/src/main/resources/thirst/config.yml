@@ -2,20 +2,21 @@ enable: true
 thirst:
   max-value: 100 # 最大值
   natural-depletion: 1 # 自然流失1属性值每秒
-  death-punishment:
-    value: 60
-    effect:
-      first:
-        bundle: "abc"
-        duration: 60
+  death-punishment: # 死亡惩罚
+    enable: true    # 开关
+    value: 60       # 复活时口渴值为上限的百分之几。取之范围为0～100
+    effect:         # 复活时赋予的效果
+      first:        # 可列多个
+        bundle: "abc" # 效果包的ID
+        duration: 60  # 持续时间 秒
   effect-bundles:
     "缺水":
-      type: "元素效果"
+      type: "元素负面效果"
       PotionEffect:
         effect-1:
           potion-type: "SLOW"
           amplifier: 0
-      ChatEffect:
+      ChatMessage:
         effect-1:
           message: "你现在有一点缺水了"
   effects:

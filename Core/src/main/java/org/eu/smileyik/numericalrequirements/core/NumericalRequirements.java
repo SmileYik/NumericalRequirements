@@ -26,7 +26,9 @@ import java.io.File;
 import java.io.InvalidClassException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements {
     private static NumericalRequirements instance;
@@ -39,6 +41,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
     private PlaceholderApiExtension placeholderApiExtension;
     private CommandService commandService;
     private Metrics metrics;
+    private Set<String> worlds;
 
     @Override
     public void onLoad() {
@@ -50,6 +53,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
         getServer().getScheduler().runTaskAsynchronously(this, () -> {
             synchronized (this) {
                 loadConfig();
+                loadAvailableWorlds();
                 new I18N(this, getConfig().getString("language", null));
                 playerService = new YamlPlayerService(this);
                 effectService = new SimpleEffectService(this);
@@ -127,6 +131,14 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
         reloadConfig();
     }
 
+    private void loadAvailableWorlds() {
+        List<String> list = getConfig().getStringList("available-worlds");
+        worlds = new HashSet<>();
+        for (String world : list) {
+            worlds.add(world.toLowerCase());
+        }
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("nradd")) {
@@ -184,5 +196,10 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
     @Override
     public void runTask(Runnable task) {
         getServer().getScheduler().runTask(this, task);
+    }
+
+    @Override
+    public boolean isAvailableWorld(String worldName) {
+        return worlds.contains(worldName.toLowerCase());
     }
 }

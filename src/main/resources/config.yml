@@ -1,4 +1,6 @@
 language: zh_CN
+available-worlds:
+  - "World"
 bStats: true
 effect:
   bundle:               # 设定效果捆绑包

@@ -3,10 +3,8 @@ package org.eu.smileyik.numericalrequirements.thirst;
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.element.AbstractElement;
-import org.eu.smileyik.numericalrequirements.core.element.Element;
 import org.eu.smileyik.numericalrequirements.core.element.data.ElementData;
 import org.eu.smileyik.numericalrequirements.core.element.handler.ElementHandler;
-import org.eu.smileyik.numericalrequirements.core.extension.placeholderapi.ElementPlaceholder;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.player.PlayerDataValue;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
@@ -33,6 +31,7 @@ public class ThirstElement extends AbstractElement {
 
     @Override
     protected void register() {
+
     }
 
     @Override
@@ -60,5 +59,5 @@ public class ThirstElement extends AbstractElement {
         return true;
     }
 
-//papi parse SmileYik 属性值范围：[%nreq_ThirstElement_lower_bound%, %nreq_ThirstElement_upper_bound%] 自然流失：%nreq_ThirstElement_natural_depletion%每秒 上一值/现值：[%nreq_ThirstElement_previous%/%nreq_ThirstElement%(%nreq_ThirstElement_percentage%%)]
+    //papi parse SmileYik 属性值范围：[%nreq_ThirstElement_lower_bound%, %nreq_ThirstElement_upper_bound%] 自然流失：%nreq_ThirstElement_natural_depletion%每秒 上一值/现值：[%nreq_ThirstElement_previous%/%nreq_ThirstElement%(%nreq_ThirstElement_percentage%%)]
 }
