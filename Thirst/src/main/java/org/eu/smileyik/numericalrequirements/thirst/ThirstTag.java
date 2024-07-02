@@ -1,5 +1,7 @@
 package org.eu.smileyik.numericalrequirements.thirst;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.element.ElementPlayer;
 import org.eu.smileyik.numericalrequirements.core.element.data.ElementData;
@@ -8,16 +10,24 @@ import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagTypeVa
 import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagValue;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 
-import java.util.List;
-
 public class ThirstTag extends ConsumeItemTag {
-    protected ThirstTag() {
-        super("Thirst", "口渴度标签", "使用带有此标签的物品将会对口渴值产生影响", NumericalRequirements.getInstance().getItemService().getLoreTagService().compile("§b增加 §2<%:numf1> §b滋润度."));
+    private final ThirstElement element;
+    protected ThirstTag(ThirstElement element, ConfigurationSection config) {
+        super(
+                "Thirst",
+                I18N.tr("extension.thirst.tag.name"),
+                I18N.tr("extension.thirst.tag.description"),
+                NumericalRequirements.getInstance().getItemService().getLoreTagService().compile(
+                        config.getString("tag.thirst", "§b增加 §2<%:numf1> §b滋润度.")
+                )
+        );
+        this.element = element;
     }
 
     @Override
     public void handlePlayer(NumericalPlayer player, LoreTagValue value) {
-        ElementData elementData = ElementPlayer.getElementData(player, ThirstExtension.element);
+        ElementData elementData = ElementPlayer.getElementData(player, element);
+        assert elementData != null;
         LoreTagTypeValue loreTagTypeValue = value.get(0);
         double v = ((Number) loreTagTypeValue.getValue()).doubleValue();
         ThirstData data = (ThirstData) elementData;

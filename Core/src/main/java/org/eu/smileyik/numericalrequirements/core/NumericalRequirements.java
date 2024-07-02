@@ -66,6 +66,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                             RootCommand.class, ItemCommand.class, EffectCommand.class, ExtensionCommand.class
                     );
                     commandService.registerToBukkit(this);
+                    commandService.registerTabSuggest(new ElementTagSuggest());
                     commandService.registerTabSuggest(new EffectIdSuggest(effectService));
                     commandService.registerTabSuggest(new PlayerNameSuggest(this));
                     commandService.registerTabSuggest(new TaskIdSuggest(extensionService));

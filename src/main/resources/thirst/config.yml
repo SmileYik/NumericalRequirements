@@ -1,1 +1,12 @@
-test: a
+enable: true
+thirst:
+  max-value: 100 # 最大值
+  natural-depletion: 1 # 自然流失1属性值每秒
+  death-punishment:
+    value: 60
+    effect:
+      first:
+        bundle: "abc"
+        duration: 60
+tag:
+  thirst: "§b增加 §2<%:numf1> §b滋润度."

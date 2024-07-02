@@ -128,9 +128,20 @@ public class ExtensionServiceImpl implements ExtensionService {
         for (Extension extension : extensionList) {
             try {
                 extension.onDisable();
+                extension.setPlugin(null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        extensionList.clear();
+    }
+
+    @Override
+    public void unregister(Extension extension) {
+        boolean remove = extensionList.remove(extension);
+        if (remove) {
+            extension.onDisable();
+            extension.setPlugin(null);
         }
     }
 

@@ -1,6 +1,7 @@
 package org.eu.smileyik.numericalrequirements.thirst;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.element.AbstractElement;
 import org.eu.smileyik.numericalrequirements.core.element.Element;
 import org.eu.smileyik.numericalrequirements.core.element.data.ElementData;
@@ -10,13 +11,25 @@ import org.eu.smileyik.numericalrequirements.core.player.PlayerDataValue;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 
 public class ThirstElement extends AbstractElement {
-    public ThirstElement() {
-        super("ThirstElement", "Thirst", "SmileYik", "1.0", "aaa");
+    private final ConfigurationSection config;
+    private final double upperBound;
+    private final double naturalDepletion;
+
+    public ThirstElement(ThirstExtension extension, ConfigurationSection config) {
+        super(
+                "ThirstElement",
+                I18N.tr("extension.thirst.element.name"),
+                extension.getInfo().getAuthor(),
+                extension.getInfo().getVersion(),
+                I18N.tr("extension.thirst.element.description")
+        );
+        this.config = config;
+        this.upperBound = config.getDouble("thirst.max-value");
+        this.naturalDepletion = config.getDouble("thirst.natural-depletion");
     }
 
     @Override
     protected void register() {
-        System.out.println("口渴要素被启用！");
     }
 
     @Override
@@ -28,9 +41,9 @@ public class ThirstElement extends AbstractElement {
     public ElementData newElementData() {
         ThirstData thirstData = new ThirstData();
         thirstData.setRate(1);
-        thirstData.setBounds(Pair.newPair(0D, 200D));
-        thirstData.setNaturalDepletionValue(1.0);
-        thirstData.setValue(100D);
+        thirstData.setBounds(Pair.newPair(0D, upperBound));
+        thirstData.setNaturalDepletionValue(naturalDepletion);
+        thirstData.setValue(upperBound);
         return thirstData;
     }
 
@@ -50,16 +63,5 @@ public class ThirstElement extends AbstractElement {
         return true;
     }
 
-//    @Override
-//    public String onRequestPlaceholder(ElementData data) {
-//        return String.format("%.2f", ((ThirstData) data).getValue());
-//    }
 //papi parse SmileYik 属性值范围：[%nreq_ThirstElement_lower_bound%, %nreq_ThirstElement_upper_bound%] 自然流失：%nreq_ThirstElement_natural_depletion%每秒 上一值/现值：[%nreq_ThirstElement_previous%/%nreq_ThirstElement%(%nreq_ThirstElement_percentage%%)]
-//    @Override
-//    public String onRequestPlaceholder(ElementData data, String args) {
-//        if (args.equalsIgnoreCase("percentage")) {
-//            return String.format("%.2f", ((ThirstData) data).getValueOfUpperBound() * 100);
-//        }
-//        return onRequestPlaceholder(data);
-//    }
 }

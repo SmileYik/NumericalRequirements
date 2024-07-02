@@ -91,3 +91,10 @@ extension:
     error:
       not-found-id: "没有找到ID为【{0}】的LuaEffect脚本！"
       failed-load-id: "加载ID为【{0}】的LuaEffect脚本失败！"
+  thirst:
+    element:
+      name: "口渴值"
+      description: "这是一个描述玩家口渴程度的数值"
+    tag:
+      name: "口渴值"
+      description: "带有此标签的物品将会能够被消耗，并且能够影响口渴值"

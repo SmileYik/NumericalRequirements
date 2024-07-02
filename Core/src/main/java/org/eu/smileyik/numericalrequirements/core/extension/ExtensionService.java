@@ -18,5 +18,7 @@ public interface ExtensionService {
 
     void unregisterAll();
 
+    void unregister(Extension extension);
+
     void shutdown();
 }

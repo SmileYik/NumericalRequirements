@@ -15,7 +15,12 @@ public interface ItemService {
     LoreTagService getLoreTagService();
 
     void registerItemTag(ItemTag tag);
+
+    void unregisterItemTag(ItemTag tag);
+
     ItemTag getItemTagById(String id);
+
+    List<String> getTagIds();
 
     Map<ItemTag, List<LoreTagValue>> analyzeLoreList(List<String> loreList, byte tagType);
     Pair<ItemTag, LoreTagValue> analyzeLore(String lore, byte tagType);

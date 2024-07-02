@@ -37,7 +37,7 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     @Override
-    public void registerItemTag(ItemTag tag) {
+    public synchronized void registerItemTag(ItemTag tag) {
         String id = tag.getTagId().toLowerCase();
         if (idTagMap.containsKey(id)) {
             // throw error
@@ -53,8 +53,23 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     @Override
+    public synchronized void unregisterItemTag(ItemTag tag) {
+        String id = tag.getTagId().toLowerCase();
+        idTagMap.remove(id);
+        idTagMap.remove(id);
+        consumeItemTags.remove(tag);
+        normalItemTags.remove(tag);
+        noColorTagMap.remove(tag);
+    }
+
+    @Override
     public ItemTag getItemTagById(String id) {
         return idTagMap.get(id.toLowerCase());
+    }
+
+    @Override
+    public List<String> getTagIds() {
+        return new ArrayList<>(idTagMap.keySet());
     }
 
     @Override
