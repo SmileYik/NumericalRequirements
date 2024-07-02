@@ -114,7 +114,7 @@ public abstract class DoubleElementValue extends AbstractUpdatable implements Si
     }
 
     @Override
-    protected synchronized boolean doUpdate(double second) {
+    protected boolean doUpdate(double second) {
         this.previousValue = this.value;
         updateValue(second);
         return true;

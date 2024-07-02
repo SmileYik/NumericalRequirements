@@ -23,7 +23,7 @@ public class LuaEffectData extends AbstractEffectData {
     }
 
     @Override
-    protected synchronized boolean doUpdate(double second) {
+    protected boolean doUpdate(double second) {
         super.doUpdate(second);
         if (entity.dataUpdate == null) return true;
         return luaConfig.callClosureReturnBoolean(entity.dataUpdate, luaData, second, getDuration());

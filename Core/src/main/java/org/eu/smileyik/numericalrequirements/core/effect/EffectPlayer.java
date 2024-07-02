@@ -1,13 +1,13 @@
 package org.eu.smileyik.numericalrequirements.core.effect;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundle;
+import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundleData;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public interface EffectPlayer {
 
@@ -25,7 +25,31 @@ public interface EffectPlayer {
     byte MERGE_IGNORE = 2;
 
     static List<EffectData> getEffectData(@NotNull NumericalPlayer player, Effect effect) {
-        return player.getRegisteredValues(effect, EffectData.class);
+        List<EffectData> registeredValues = player.getRegisteredValues(effect, EffectData.class);
+        return registeredValues == null ? Collections.EMPTY_LIST : registeredValues;
+    }
+
+    /**
+     * 给玩家注册指定效果包。
+     * @param player 玩家
+     * @param bundle 效果包ID
+     * @param duration 持续时间
+     * @param mergeMode 合并模式
+     */
+    static void registerEffectBundle(@NotNull NumericalPlayer player, String bundle, double duration, byte mergeMode) {
+        EffectBundle effectBundle = (EffectBundle) NumericalRequirements.getInstance().getEffectService().findEffectById("EffectBundle");
+        assert effectBundle != null;
+        EffectData effectData = effectBundle.newEffectData(new String[]{bundle, String.valueOf(duration)});
+        assert effectData != null;
+        registerEffect(player, effectBundle, effectData, mergeMode);
+    }
+
+    static void registerEffect(@NotNull NumericalPlayer player, String effect, String[] args, byte mergeMode) {
+        Effect effectById = NumericalRequirements.getInstance().getEffectService().findEffectById(effect);
+        assert effectById != null;
+        EffectData effectData = effectById.newEffectData(args);
+        assert effectData != null;
+        registerEffect(player, effectById, effectData, mergeMode);
     }
 
     /**
@@ -79,6 +103,12 @@ public interface EffectPlayer {
      */
     static void unregisterEffect(@NotNull NumericalPlayer player, Effect effect) {
         player.unregisterData(effect);
+    }
+
+    static void unregisterEffectBundle(@NotNull NumericalPlayer player, String bundle) {
+        EffectBundle effectBundle = (EffectBundle) NumericalRequirements.getInstance().getEffectService().findEffectById("EffectBundle");
+        assert effectBundle != null;
+        player.unregisterData(effectBundle, reg -> ((EffectBundleData) reg).getBundleId().equals(bundle));
     }
 
     /**

@@ -19,5 +19,7 @@ public interface EffectService {
 
     ConfigurationSection getBundleConfigById(String id);
 
+    void addBundleConfigSection(ConfigurationSection section);
+
     void shutdown();
 }

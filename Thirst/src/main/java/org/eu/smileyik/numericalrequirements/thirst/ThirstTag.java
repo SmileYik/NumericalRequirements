@@ -5,6 +5,7 @@ import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.element.ElementPlayer;
 import org.eu.smileyik.numericalrequirements.core.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.element.handler.ElementHandler;
 import org.eu.smileyik.numericalrequirements.core.item.ConsumeItemTag;
 import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagTypeValue;
 import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagValue;
@@ -12,7 +13,8 @@ import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 
 public class ThirstTag extends ConsumeItemTag {
     private final ThirstElement element;
-    protected ThirstTag(ThirstElement element, ConfigurationSection config) {
+    private final ElementHandler elementHandler;
+    protected ThirstTag(ThirstElement element, ConfigurationSection config, ElementHandler elementHandler) {
         super(
                 "Thirst",
                 I18N.tr("extension.thirst.tag.name"),
@@ -22,6 +24,7 @@ public class ThirstTag extends ConsumeItemTag {
                 )
         );
         this.element = element;
+        this.elementHandler = elementHandler;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class ThirstTag extends ConsumeItemTag {
         double v = ((Number) loreTagTypeValue.getValue()).doubleValue();
         ThirstData data = (ThirstData) elementData;
         data.calculateAndGet(v, Double::sum);
+        elementHandler.handlePlayer(player, data);
     }
 
     @Override

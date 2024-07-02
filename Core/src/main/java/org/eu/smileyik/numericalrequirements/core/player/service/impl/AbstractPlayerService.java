@@ -16,7 +16,7 @@ public abstract class AbstractPlayerService implements PlayerService {
     private final NumericalRequirements plugin;
     private final ConcurrentHashMap<Player, NumericalPlayer> players = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    // private final ExecutorService executorService = Executors.newFixedThreadPool(5);
     protected final String CONFIG_PATH_DATA = "data";
     private ScheduledFuture<?> scheduledFuture = null;
 
@@ -33,7 +33,7 @@ public abstract class AbstractPlayerService implements PlayerService {
 
     private void start() {
         if (scheduledFuture == null) {
-            scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(this::update, 0, 40, TimeUnit.MILLISECONDS);
+            scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(this::update, 40, 40, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -45,7 +45,7 @@ public abstract class AbstractPlayerService implements PlayerService {
     }
 
     @Override
-    public synchronized NumericalPlayer getNumericalPlayer(Player player) {
+    public NumericalPlayer getNumericalPlayer(Player player) {
         return players.get(player);
     }
 
@@ -110,14 +110,14 @@ public abstract class AbstractPlayerService implements PlayerService {
         synchronized (this) {
             players.clear();
             stop();
-            executorService.shutdownNow();
+            // executorService.shutdownNow();
             scheduledExecutorService.shutdown();
         }
     }
 
     @Override
-    public synchronized boolean update() {
-        players.forEachValue(players.mappingCount(), player -> executorService.submit(player::update));
+    public boolean update() {
+        players.forEachValue(players.mappingCount(), NumericalPlayer::update);
         return true;
     }
 

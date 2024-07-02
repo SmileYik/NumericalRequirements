@@ -58,7 +58,7 @@ public class PotionEffectData extends AbstractEffectData {
     }
 
     @Override
-    protected synchronized boolean doUpdate(double second) {
+    protected boolean doUpdate(double second) {
         super.doUpdate(second);
         return times++ % 4 == 0;
     }

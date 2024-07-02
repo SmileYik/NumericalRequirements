@@ -8,5 +8,30 @@ thirst:
       first:
         bundle: "abc"
         duration: 60
+  effect-bundles:
+    "缺水":
+      type: "元素效果"
+      PotionEffect:
+        effect-1:
+          potion-type: "SLOW"
+          amplifier: 0
+      ChatEffect:
+        effect-1:
+          message: "你现在有一点缺水了"
+  effects:
+    "level-1":
+      range: [0, 10]
+      percentage: true
+      bundle: "缺水"
+      duration: 20
+      message-sender: "ChatMessage"
+      message: "河水河水河水河水"
+    "level-2":
+      range: [90, 100]
+      percentage: true
+      bundle: "速度升级"
+      duration: 20
+      message-sender: "ChatMessage"
+      message: "你好滋润啊！！！"
 tag:
   thirst: "§b增加 §2<%:numf1> §b滋润度."

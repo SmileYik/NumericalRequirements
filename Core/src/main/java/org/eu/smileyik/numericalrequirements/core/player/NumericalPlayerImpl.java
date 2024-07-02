@@ -15,33 +15,41 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
     private final ConcurrentHashMap<PlayerDataKey, List<PlayerDataValueUpdatable>> updatableMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Class<? extends PlayerDataKey>, List<PlayerDataKey>> basedClassInstanceListMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<PlayerDataKey, Class<? extends PlayerDataKey>> instanceBaseClassMap = new ConcurrentHashMap<>();
+    private final Object lock = new Object();
+
 
     public NumericalPlayerImpl(Player player) {
         this.player = player;
     }
 
     @Override
-    protected synchronized boolean doUpdate(double second) {
-        if (player.isDead()) return true;
-        List<Pair<PlayerDataKey, PlayerDataValueUpdatable>> timeoutList = new ArrayList<>();
-        updatableMap.forEach(updatableMap.mappingCount(), (key, value) -> {
-            if (key.isDisable()) return;
-            value.forEach(it -> {
-                if (it.update()) {
-                    key.handlePlayer(this, it);
-                }
-                if (it.isTimeout()) {
-                    timeoutList.add(Pair.newUnchangablePair(key, it));
+    protected boolean doUpdate(double second) {
+        synchronized (lock) {
+            if (player.isDead()) return true;
+            List<Pair<PlayerDataKey, PlayerDataValueUpdatable>> timeoutList = new ArrayList<>();
+            updatableMap.forEach(updatableMap.mappingCount(), (key, value) -> {
+                if (key.isDisable()) return;
+                value.forEach(it -> {
+                    try {
+                        if (it.update()) {
+                            key.handlePlayer(this, it);
+                        }
+                        if (it.isTimeout()) {
+                            timeoutList.add(Pair.newUnchangablePair(key, it));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            });
+            timeoutList.forEach(it -> {
+                it.getFirst().onUnregisterFromPlayerData(this, it.getSecond());
+                if (it.getSecond().canDelete()) {
+                    updatableMap.getOrDefault(it.getFirst(), Collections.emptyList()).remove(it.getSecond());
+                    registeredMap.getOrDefault(it.getFirst(), Collections.emptyList()).remove(it.getSecond());
                 }
             });
-        });
-        timeoutList.forEach(it -> {
-            it.getFirst().onUnregisterFromPlayerData(this, it.getSecond());
-            if (it.getSecond().canDelete()) {
-                updatableMap.getOrDefault(it.getFirst(), Collections.emptyList()).remove(it.getSecond());
-                registeredMap.getOrDefault(it.getFirst(), Collections.emptyList()).remove(it.getSecond());
-            }
-        });
+        }
         return true;
     }
 
@@ -61,77 +69,86 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
         registerData(basedClass, key, value, true);
     }
 
-    public synchronized void registerData(Class<? extends PlayerDataKey> basedClass,
+    public void registerData(Class<? extends PlayerDataKey> basedClass,
                                           PlayerDataKey key, PlayerDataValue value, boolean first) {
-        List<PlayerDataValue> playerDataValues = registeredMap.putIfAbsent(key, new ArrayList<>());
-        registeredMap.get(key).add(value);
-        if (playerDataValues == null) {
-            List<PlayerDataKey> playerDataKeys = basedClassInstanceListMap.putIfAbsent(basedClass, new ArrayList<>());
-            if (playerDataKeys != null && !playerDataKeys.contains(key)) {
-                playerDataKeys.add(key);
+        synchronized (lock) {
+            List<PlayerDataValue> playerDataValues = registeredMap.putIfAbsent(key, new ArrayList<>());
+            registeredMap.get(key).add(value);
+            if (playerDataValues == null) {
+                List<PlayerDataKey> playerDataKeys = basedClassInstanceListMap.putIfAbsent(basedClass, new ArrayList<>());
+                if (playerDataKeys != null && !playerDataKeys.contains(key)) {
+                    playerDataKeys.add(key);
+                }
             }
-        }
-        if (value instanceof PlayerDataValueUpdatable) {
-            if (!updatableMap.containsKey(key)) {
-                updatableMap.put(key, new ArrayList<>());
+            if (value instanceof PlayerDataValueUpdatable) {
+                if (!updatableMap.containsKey(key)) {
+                    updatableMap.put(key, new ArrayList<>());
+                }
+                updatableMap.get(key).add((PlayerDataValueUpdatable) value);
             }
-            updatableMap.get(key).add((PlayerDataValueUpdatable) value);
-        }
-        instanceBaseClassMap.putIfAbsent(key, basedClass);
-        if (first) {
-            key.onRegisterToPlayerData(this, value);
+            instanceBaseClassMap.putIfAbsent(key, basedClass);
+            if (first) {
+                key.onRegisterToPlayerData(this, value);
+            }
         }
     }
 
     @Override
-    public synchronized void unregisterData(PlayerDataKey key) {
-        Class<? extends PlayerDataKey> basedClass = instanceBaseClassMap.remove(key);
-        basedClassInstanceListMap.get(basedClass).remove(key);
-        registeredMap.remove(key).forEach(it -> key.onUnregisterFromPlayerData(this, it));
-        updatableMap.remove(key);
+    public void unregisterData(PlayerDataKey key) {
+        synchronized (lock) {
+            Class<? extends PlayerDataKey> basedClass = instanceBaseClassMap.remove(key);
+            basedClassInstanceListMap.get(basedClass).remove(key);
+            registeredMap.remove(key).forEach(it -> key.onUnregisterFromPlayerData(this, it));
+            updatableMap.remove(key);
+        }
     }
 
     @Override
-    public synchronized void unregisterData(PlayerDataKey key, SingleOperator<Boolean, PlayerDataValue> operator) {
-        for (PlayerDataValue playerDataValue : registeredMap.getOrDefault(key, Collections.emptyList())) {
-            if (operator.apply(playerDataValue)) {
-                if (playerDataValue instanceof PlayerDataValueUpdatable) {
-                    List<PlayerDataValueUpdatable> updatableValues = updatableMap.getOrDefault(key, Collections.emptyList());
-                    updatableValues.remove(playerDataValue);
-                    if (updatableValues.isEmpty()) {
-                        updatableMap.remove(key);
+    public void unregisterData(PlayerDataKey key, SingleOperator<Boolean, PlayerDataValue> operator) {
+        synchronized (lock) {
+            for (PlayerDataValue playerDataValue : registeredMap.getOrDefault(key, Collections.emptyList())) {
+                if (operator.apply(playerDataValue)) {
+                    if (playerDataValue instanceof PlayerDataValueUpdatable) {
+                        List<PlayerDataValueUpdatable> updatableValues = updatableMap.getOrDefault(key, Collections.emptyList());
+                        updatableValues.remove(playerDataValue);
+                        if (updatableValues.isEmpty()) {
+                            updatableMap.remove(key);
+                        }
                     }
+                    List<PlayerDataValue> registeredValues = registeredMap.getOrDefault(key, Collections.emptyList());
+                    registeredValues.remove(playerDataValue);
+                    if (registeredValues.isEmpty()) {
+                        basedClassInstanceListMap.get(instanceBaseClassMap.remove(key)).remove(key);
+                        registeredMap.remove(key);
+                    }
+                    key.onUnregisterFromPlayerData(this, playerDataValue);
+                    return;
                 }
-                List<PlayerDataValue> registeredValues = registeredMap.getOrDefault(key, Collections.emptyList());
-                registeredValues.remove(playerDataValue);
-                if (registeredValues.isEmpty()) {
-                    basedClassInstanceListMap.get(instanceBaseClassMap.remove(key)).remove(key);
-                    registeredMap.remove(key);
-                }
-                key.onUnregisterFromPlayerData(this, playerDataValue);
-                return;
             }
         }
     }
 
     @Override
-    public synchronized List<PlayerDataValue> getRegisteredValues(PlayerDataKey key) {
+    public List<PlayerDataValue> getRegisteredValues(PlayerDataKey key) {
         return Collections.unmodifiableList(registeredMap.get(key));
     }
 
     @Override
-    public synchronized <T extends PlayerDataValue> List<T> getRegisteredValues(PlayerDataKey key, Class<T> tClass) {
-        return (List<T>) (registeredMap.get(key));
+    public <T extends PlayerDataValue> List<T> getRegisteredValues(PlayerDataKey key, Class<T> tClass) {
+        List<T> ts = (List<T>) (registeredMap.get(key));
+        return ts == null ? null : Collections.unmodifiableList(ts);
     }
 
     @Override
     public void removeDisabledKey() {
-        Map<PlayerDataKey, List<PlayerDataValue>> disabledDataMap = getDisabledDataMap();
-        disabledDataMap.keySet().forEach(this::unregisterData);
+        synchronized (lock) {
+            Map<PlayerDataKey, List<PlayerDataValue>> disabledDataMap = getDisabledDataMap();
+            disabledDataMap.keySet().forEach(this::unregisterData);
+        }
     }
 
     @Override
-    public synchronized Map<PlayerDataKey, List<PlayerDataValue>> getDisabledDataMap() {
+    public Map<PlayerDataKey, List<PlayerDataValue>> getDisabledDataMap() {
         Map<PlayerDataKey, List<PlayerDataValue>> map = new HashMap<>();
         registeredMap.forEach(registeredMap.mappingCount(), (key, value) -> {
             if (key.isDisable()) {
@@ -142,7 +159,7 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
     }
 
     @Override
-    public synchronized <T extends PlayerDataKey> Map<T, List<PlayerDataValue>> getDisabledDataMap(Class<T> tClass) {
+    public <T extends PlayerDataKey> Map<T, List<PlayerDataValue>> getDisabledDataMap(Class<T> tClass) {
         List<PlayerDataKey> keys = basedClassInstanceListMap.getOrDefault(tClass, new ArrayList<>());
         Map<T, List<PlayerDataValue>> map = new HashMap<>();
         for (PlayerDataKey key : keys) {
@@ -154,7 +171,7 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
     }
 
     @Override
-    public synchronized <K extends PlayerDataKey, V extends PlayerDataValue> Map<K, List<V>> getDisabledDataMap(Class<K> kClass, Class<V> vClass) {
+    public <K extends PlayerDataKey, V extends PlayerDataValue> Map<K, List<V>> getDisabledDataMap(Class<K> kClass, Class<V> vClass) {
         List<PlayerDataKey> keys = basedClassInstanceListMap.getOrDefault(kClass, new ArrayList<>());
         Map<K, List<V>> map = new HashMap<>();
         for (PlayerDataKey key : keys) {
@@ -166,18 +183,20 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
     }
 
     @Override
-    public synchronized void store(ConfigurationSection section) {
-        registeredMap.forEach((key, value) -> {
-            if (key.isDisable()) return;
-            String id = key.getId();
-            String path = String.format("%s.%s", key.getClass().getName(), id);
-            ConfigurationSection valueSection = section.createSection(path);
-            int idx = 0;
-            for (PlayerDataValue v : value) {
-                key.storeDataValue(valueSection.createSection(String.valueOf(idx)), v);
-                idx++;
-            }
-        });
+    public void store(ConfigurationSection section) {
+        synchronized (lock) {
+            registeredMap.forEach((key, value) -> {
+                if (key.isDisable()) return;
+                String id = key.getId();
+                String path = String.format("%s.%s", key.getClass().getName(), id);
+                ConfigurationSection valueSection = section.createSection(path);
+                int idx = 0;
+                for (PlayerDataValue v : value) {
+                    key.storeDataValue(valueSection.createSection(String.valueOf(idx)), v);
+                    idx++;
+                }
+            });
+        }
     }
 
     @Override

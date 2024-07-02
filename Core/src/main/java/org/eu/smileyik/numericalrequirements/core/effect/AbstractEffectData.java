@@ -28,13 +28,18 @@ public class AbstractEffectData extends AbstractUpdatable implements EffectData,
     }
 
     @Override
-    protected synchronized boolean doUpdate(double second) {
+    protected boolean doUpdate(double second) {
         duration -= second;
         return true;
     }
 
     @Override
     public synchronized boolean isTimeout() {
+        return duration <= 0;
+    }
+
+    @Override
+    public boolean canDelete() {
         return duration <= 0;
     }
 

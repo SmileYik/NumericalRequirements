@@ -131,11 +131,11 @@ public class EffectBundleData extends AbstractEffectData {
     }
 
     @Override
-    protected synchronized boolean doUpdate(double second) {
+    protected boolean doUpdate(double second) {
         super.doUpdate(second);
-        if (map != null) {
-            map.values().forEach(list -> list.forEach(Updatable::update));
-        }
+//        if (map != null) {
+//            map.values().forEach(list -> list.forEach(Updatable::update));
+//        }
         return true;
     }
 

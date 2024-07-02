@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.effect.Effect;
+import org.eu.smileyik.numericalrequirements.core.effect.impl.ChatMessageEffect;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundle;
 import org.eu.smileyik.numericalrequirements.core.effect.EffectPlayer;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.PotionEffect;
@@ -23,6 +24,7 @@ public class SimpleEffectService implements Listener, EffectService {
         this.effectBundleConfig = plugin.getConfig().getConfigurationSection("effect.bundle");
         registerEffect(new PotionEffect());
         registerEffect(new EffectBundle(this));
+        registerEffect(new ChatMessageEffect());
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -71,6 +73,13 @@ public class SimpleEffectService implements Listener, EffectService {
             return null;
         }
         return effectBundleConfig.getConfigurationSection(id);
+    }
+
+    @Override
+    public synchronized void addBundleConfigSection(ConfigurationSection section) {
+        for (String key : section.getKeys(false)) {
+            effectBundleConfig.set(key, section.getConfigurationSection(key));
+        }
     }
 
     @Override

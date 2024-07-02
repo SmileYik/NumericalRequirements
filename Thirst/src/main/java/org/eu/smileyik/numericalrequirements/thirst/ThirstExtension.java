@@ -6,6 +6,8 @@ import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementBoundedEffe
 import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementNaturalDepletionEffect;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementRateEffect;
 import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
+import org.eu.smileyik.numericalrequirements.core.element.handler.ElementHandler;
+import org.eu.smileyik.numericalrequirements.core.element.handler.RangeHandler;
 import org.eu.smileyik.numericalrequirements.core.extension.Extension;
 
 import java.io.File;
@@ -19,6 +21,8 @@ public class ThirstExtension extends Extension {
     private ElementRateEffect elementRateEffect;
     private ElementBoundedEffect elementBoundedEffect;
 
+    private ElementHandler elementHandler;
+
     @Override
     protected void onEnable() {
         saveResource("config.yml", false);
@@ -30,12 +34,14 @@ public class ThirstExtension extends Extension {
             return;
         }
 
-        thirstElement = new ThirstElement(this, config);
-        thirstTag = new ThirstTag(thirstElement, config);
+        elementHandler = new RangeHandler(config.getConfigurationSection("thirst.effects"));
+        thirstElement = new ThirstElement(this, config, elementHandler);
+        thirstTag = new ThirstTag(thirstElement, config, elementHandler);
 
         api.getElementService().registerElement(thirstElement);
         api.getItemService().registerItemTag(thirstTag);
         EffectService effectService = api.getEffectService();
+        effectService.addBundleConfigSection(config.getConfigurationSection("thirst.effect-bundles"));
 
         elementBoundedEffect = new ElementBoundedEffect(thirstElement);
         effectService.registerEffect(elementBoundedEffect);
