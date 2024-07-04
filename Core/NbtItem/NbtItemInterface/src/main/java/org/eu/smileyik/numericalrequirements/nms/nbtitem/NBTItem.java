@@ -3,6 +3,8 @@ package org.eu.smileyik.numericalrequirements.nms.nbtitem;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 /**
  * 使用NBTItemHelper将Bukkit物品转换为NBTItem.
  *
@@ -129,6 +131,29 @@ public interface NBTItem {
      * @return
      */
     int[] getIntArray(String key);
+
+    /**
+     * 根据提供的Key获取UUID。
+     * @param key
+     * @return
+     */
+    UUID getUUID(String key);
+
+    /**
+     * 移除一个Key.
+     * @param key
+     */
+    void remove(String key);
+
+    /**
+     * 移除一个Key并返回当前正在操作的NBT物品实例。
+     * @param key Key
+     * @return 当前实例
+     */
+    default NBTItem erase(String key) {
+        remove(key);
+        return this;
+    }
 
     /**
      * 将该物品的NBT标签保存为字符串。

@@ -2,6 +2,8 @@ package org.eu.smileyik.numericalrequirements.nms.nbtitem;
 
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public abstract class AbstractNBTItem implements NBTItem {
     private ItemStack item;
     private Object nmsCopy;
@@ -54,7 +56,11 @@ public abstract class AbstractNBTItem implements NBTItem {
     public void put(String key, Object value) {
         Object tags = getTags();
         if (tags != null) {
-            doPut(tags, key, value);
+            if (value == null) {
+                remove(key);
+            } else {
+                doPut(tags, key, value);
+            }
         }
     }
 
@@ -206,6 +212,21 @@ public abstract class AbstractNBTItem implements NBTItem {
             return null;
         }
         return doGetIntArray(tags, key);
+    }
+
+    @Override
+    public UUID getUUID(String key) {
+        Object tags = getTags();
+        if (tags == null) {
+            return null;
+        }
+        return doGetUUID(tags, key);
+    }
+
+    @Override
+    public void remove(String key) {
+        Object tags = getTags();
+        if (tags != null) doRemove(tags, key);
     }
 
     /**
@@ -370,4 +391,19 @@ public abstract class AbstractNBTItem implements NBTItem {
      * @return 失败返回null
      */
     protected abstract int[] doGetIntArray(Object tags, String key);
+
+    /**
+     * 获取UUID。
+     * @param tags NBT组件，不可能为null
+     * @param key Key
+     * @return 失败返回null
+     */
+    protected abstract UUID doGetUUID(Object tags, String key);
+
+    /**
+     * 移除指定键值对。
+     * @param tags NBT组件，不可能为null
+     * @param key Key
+     */
+    protected abstract void doRemove(Object tags, String key);
 }

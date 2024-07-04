@@ -15,8 +15,14 @@ dependencies {
 
     implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
     implementation(project(":Core:NbtItem:NbtItemInterface"))
+    implementation(project(":Core:NbtItem:NbtItemInterface_1_18"))
     implementation(project(":Core:NbtItem:craftbukkit_1_5_to_1_16"))
     implementation(project(":Core:NbtItem:craftbukkit_1_17"))
+    implementation(project(":Core:NbtItem:craftbukkit_1_18"))
+    implementation(project(":Core:NbtItem:craftbukkit_1_18_2"))
+    implementation(project(":Core:NbtItem:craftbukkit_1_19"))
+    implementation(project(":Core:NbtItem:craftbukkit_1_20"))
+    implementation(project(":Core:NbtItem:craftbukkit_1_21"))
 }
 
 //test {

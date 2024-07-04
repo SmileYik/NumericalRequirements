@@ -2,6 +2,11 @@ package org.eu.smileyik.numericalrequirements.nms.nbtitem;
 
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_17.NBTItem_1_17;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_18.NBTItem_1_18;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_18_2.NBTItem_1_18_2;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_19.NBTItem_1_19;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_20.NBTItem_1_20;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_21.NBTItem_1_21;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_5_to_1_16.NBTItem_1_5_to_1_16;
 
 import java.lang.reflect.Constructor;
@@ -26,6 +31,40 @@ public class NBTItemHelper {
         } else if (i == 17) {
             try {
                 newNBTItem = NBTItem_1_17.class.getDeclaredConstructor(ItemStack.class);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else if (i == 18) {
+            Class<? extends NBTItem> clazz;
+
+            switch (versions[2].toUpperCase()) {
+                case "R1":
+                    clazz = NBTItem_1_18.class;
+                    break;
+                default:
+                    clazz = NBTItem_1_18_2.class;
+            }
+
+            try {
+                newNBTItem = clazz.getDeclaredConstructor(ItemStack.class);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else if (i == 19) {
+            try {
+                newNBTItem = NBTItem_1_19.class.getDeclaredConstructor(ItemStack.class);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else if (i == 20) {
+            try {
+                newNBTItem = NBTItem_1_20.class.getDeclaredConstructor(ItemStack.class);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else if (i >= 21) {
+            try {
+                newNBTItem = NBTItem_1_21.class.getDeclaredConstructor(ItemStack.class);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

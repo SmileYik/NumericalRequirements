@@ -3,6 +3,8 @@ package org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_5_to_1_16;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.AbstractNBTItem;
 
+import java.util.UUID;
+
 import static org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_5_to_1_16.NBTItemMethods.*;
 
 public class NBTItem_1_5_to_1_16 extends AbstractNBTItem {
@@ -45,7 +47,9 @@ public class NBTItem_1_5_to_1_16 extends AbstractNBTItem {
     @Override
     protected void doPut(Object tags, String key, Object value) {
         try {
-            if (value instanceof String) {
+            if (value instanceof UUID) {
+                setUUID.invoke(tags, key, (UUID) value);
+            } else if (value instanceof String) {
                 setString.invoke(tags, key, (String) value);
             } else if (value instanceof Integer) {
                 setInt.invoke(tags, key, (int) value);
@@ -192,4 +196,24 @@ public class NBTItem_1_5_to_1_16 extends AbstractNBTItem {
         }
         return null;
     }
+
+    @Override
+    protected void doRemove(Object tags, String key) {
+        try {
+            remove.invoke(tags, key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected UUID doGetUUID(Object tags, String key) {
+        try {
+            return (UUID) getUUID.invoke(tags, key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

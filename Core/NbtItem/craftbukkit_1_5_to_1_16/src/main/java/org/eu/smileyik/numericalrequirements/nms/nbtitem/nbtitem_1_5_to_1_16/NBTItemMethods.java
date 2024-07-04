@@ -4,6 +4,7 @@ import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 public class NBTItemMethods {
     // -------------------
@@ -45,6 +46,9 @@ public class NBTItemMethods {
     public static final Method getString;
     public static final Method setByteArray;
     public static final Method getByteArray;
+    public static final Method getUUID;
+    public static final Method setUUID;
+    public static final Method remove;
 
     static {
         String ver = NBTItem.getBukkitVersion();
@@ -72,6 +76,8 @@ public class NBTItemMethods {
             // ----------------
             newNBTTagCompound = NBTTagCompoundClass.getDeclaredConstructor();
             hasKey = NBTTagCompoundClass.getDeclaredMethod("hasKey", String.class);
+            remove = NBTTagCompoundClass.getDeclaredMethod("remove", String.class);
+
             getInt = NBTTagCompoundClass.getDeclaredMethod("getInt", String.class);
             getDouble = NBTTagCompoundClass.getDeclaredMethod("getDouble", String.class);
             getBoolean = NBTTagCompoundClass.getDeclaredMethod("getBoolean", String.class);
@@ -82,6 +88,8 @@ public class NBTItemMethods {
             getFloat = NBTTagCompoundClass.getDeclaredMethod("getFloat", String.class);
             getString = NBTTagCompoundClass.getDeclaredMethod("getString", String.class);
             getByteArray = NBTTagCompoundClass.getDeclaredMethod("getByteArray", String.class);
+            getUUID = NBTTagCompoundClass.getDeclaredMethod("a", String.class);
+
             setInt = NBTTagCompoundClass.getDeclaredMethod("setInt", String.class, int.class);
             setDouble = NBTTagCompoundClass.getDeclaredMethod("setDouble", String.class, double.class);
             setBoolean = NBTTagCompoundClass.getDeclaredMethod("setBoolean", String.class, boolean.class);
@@ -92,6 +100,7 @@ public class NBTItemMethods {
             setLong = NBTTagCompoundClass.getDeclaredMethod("setLong", String.class, long.class);
             setString = NBTTagCompoundClass.getDeclaredMethod("setString", String.class, String.class);
             setShort = NBTTagCompoundClass.getDeclaredMethod("setShort", String.class, short.class);
+            setUUID = NBTTagCompoundClass.getDeclaredMethod("a", String.class, UUID.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

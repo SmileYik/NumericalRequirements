@@ -8,6 +8,8 @@ import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 import org.eu.smileyik.numericalrequirements.test.NeedTest;
 
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.UUID;
 
 @NeedTest
 public class NbtItemTest {
@@ -16,6 +18,7 @@ public class NbtItemTest {
         ItemStack item = new ItemStack(Material.APPLE);
         NBTItem cast = NBTItemHelper.cast(item);
         assert cast != null : "NBT Item cast returned null";
+        System.out.println("NBTItem: " + cast.getClass());
     }
 
     @NeedTest
@@ -33,6 +36,7 @@ public class NbtItemTest {
         cast.put("double", 3.141592653589793d);
         cast.put("intArray", new int[] { 1, 2, 3 });
         cast.put("byteArray", new byte[] { 4, 5, 6 });
+        cast.put("uuid", UUID.randomUUID());
         ItemStack copy = cast.getItemStack();
         assert copy != null : "NBT Item copy returned null";
         System.out.println("item == copy: " + (copy == item));
@@ -56,6 +60,7 @@ public class NbtItemTest {
                             .append("double", 3.141592653589793d)
                             .append("intArray", new int[] { 1, 2, 3 })
                             .append("byteArray", new byte[] { 4, 5, 6 })
+                            .append("uuid", UUID.randomUUID())
                             .getItemStack();
         assert copy != null : "NBT Item copy returned null";
         System.out.println("item == copy: " + (copy == item));
@@ -79,6 +84,7 @@ public class NbtItemTest {
         System.out.println("Key 'boolean': " + cast.containsKey("boolean"));
         System.out.println("Key 'float': " + cast.containsKey("float"));
         System.out.println("Key 'double': " + cast.containsKey("double"));
+        System.out.println("Key 'uuid': " + cast.containsKey("uuid"));
     }
 
     @NeedTest
@@ -97,15 +103,39 @@ public class NbtItemTest {
         System.out.println("Key 'boolean': " + cast.getBoolean("boolean"));
         System.out.println("Key 'float': " + cast.containsKey("float"));
         System.out.println("Key 'double': " + cast.getDouble("double"));
+        System.out.println("Key 'uuid': " + cast.getUUID("uuid"));
     }
 
     @NeedTest
-    public void saveToString() {
+    public void saveToStringTest() {
         ItemStack item = putNBTTest();
         NBTItem cast = NBTItemHelper.cast(item);
         assert cast != null : "NBT Item cast returned null";
         System.out.println(cast.saveToString());
     }
+
+    @NeedTest
+    public void putAndGetNullTest() {
+        ItemStack item = putNBTTest();
+        NBTItem cast = NBTItemHelper.cast(item);
+        assert cast != null : "NBT Item cast returned null";
+        System.out.println("Key 'uuid': " + Objects.toString(cast.getUUID("uuid")));
+        cast.put("uuid", null);
+        System.out.println("Has key 'uuid': " + cast.containsKey("uuid"));
+        assert !cast.containsKey("uuid") : "Key 'uuid' does not be delete";
+    }
+
+    @NeedTest
+    public void removeAndGetNullTest() {
+        ItemStack item = putNBTTest();
+        NBTItem cast = NBTItemHelper.cast(item);
+        assert cast != null : "NBT Item cast returned null";
+        System.out.println("Key 'uuid': " + Objects.toString(cast.getUUID("uuid")));
+        cast.remove("uuid");
+        System.out.println("Has key 'uuid': " + cast.containsKey("uuid"));
+        assert !cast.containsKey("uuid") : "Key 'uuid' does not be delete.";
+    }
+
     private String saveItemToString(String key, ItemStack itemStack) {
         YamlConfiguration yaml = new YamlConfiguration();
         yaml.set(key, itemStack);
