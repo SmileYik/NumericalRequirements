@@ -2,19 +2,26 @@ package org.eu.smileyik.numericalrequirements.core.item;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.item.tag.service.*;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class ItemServiceImpl implements Listener, ItemService {
@@ -25,10 +32,23 @@ public class ItemServiceImpl implements Listener, ItemService {
     private final Map<ItemTag, LoreTagPattern> noColorTagMap = new HashMap<>();
     private final LoreTagService loreTagService;
 
+    private final File itemFile;
+    private final YamlConfiguration itemConfig;
+
     public ItemServiceImpl(NumericalRequirements plugin) {
         this.plugin = plugin;
         loreTagService = new SimpleLoreTagService();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
+        itemFile = new File(plugin.getDataFolder(), "items.yml");
+        if (!itemFile.exists()) {
+            try {
+                itemFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        itemConfig = YamlConfiguration.loadConfiguration(itemFile);
     }
 
     @Override
@@ -131,6 +151,82 @@ public class ItemServiceImpl implements Listener, ItemService {
         return tag != null && noColorTagMap.containsKey(tag) && noColorTagMap.get(tag).matches(ChatColor.stripColor(lore));
     }
 
+    @Override
+    public ItemStack loadItem(String id, int amount) {
+        if (!itemConfig.isConfigurationSection(id)) {
+            return null;
+        }
+        ConfigurationSection section = itemConfig.getConfigurationSection(id);
+        if (!section.contains("material")) {
+            return null;
+        }
+        ItemStack stack = new ItemStack(Material.matchMaterial(section.getString("material")));
+        ItemMeta meta = stack.getItemMeta();
+
+        if (section.contains("name")) {
+            meta.setDisplayName(section.getString("name"));
+        }
+        if (section.contains("lore")) {
+            meta.setLore(section.getStringList("lore"));
+        }
+        if (section.contains("durability")) {
+            stack.setDurability((short) section.getInt("durability"));
+        }
+        if (section.contains("enchantment")) {
+            ConfigurationSection ench = section.getConfigurationSection("enchantment");
+            for (String key : ench.getKeys(false)) {
+                meta.addEnchant(Enchantment.getByName(key), ench.getInt(key), true);
+            }
+        }
+        if (section.contains("flags")) {
+            for (String flag : section.getStringList("flags")) {
+                meta.addItemFlags(ItemFlag.valueOf(flag));
+            }
+        }
+        stack.setItemMeta(meta);
+        stack.setAmount(amount);
+        return stack;
+    }
+
+    @Override
+    public void storeItem(String id, ItemStack stack) {
+        ConfigurationSection section = itemConfig.createSection(id);
+        section.set("material", stack.getType().name());
+        section.set("durability", stack.getDurability());
+        if (stack.hasItemMeta()) {
+            ItemMeta meta = stack.getItemMeta();
+            if (meta.hasDisplayName()) {
+                section.set("name", meta.getDisplayName());
+            }
+            if (meta.hasLore()) {
+                section.set("lore", meta.getLore());
+            }
+            if (meta.hasEnchants()) {
+                meta.getEnchants().forEach((k, v) -> {
+                    section.set("enchantment." + k, v);
+                });
+            }
+            Set<ItemFlag> itemFlags = meta.getItemFlags();
+            if (!itemFlags.isEmpty()) {
+                section.set("flags", new ArrayList<>(itemFlags));
+            }
+        }
+        saveItemFile();
+    }
+
+    @Override
+    public Collection<String> getItemIds() {
+        return Collections.unmodifiableCollection(itemConfig.getKeys(false));
+    }
+
+    private void saveItemFile() {
+        try {
+            itemConfig.save(itemFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private boolean useItem(NumericalPlayer player, ItemStack item) {
         if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
             return false;
@@ -148,6 +244,8 @@ public class ItemServiceImpl implements Listener, ItemService {
 
     @Override
     public void shutdown() {
+        saveItemFile();
+
         loreTagService.shutdown();
         idTagMap.clear();
         normalItemTags.clear();

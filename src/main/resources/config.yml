@@ -31,3 +31,16 @@ effect:
       EffectBundle:
         a:
           bundle-id: test1
+item:
+  id:
+    name: "aaa"
+    material: "bbb"
+    durability: 0
+    lore:
+      - "aaaa"
+    enchantment:
+      ARROW_DAMAGE: 1
+    flags:
+      - HIDE_ATTRIBUTES
+
+
