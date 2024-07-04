@@ -49,6 +49,7 @@ public class Test {
                     }
                 };
                 System.setOut(bw);
+                System.setErr(bw);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -95,6 +96,17 @@ public class Test {
             stopLogging = false;
         }
 
+        public synchronized void error(String message) {
+            stopLogging = true;
+            l.severe(message);
+
+            writeTime();
+            bw.print("[ERROR] ");
+            bw.print(message);
+            bw.println();
+            stopLogging = false;
+        }
+
         public void close() throws IOException {
             bw.close();
         }
@@ -106,20 +118,29 @@ public class Test {
 
     public static void start() {
         PrintStream out = System.out;
+        PrintStream err = System.err;
         NumericalRequirements.getPlugin().getLogger().info("--------- Test Starting ---------");
         new Test().startTest();
         NumericalRequirements.getPlugin().getLogger().info("--------- Test Finished ---------");
         System.setOut(out);
+        System.setErr(err);
     }
 
     public void startTest() {
+        int totalClass = 0;
+        List<String> failedClasses = new ArrayList<>();
+        List<String> cannotLoadClasses = new ArrayList<>();
         for (Class<?> aClass : getClasses()) {
+            ++totalClass;
             logger.info("========================== Class ============================");
             logger.info("        " + aClass.getSimpleName());
             logger.info("-------------------------------------------------------------");
+            int totalMethod = 0;
+            List<String> failedMethods = new ArrayList<>();
             try {
                 Constructor<?> newInstance = aClass.getDeclaredConstructor();
                 for (Method method : getTestMethods(aClass)) {
+                    ++totalMethod;
                     method.setAccessible(true);
                     logger.info("++++++++++++++ Method ++++++++++++++++++");
                     logger.info("        " + method.getName());
@@ -128,21 +149,50 @@ public class Test {
                         Object o = newInstance.newInstance();
                         long nanoTime = System.nanoTime();
                         method.invoke(o);
-                        logger.info("Executing " + method.getName() + ": " + (System.nanoTime() - nanoTime) + " nanoseconds");
+                        logger.info("Executing " + method.getName() + ": " + (System.nanoTime() - nanoTime) / 1.0E6 + " ms");
                     } catch (Exception e) {
-                        logger.warning("Exception while executing " + method.getName() + ": " + e.getMessage());
-                        e.printStackTrace();
+                        logger.warning("Exception while executing " + method.getName() + ": " + e.getCause());
+                        printStackTrace(e);
+                        logger.error("Failed test while executing " + method.getName() + ": " + e.getCause());
+                        failedMethods.add(method.getName());
                     }
                     logger.info("++++++++++++++++++++++++++++++++++++++++");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                printStackTrace(e);
+                logger.error("Can't load test class: " + aClass.getName());
+                cannotLoadClasses.add(aClass.getName());
+            }
+            logger.info("All tests: " + totalMethod + "; passed: " + (totalMethod - failedMethods.size()) + "; failed: " + failedMethods.size());
+            if (!failedMethods.isEmpty()) {
+                logger.warning("Failed tests: " + failedMethods.size() + "; " + failedMethods);
+                failedClasses.add(aClass.getName());
             }
             logger.info("============================================================");
         }
+        {
+            logger.info("All tests class: " + totalClass +
+                    "; passed: " + (totalClass - cannotLoadClasses.size() - failedClasses.size()) +
+                    "; failed: " + failedClasses.size() + "; can't load: " + cannotLoadClasses.size());
+            if (!cannotLoadClasses.isEmpty()) {
+                logger.warning("Can't load test classes: " + cannotLoadClasses.size() + "; " + cannotLoadClasses);
+            }
+            if (!failedClasses.isEmpty()) {
+                logger.error("Failed test classes: " + failedClasses.size() + "; " + failedClasses);
+            }
+        }
+
         try {
             logger.close();
         } catch (IOException e) {
+            printStackTrace(e);
+        }
+    }
+
+    private void printStackTrace(Exception e) {
+        if (e.getCause() != null) {
+            e.getCause().printStackTrace();
+        } else {
             e.printStackTrace();
         }
     }
