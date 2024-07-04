@@ -1,6 +1,7 @@
 package org.eu.smileyik.numericalrequirements.nms.nbtitem;
 
 import org.bukkit.inventory.ItemStack;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_17.NBTItem_1_17;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.nbtitem_1_5_to_1_16.NBTItem_1_5_to_1_16;
 
 import java.lang.reflect.Constructor;
@@ -19,6 +20,12 @@ public class NBTItemHelper {
         if (i >= 5 && i <= 16) {
             try {
                 newNBTItem = NBTItem_1_5_to_1_16.class.getDeclaredConstructor(ItemStack.class);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else if (i == 17) {
+            try {
+                newNBTItem = NBTItem_1_17.class.getDeclaredConstructor(ItemStack.class);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
