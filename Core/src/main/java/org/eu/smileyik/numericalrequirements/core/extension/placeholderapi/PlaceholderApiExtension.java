@@ -1,6 +1,5 @@
 package org.eu.smileyik.numericalrequirements.core.extension.placeholderapi;
 
-import org.eu.smileyik.numericalrequirements.core.RegisterInfo;
 import org.eu.smileyik.numericalrequirements.core.extension.Extension;
 import org.eu.smileyik.numericalrequirements.core.extension.ExtensionDescription;
 
@@ -19,15 +18,18 @@ public class PlaceholderApiExtension extends Extension {
     }
 
     public synchronized void addPlaceholder(PlaceholderRequestCallback callback) {
-        if (placeholder == null) {
-            placeholder = new PlaceholderExpansion(getApi().getPlayerService());
-            if(getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                getPlugin().getServer().getScheduler().runTask(getPlugin(), () -> {
-                    placeholder.register();
-                });
-            }
+        if (placeholder != null) {
+            placeholder.addCallback(callback);
+            return;
         }
-        placeholder.addCallback(callback);
+
+        if(getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            placeholder = new PlaceholderExpansion(getApi().getPlayerService());
+            getPlugin().getServer().getScheduler().runTask(getPlugin(), () -> {
+                placeholder.register();
+                placeholder.addCallback(callback);
+            });
+        }
     }
 
     public synchronized void removePlaceholder(PlaceholderRequestCallback callback) {
