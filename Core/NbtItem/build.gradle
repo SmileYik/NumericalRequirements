@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.eu.smileyik'
+version = 'PREVIEW-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
+    implementation(project(":Core:NbtItem:NbtItemInterface"))
+    implementation(project(":Core:NbtItem:craftbukkit_1_5_to_1_16"))
+}
+
+//test {
+//    useJUnitPlatform()
+//}

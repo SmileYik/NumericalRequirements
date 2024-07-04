@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.eu.smileyik'
+version = 'PREVIEW-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://maven.smileyik.eu.org:8081/minecraft"
+        allowInsecureProtocol = true
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    compileOnly 'org.spigotmc:spigot:1.9-R0.1-SNAPSHOT'
+    implementation(project(":Core:NbtItem:NbtItemInterface"))
+}
+
+//test {
+//    useJUnitPlatform()
+//}

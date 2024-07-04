@@ -12,8 +12,13 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Core" />
             <option value="$PROJECT_DIR$/Core/Command" />
+            <option value="$PROJECT_DIR$/Core/NbtItem" />
+            <option value="$PROJECT_DIR$/Core/NbtItem/NbtItemInterface" />
+            <option value="$PROJECT_DIR$/Core/NbtItem/craftbukkit_1_17" />
+            <option value="$PROJECT_DIR$/Core/NbtItem/craftbukkit_1_5_to_1_16" />
             <option value="$PROJECT_DIR$/LuaEffect" />
             <option value="$PROJECT_DIR$/MultiBlockCraft" />
+            <option value="$PROJECT_DIR$/Test" />
             <option value="$PROJECT_DIR$/Thirst" />
           </set>
         </option>

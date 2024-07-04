@@ -19,21 +19,21 @@ def pluginVersions() {
 
 repositories {
 
-    allprojects {
-        repositories {
-            // spigotmc
-            maven {
-                url 'https://hub.spigotmc.org/nexus/content/groups/public/'
-            }
-            // placeholder api
-            maven {
-                url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
-            }
-            flatDir {
-                dirs "${rootProject.projectDir}/libs/"
-            }
-        }
-    }
+//    allprojects {
+//        repositories {
+//            // spigotmc
+//            maven {
+//                url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+//            }
+//            // placeholder api
+//            maven {
+//                url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+//            }
+//            flatDir {
+//                dirs "${rootProject.projectDir}/libs/"
+//            }
+//        }
+//    }
 
     mavenCentral()
 
@@ -43,11 +43,15 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
 
     implementation name: 'LuaInMinecraftBukkit-1.7.2'
+    implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
+
+    implementation project(":Core:NbtItem")
     implementation project(":Core:Command")
     implementation project(":Core")
     implementation project(":Thirst")
     implementation project(":LuaEffect")
     implementation project(":MultiBlockCraft")
+    implementation project(":Test")
 }
 
 def getModelClass(model) {
@@ -58,11 +62,13 @@ def getModelClass(model) {
 }
 
 jar {
-    from getModelClass(":Core:Command")
-    from getModelClass(":Core")
-    from getModelClass(":Thirst")
-    from getModelClass(":LuaEffect")
-    from getModelClass(":MultiBlockCraft")
+    getAllprojects().forEach {
+        if (getRootProject() != it) {
+            from "${it.buildDir}/classes/java/main/"
+            from "${it.projectDir}/src/main/resources/"
+        }
+    }
+    from "${project(":Test").buildDir}/classes/java/test/"
 
     doLast {
         delete "${buildDir}/libs/${archivesBaseName}-${version}-ori.jar"
