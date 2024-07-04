@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.eu.smileyik'
+version = 'PREVIEW-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
+
+    implementation project(":Core:NbtItem")
+    implementation project(":Core:NbtItem:NbtItemInterface")
+    implementation project(":Core:Command")
+    implementation project(":Core")
+    implementation project(":Thirst")
+    implementation project(":LuaEffect")
+    implementation project(":MultiBlockCraft")
+}
+
+//test {
+//    useJUnitPlatform()
+//}

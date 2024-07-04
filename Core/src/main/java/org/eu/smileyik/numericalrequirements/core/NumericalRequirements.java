@@ -94,6 +94,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                     metrics = new Metrics(this, 20934);
                 }
 
+                runTask(this::startTest);
             }
         });
     }
@@ -201,5 +202,14 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
     @Override
     public boolean isAvailableWorld(String worldName) {
         return worlds.contains(worldName.toLowerCase());
+    }
+
+    private void startTest() {
+        try {
+            Class<?> aClass = Class.forName("org.eu.smileyik.numericalrequirements.test.Test");
+            aClass.getDeclaredMethod("start").invoke(null);
+        } catch (Exception ignore) {
+
+        }
     }
 }
