@@ -7,10 +7,6 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    // spigotmc
-    maven {
-        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
-    }
     flatDir {
         dirs "${rootProject.projectDir}/libs/"
     }
@@ -22,5 +18,5 @@ dependencies {
     implementation project(':Core')
     implementation project(':Core:Command')
     implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
-    implementation name: 'LuaInMinecraftBukkit-1.7.2'
+    implementation 'tk.smileyik:LuaInMinecraftBukkit:1.7.2'
 }

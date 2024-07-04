@@ -8,10 +8,10 @@ version = '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 
-    // spigotmc
-    maven {
-        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
-    }
+//    // spigotmc
+//    maven {
+//        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+//    }
 }
 
 dependencies {
