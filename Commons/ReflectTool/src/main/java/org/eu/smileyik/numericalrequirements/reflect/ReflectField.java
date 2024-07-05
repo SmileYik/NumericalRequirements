@@ -6,7 +6,7 @@ public class ReflectField implements MySimpleReflect {
 
     private final Field field;
 
-    public ReflectField(Class<?> clazz, String path) throws ClassNotFoundException, NoSuchFieldException {
+    public ReflectField(Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchFieldException {
         String[] $s = path.split("@");
         if (clazz == null) {
             clazz = Class.forName($s[0].replace("+", "$"));
@@ -14,6 +14,9 @@ public class ReflectField implements MySimpleReflect {
             clazz = MySimpleReflect.getClassInClass(clazz, $s[0].replace("+", "$"));
         }
         field = clazz.getDeclaredField($s[1].strip().replace("+", "$"));
+        if (forceAccess) {
+            field.setAccessible(true);
+        }
     }
 
     public Field getField() {

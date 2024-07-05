@@ -1,7 +1,15 @@
 package org.eu.smileyik.numericalrequirements.reflect;
 
 public interface MySimpleReflect {
-    static <T extends MySimpleReflect> T get(String path) throws ClassNotFoundException, NoSuchFieldException, NoSuchMethodException {
+    static <T extends MySimpleReflect> T get(String path) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
+        return get(path, false);
+    }
+
+    static <T extends MySimpleReflect> T getForce(String path) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
+        return get(path, true);
+    }
+
+    static <T extends MySimpleReflect> T get(String path, boolean forceAccess) throws ClassNotFoundException, NoSuchFieldException, NoSuchMethodException {
         path = path.replace("\\$", "+");
         String[] $s = path.split("\\\\$");
         String classAndOther;
@@ -17,9 +25,11 @@ public interface MySimpleReflect {
         }
 
         if (classAndOther.contains("@")) {
-            return (T) new ReflectField(targetClass, classAndOther);
+            return (T) new ReflectField(targetClass, classAndOther, forceAccess);
+        } else if (classAndOther.contains("#")) {
+            return (T) new ReflectMethod<>(targetClass, classAndOther, forceAccess);
         } else {
-            return (T) new ReflectMethod<>(targetClass, classAndOther);
+            return (T) new ReflectConstructor(targetClass, classAndOther, forceAccess);
         }
     }
 
@@ -42,8 +52,23 @@ public interface MySimpleReflect {
             case "long[]": return long[].class;
             case "float[]": return float[].class;
             case "double[]": return double[].class;
-            default: return Class.forName(className);
+            default: return getClassByPath(className);
         }
+    }
+
+    static Class<?> getClassByPath(String path) throws ClassNotFoundException {
+        path = path.replace("\\$", "+");
+        String[] $s = path.split("\\\\$");
+        Class<?> targetClass = null;
+        if ($s.length != 1) {
+            targetClass = Class.forName($s[0].strip().replace("+", "$"));
+            for (int i = 1; i < $s.length; i++) {
+                targetClass = getClassInClass(targetClass, $s[i].strip().replace("+", "$"));
+            }
+        } else {
+            targetClass = Class.forName(path);
+        }
+        return targetClass;
     }
 
     static Class<?> getClassInClass(Class<?> clazz, String className) {

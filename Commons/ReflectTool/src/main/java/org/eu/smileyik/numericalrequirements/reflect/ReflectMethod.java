@@ -10,12 +10,12 @@ public class ReflectMethod <Ret> implements MySimpleReflect {
 
     private final Method method;
 
-    public ReflectMethod(Class<?> clazz, String path) throws ClassNotFoundException, NoSuchMethodException {
+    public ReflectMethod(Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchMethodException {
         String[] $s = path.split("#");
         if (clazz == null) {
-            clazz = Class.forName($s[0]);
+            clazz = Class.forName($s[0].replace("+", "$"));
         } else {
-            clazz = MySimpleReflect.getClassInClass(clazz, $s[0]);
+            clazz = MySimpleReflect.getClassInClass(clazz, $s[0].replace("+", "$"));
         }
 
         $s[1] = $s[1].replace("+", "$");
@@ -31,7 +31,9 @@ public class ReflectMethod <Ret> implements MySimpleReflect {
         } else {
             method = clazz.getDeclaredMethod(methodName);
         }
-
+        if (forceAccess) {
+            method.setAccessible(true);
+        }
     }
 
     public String getName() {
