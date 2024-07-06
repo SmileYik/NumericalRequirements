@@ -3,11 +3,12 @@ package org.eu.smileyik.numericalrequirements.reflect;
 import java.lang.reflect.Field;
 
 public class ReflectField implements MySimpleReflect {
-
+    private final String fullPath;
     private final Field field;
     private final String fieldName;
 
-    public ReflectField(Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchFieldException {
+    public ReflectField(String fullPath, Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchFieldException {
+        this.fullPath = fullPath;
         String[] $s = path.split("@");
         if (clazz == null) {
             clazz = Class.forName($s[0].replace("+", "$"));
@@ -47,7 +48,7 @@ public class ReflectField implements MySimpleReflect {
         try {
             return field.get(instance);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(fullPath, e);
         }
     }
 
@@ -55,7 +56,11 @@ public class ReflectField implements MySimpleReflect {
         try {
             field.set(instance, value);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(fullPath, e);
         }
+    }
+
+    public String getFullPath() {
+        return fullPath;
     }
 }

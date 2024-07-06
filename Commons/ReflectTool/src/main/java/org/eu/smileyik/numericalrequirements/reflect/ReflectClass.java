@@ -49,6 +49,18 @@ public class ReflectClass implements MySimpleReflect {
         return constructors.get(constructor);
     }
 
+    public boolean hasConstructor(String constructor) {
+        return constructors.containsKey(constructor);
+    }
+
+    public boolean hasField(String field) {
+        return fields.containsKey(field);
+    }
+
+    public boolean hasMethod(String method) {
+        return methods.containsKey(method);
+    }
+
     @Override
     public String getName() {
         return null;

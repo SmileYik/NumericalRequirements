@@ -14,6 +14,7 @@ public interface MySimpleReflect {
     }
 
     static <T extends MySimpleReflect> T get(String path, boolean forceAccess) throws ClassNotFoundException, NoSuchFieldException, NoSuchMethodException {
+        String fullPath = path;
         path = path.replace(" ", "");
         DebugLogger.debug("开始处理单个反射路径. path = %s, forceAccess = %s", path, forceAccess);
         path = path.replace("\\$", "+");
@@ -31,11 +32,11 @@ public interface MySimpleReflect {
         }
 
         if (classAndOther.contains("@")) {
-            return (T) new ReflectField(targetClass, classAndOther, forceAccess);
+            return (T) new ReflectField(fullPath, targetClass, classAndOther, forceAccess);
         } else if (classAndOther.contains("#")) {
-            return (T) new ReflectMethod<>(targetClass, classAndOther, forceAccess);
+            return (T) new ReflectMethod<>(fullPath, targetClass, classAndOther, forceAccess);
         } else {
-            return (T) new ReflectConstructor(targetClass, classAndOther, forceAccess);
+            return (T) new ReflectConstructor(fullPath, targetClass, classAndOther, forceAccess);
         }
     }
 
@@ -112,11 +113,6 @@ public interface MySimpleReflect {
     }
 
     static Class<?> forName(String className) throws ClassNotFoundException {
-        if (className.startsWith("[")) {
-            className += ";";
-        } else if (className.endsWith("[]")) {
-            className = String.format("[L%s;", className.substring(0, className.length() - 2));
-        }
         switch (className) {
             case "boolean": return boolean.class;
             case "byte": return byte.class;
@@ -140,6 +136,11 @@ public interface MySimpleReflect {
     }
 
     static Class<?> getClassByPath(String path) throws ClassNotFoundException {
+        if (path.startsWith("[")) {
+            path += ";";
+        } else if (path.endsWith("[]")) {
+            path = String.format("[L%s;", path.substring(0, path.length() - 2));
+        }
         path = path.replace("\\$", "+");
         String[] $s = path.split("\\\\$");
         Class<?> targetClass = null;

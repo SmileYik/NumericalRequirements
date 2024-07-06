@@ -2,16 +2,15 @@ package org.eu.smileyik.numericalrequirements.reflect;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 
 public class ReflectMethod <Ret> implements MySimpleReflect {
     // org.eu.smileyik.numericalrequirements.reflect.ReflectMethod#hello(java.lang.String)
-
+    private final String fullPath;
     private final Method method;
     private final String methodName;
 
-    public ReflectMethod(Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchMethodException {
+    public ReflectMethod(String fullPath, Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchMethodException {
+        this.fullPath = fullPath;
         String[] $s = path.split("#");
         if (clazz == null) {
             clazz = Class.forName($s[0].replace("+", "$"));
@@ -61,10 +60,12 @@ public class ReflectMethod <Ret> implements MySimpleReflect {
     public Ret execute(Object instance, Object ... args) {
         try {
             return (Ret) method.invoke(instance, args);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(fullPath, e);
         }
+    }
+
+    public String getFullPath() {
+        return fullPath;
     }
 }

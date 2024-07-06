@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class ReflectConstructor implements MySimpleReflect {
+    private final String fullPath;
     private final Constructor<?> constructor;
     private final String name;
 
@@ -16,7 +17,8 @@ public class ReflectConstructor implements MySimpleReflect {
      * @throws NoSuchMethodException
      */
     // "a.b.c.D$DA$DAA<constructor name>(fields...)"
-    public ReflectConstructor(Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchMethodException {
+    public ReflectConstructor(String fullPath, Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchMethodException {
+        this.fullPath = fullPath;
         String className = path.substring(0, path.indexOf('(')).strip().replace("+", "$");
         if (className.contains("<")) {
             name = className.substring(className.indexOf("<") + 1, className.indexOf(">"));
@@ -55,12 +57,8 @@ public class ReflectConstructor implements MySimpleReflect {
     public Object execute(Object ... args) {
         try {
             return constructor.newInstance(args);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            throw new RuntimeException(fullPath, e);
         }
     }
 
@@ -72,5 +70,9 @@ public class ReflectConstructor implements MySimpleReflect {
     @Override
     public String getOriginName() {
         return name;
+    }
+
+    public String getFullPath() {
+        return fullPath;
     }
 }
