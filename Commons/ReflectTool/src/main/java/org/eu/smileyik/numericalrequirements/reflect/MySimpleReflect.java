@@ -114,6 +114,8 @@ public interface MySimpleReflect {
     static Class<?> forName(String className) throws ClassNotFoundException {
         if (className.startsWith("[")) {
             className += ";";
+        } else if (className.endsWith("[]")) {
+            className = String.format("[L%s;", className.substring(0, className.length() - 2));
         }
         switch (className) {
             case "boolean": return boolean.class;

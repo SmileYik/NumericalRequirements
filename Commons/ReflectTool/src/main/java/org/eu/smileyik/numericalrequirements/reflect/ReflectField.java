@@ -19,7 +19,7 @@ public class ReflectField implements MySimpleReflect {
         String fieldName = $s[1].replace("+", "$");
         String rename = fieldName;
         if (fieldName.contains("<")) {
-            rename = fieldName.substring(fieldName.indexOf("<" + 1, fieldName.indexOf(">")), fieldName.indexOf(">"));
+            rename = fieldName.substring(fieldName.indexOf("<") + 1, fieldName.indexOf(">"));
             fieldName = fieldName.substring(0, fieldName.indexOf("<"));
         }
 
