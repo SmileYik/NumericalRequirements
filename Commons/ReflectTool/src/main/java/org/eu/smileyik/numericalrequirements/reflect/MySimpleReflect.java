@@ -14,15 +14,16 @@ public interface MySimpleReflect {
     }
 
     static <T extends MySimpleReflect> T get(String path, boolean forceAccess) throws ClassNotFoundException, NoSuchFieldException, NoSuchMethodException {
+        path = path.replace(" ", "");
         DebugLogger.debug("开始处理单个反射路径. path = %s, forceAccess = %s", path, forceAccess);
         path = path.replace("\\$", "+");
         String[] $s = path.split("\\\\$");
         String classAndOther;
         Class<?> targetClass = null;
         if ($s.length != 1) {
-            targetClass = Class.forName($s[0].strip().replace("+", "$"));
+            targetClass = Class.forName($s[0].replace("+", "$"));
             for (int i = 1; i < $s.length - 1; i++) {
-                targetClass = getClassInClass(targetClass, $s[i].strip().replace("+", "$"));
+                targetClass = getClassInClass(targetClass, $s[i].replace("+", "$"));
             }
             classAndOther = $s[$s.length - 1];
         } else {
@@ -111,6 +112,9 @@ public interface MySimpleReflect {
     }
 
     static Class<?> forName(String className) throws ClassNotFoundException {
+        if (className.startsWith("[")) {
+            className += ";";
+        }
         switch (className) {
             case "boolean": return boolean.class;
             case "byte": return byte.class;
@@ -158,4 +162,6 @@ public interface MySimpleReflect {
     }
 
     String getName();
+
+    String getOriginName();
 }

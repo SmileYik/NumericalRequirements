@@ -53,4 +53,9 @@ public class ReflectClass implements MySimpleReflect {
     public String getName() {
         return null;
     }
+
+    @Override
+    public String getOriginName() {
+        return getName();
+    }
 }

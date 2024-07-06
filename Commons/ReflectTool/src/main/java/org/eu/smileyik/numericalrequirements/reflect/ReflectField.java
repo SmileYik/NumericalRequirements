@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 public class ReflectField implements MySimpleReflect {
 
     private final Field field;
+    private final String fieldName;
 
     public ReflectField(Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchFieldException {
         String[] $s = path.split("@");
@@ -13,7 +14,17 @@ public class ReflectField implements MySimpleReflect {
         } else {
             clazz = MySimpleReflect.getClassInClass(clazz, $s[0].replace("+", "$"));
         }
-        field = clazz.getDeclaredField($s[1].strip().replace("+", "$"));
+        assert clazz != null;
+
+        String fieldName = $s[1].replace("+", "$");
+        String rename = fieldName;
+        if (fieldName.contains("<")) {
+            rename = fieldName.substring(fieldName.indexOf("<" + 1, fieldName.indexOf(">")), fieldName.indexOf(">"));
+            fieldName = fieldName.substring(0, fieldName.indexOf("<"));
+        }
+
+        this.fieldName = rename;
+        field = clazz.getDeclaredField(fieldName);
         if (forceAccess) {
             field.setAccessible(true);
         }
@@ -24,6 +35,11 @@ public class ReflectField implements MySimpleReflect {
     }
 
     public String getName() {
+        return fieldName;
+    }
+
+    @Override
+    public String getOriginName() {
         return field.getName();
     }
 

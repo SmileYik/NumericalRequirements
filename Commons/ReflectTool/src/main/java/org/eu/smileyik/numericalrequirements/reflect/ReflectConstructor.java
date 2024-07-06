@@ -68,4 +68,9 @@ public class ReflectConstructor implements MySimpleReflect {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String getOriginName() {
+        return name;
+    }
 }
