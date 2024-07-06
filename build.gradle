@@ -18,25 +18,7 @@ def pluginVersions() {
 }
 
 repositories {
-
-//    allprojects {
-//        repositories {
-//            // spigotmc
-//            maven {
-//                url 'https://hub.spigotmc.org/nexus/content/groups/public/'
-//            }
-//            // placeholder api
-//            maven {
-//                url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
-//            }
-//            flatDir {
-//                dirs "${rootProject.projectDir}/libs/"
-//            }
-//        }
-//    }
-
     mavenCentral()
-
 }
 
 dependencies {
