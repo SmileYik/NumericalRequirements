@@ -3,6 +3,7 @@ package org.eu.smileyik.numericalrequirements.core;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -99,16 +100,25 @@ public class I18N {
     public static void info(String key, Object ... objs) {
         assert self != null;
         self.plugin.getLogger().info(tr(String.format("log.info.%s", key), objs));
+        DebugLogger.debug(e -> {
+            DebugLogger.debug(DebugLogger.getStackTraceElement(5), tr(String.format("log.info.%s", key), objs));
+        });
     }
 
     public static void warning(String key, Object ... objs) {
         assert self != null;
         self.plugin.getLogger().warning(tr(String.format("log.warning.%s", key), objs));
+        DebugLogger.debug(e -> {
+            DebugLogger.debug(DebugLogger.getStackTraceElement(5), tr(String.format("log.warning.%s", key), objs));
+        });
     }
 
     public static void severe(String key, Object ... objs) {
         assert self != null;
         self.plugin.getLogger().severe(tr(String.format("log.severe.%s", key), objs));
+        DebugLogger.debug(e -> {
+            DebugLogger.debug(DebugLogger.getStackTraceElement(5), tr(String.format("log.severe.%s", key), objs));
+        });
     }
 
     protected static void clear() {

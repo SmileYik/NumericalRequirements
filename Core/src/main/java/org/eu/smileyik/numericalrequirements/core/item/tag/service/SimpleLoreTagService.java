@@ -20,12 +20,12 @@ public class SimpleLoreTagService implements LoreTagService {
     }
 
     @Override
-    public synchronized void registerLoreTagType(LoreTagType<?> type) {
+    public void registerLoreTagType(LoreTagType<?> type) {
         tagTypeMap.put(type.getTypeName(), type);
     }
 
     @Override
-    public synchronized LoreTagType<?> getLoreTagType(String typeName) {
+    public LoreTagType<?> getLoreTagType(String typeName) {
         return tagTypeMap.get(typeName);
     }
 

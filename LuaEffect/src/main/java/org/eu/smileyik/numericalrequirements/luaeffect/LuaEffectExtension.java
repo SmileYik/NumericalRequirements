@@ -80,7 +80,7 @@ public class LuaEffectExtension extends Extension {
         }
     }
 
-    private synchronized void registerScript(LuaEffect luaEffect) {
+    private void registerScript(LuaEffect luaEffect) {
         if (luaEffect == null) return;
         luaEffectList.add(luaEffect);
         getApi().getEffectService().registerEffect(luaEffect);
@@ -103,7 +103,7 @@ public class LuaEffectExtension extends Extension {
         }
     }
 
-    private synchronized void unregisterScript(LuaEffect luaEffect) {
+    private void unregisterScript(LuaEffect luaEffect) {
         getApi().getEffectService().unregisterEffect(luaEffect);
         luaEffectList.remove(luaEffect);
         luaEffect.getLuaConfig().close();
@@ -127,7 +127,7 @@ public class LuaEffectExtension extends Extension {
         registerScript(luaEffect);
     }
 
-    public synchronized boolean isLoaded(File file) {
+    public boolean isLoaded(File file) {
         for (LuaEffect luaEffect : luaEffectList) {
             if (luaEffect.getFile().equals(file)) {
                 return true;
@@ -136,7 +136,7 @@ public class LuaEffectExtension extends Extension {
         return false;
     }
 
-    public synchronized LuaEffect getLuaEffectById(String id) {
+    public LuaEffect getLuaEffectById(String id) {
         for (LuaEffect luaEffect : luaEffectList) {
             if (luaEffect.getId().equalsIgnoreCase(id)) {
                 return luaEffect;
@@ -145,7 +145,7 @@ public class LuaEffectExtension extends Extension {
         return null;
     }
 
-    public synchronized List<LuaEffect> getLuaEffectList() {
+    public List<LuaEffect> getLuaEffectList() {
         return Collections.unmodifiableList(luaEffectList);
     }
 

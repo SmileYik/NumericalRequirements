@@ -8,15 +8,16 @@ import org.eu.smileyik.numericalrequirements.core.util.SingleOperator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalPlayer {
     private final Player player;
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
+    private final ReentrantReadWriteLock updateLock = new ReentrantReadWriteLock(true);
     private final ConcurrentHashMap<PlayerDataKey, List<PlayerDataValue>> registeredMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<PlayerDataKey, List<PlayerDataValueUpdatable>> updatableMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Class<? extends PlayerDataKey>, List<PlayerDataKey>> basedClassInstanceListMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<PlayerDataKey, Class<? extends PlayerDataKey>> instanceBaseClassMap = new ConcurrentHashMap<>();
-    private final Object lock = new Object();
-
 
     public NumericalPlayerImpl(Player player) {
         this.player = player;
@@ -24,32 +25,39 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
 
     @Override
     protected boolean doUpdate(double second) {
-        synchronized (lock) {
-            if (player.isDead()) return true;
-            List<Pair<PlayerDataKey, PlayerDataValueUpdatable>> timeoutList = new ArrayList<>();
-            updatableMap.forEach(updatableMap.mappingCount(), (key, value) -> {
+        if (player.isDead()) return true;
+        List<Pair<PlayerDataKey, PlayerDataValueUpdatable>> timeoutList = new ArrayList<>();
+
+        updatableMap.forEach(updatableMap.mappingCount(), (key, value) -> {
+            lock.writeLock().lock();
+            updateLock.writeLock().lock();
+            try {
                 if (key.isDisable()) return;
                 value.forEach(it -> {
-                    try {
-                        if (it.update()) {
-                            key.handlePlayer(this, it);
-                        }
-                        if (it.isTimeout()) {
-                            timeoutList.add(Pair.newUnchangablePair(key, it));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    if (it.update()) key.handlePlayer(this, it);
+                    if (it.isTimeout()) timeoutList.add(Pair.newUnchangablePair(key, it));
                 });
-            });
-            timeoutList.forEach(it -> {
-                it.getFirst().onUnregisterFromPlayerData(this, it.getSecond());
+            } finally {
+                lock.writeLock().unlock();
+                updateLock.writeLock().unlock();
+            }
+        });
+
+        timeoutList.forEach(it -> {
+            lock.writeLock().lock();
+            updateLock.writeLock().lock();
+            try {
                 if (it.getSecond().canDelete()) {
+                    it.getFirst().onUnregisterFromPlayerData(this, it.getSecond());
                     updatableMap.getOrDefault(it.getFirst(), Collections.emptyList()).remove(it.getSecond());
                     registeredMap.getOrDefault(it.getFirst(), Collections.emptyList()).remove(it.getSecond());
                 }
-            });
-        }
+            } finally {
+                lock.writeLock().unlock();
+                updateLock.writeLock().unlock();
+            }
+        });
+
         return true;
     }
 
@@ -71,7 +79,10 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
 
     public void registerData(Class<? extends PlayerDataKey> basedClass,
                                           PlayerDataKey key, PlayerDataValue value, boolean first) {
-        synchronized (lock) {
+        boolean flag = updateLock.isWriteLockedByCurrentThread();
+        if (!flag) lock.writeLock().lock();
+        try {
+            if (value == null) return;
             List<PlayerDataValue> playerDataValues = registeredMap.putIfAbsent(key, new ArrayList<>());
             registeredMap.get(key).add(value);
             if (playerDataValues == null) {
@@ -90,22 +101,30 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
             if (first) {
                 key.onRegisterToPlayerData(this, value);
             }
+        } finally {
+            if (!flag) lock.writeLock().unlock();
         }
     }
 
     @Override
     public void unregisterData(PlayerDataKey key) {
-        synchronized (lock) {
+        boolean flag = updateLock.isWriteLockedByCurrentThread();
+        if (!flag) lock.writeLock().lock();
+        try {
             Class<? extends PlayerDataKey> basedClass = instanceBaseClassMap.remove(key);
             basedClassInstanceListMap.get(basedClass).remove(key);
             registeredMap.remove(key).forEach(it -> key.onUnregisterFromPlayerData(this, it));
             updatableMap.remove(key);
+        } finally {
+            if (!flag) lock.writeLock().unlock();
         }
     }
 
     @Override
     public void unregisterData(PlayerDataKey key, SingleOperator<Boolean, PlayerDataValue> operator) {
-        synchronized (lock) {
+        boolean flag = updateLock.isWriteLockedByCurrentThread();
+        if (!flag) lock.writeLock().lock();
+        try {
             for (PlayerDataValue playerDataValue : registeredMap.getOrDefault(key, Collections.emptyList())) {
                 if (operator.apply(playerDataValue)) {
                     if (playerDataValue instanceof PlayerDataValueUpdatable) {
@@ -125,25 +144,41 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
                     return;
                 }
             }
+        } finally {
+            if (!flag) lock.writeLock().unlock();
         }
     }
 
     @Override
     public List<PlayerDataValue> getRegisteredValues(PlayerDataKey key) {
-        return Collections.unmodifiableList(registeredMap.get(key));
+        lock.readLock().lock();
+        try {
+            return Collections.unmodifiableList(registeredMap.get(key));
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     @Override
     public <T extends PlayerDataValue> List<T> getRegisteredValues(PlayerDataKey key, Class<T> tClass) {
-        List<T> ts = (List<T>) (registeredMap.get(key));
-        return ts == null ? null : Collections.unmodifiableList(ts);
+        lock.readLock().lock();
+        try {
+            List<T> ts = (List<T>) (registeredMap.get(key));
+            return ts == null ? null : Collections.unmodifiableList(ts);
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     @Override
     public void removeDisabledKey() {
-        synchronized (lock) {
+        boolean flag = updateLock.isWriteLockedByCurrentThread();
+        if (!flag) lock.writeLock().lock();
+        try {
             Map<PlayerDataKey, List<PlayerDataValue>> disabledDataMap = getDisabledDataMap();
             disabledDataMap.keySet().forEach(this::unregisterData);
+        } finally {
+            if (!flag) lock.writeLock().unlock();
         }
     }
 
@@ -184,7 +219,8 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
 
     @Override
     public void store(ConfigurationSection section) {
-        synchronized (lock) {
+        lock.readLock().lock();
+        try {
             registeredMap.forEach((key, value) -> {
                 if (key.isDisable()) return;
                 String id = key.getId();
@@ -196,6 +232,8 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
                     idx++;
                 }
             });
+        } finally {
+            lock.readLock().unlock();
         }
     }
 

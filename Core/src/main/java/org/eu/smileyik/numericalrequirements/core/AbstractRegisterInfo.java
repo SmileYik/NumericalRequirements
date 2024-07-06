@@ -42,7 +42,7 @@ public abstract class AbstractRegisterInfo implements RegisterInfo {
     }
 
     @Override
-    public final synchronized void onRegister() {
+    public final void onRegister() {
         disable = false;
         register();
     }
@@ -50,7 +50,7 @@ public abstract class AbstractRegisterInfo implements RegisterInfo {
     protected abstract void register();
 
     @Override
-    public final synchronized void onUnregister() {
+    public final void onUnregister() {
         disable = true;
         unregister();
     }

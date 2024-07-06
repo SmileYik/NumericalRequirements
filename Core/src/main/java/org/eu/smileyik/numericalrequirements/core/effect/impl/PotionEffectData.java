@@ -15,37 +15,37 @@ public class PotionEffectData extends AbstractEffectData {
     private PotionEffect potionEffect;
     private int times = 0;
 
-    public synchronized int getAmplifier() {
+    public int getAmplifier() {
         return amplifier;
     }
 
-    public synchronized void setAmplifier(int amplifier) {
+    public void setAmplifier(int amplifier) {
         this.amplifier = amplifier;
     }
 
-    public synchronized String getPotionType() {
+    public String getPotionType() {
         return potionType;
     }
 
-    public synchronized void setPotionType(String potionType) {
+    public void setPotionType(String potionType) {
         this.potionType = potionType;
     }
 
     @Override
-    public synchronized void store(ConfigurationSection section) {
+    public void store(ConfigurationSection section) {
         super.store(section);
         section.set("potion-type", potionType);
         section.set("amplifier", amplifier);
     }
 
     @Override
-    public synchronized void load(ConfigurationSection section) {
+    public void load(ConfigurationSection section) {
         super.load(section);
         potionType = section.getString("potion-type");
         amplifier = section.getInt("amplifier");
     }
 
-    public synchronized PotionEffect getPotionEffect() {
+    public PotionEffect getPotionEffect() {
         if (potionEffect == null) {
             if (potionType != null) {
                 PotionEffectType type = PotionEffectType.getByName(potionType);

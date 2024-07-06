@@ -21,8 +21,10 @@ import org.eu.smileyik.numericalrequirements.core.item.ItemServiceImpl;
 import org.eu.smileyik.numericalrequirements.core.player.service.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.player.service.impl.YamlPlayerService;
 import org.eu.smileyik.numericalrequirements.core.util.Metrics;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InvalidClassException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
             synchronized (this) {
                 loadConfig();
                 loadAvailableWorlds();
+                setupDebugTools();
                 new I18N(this, getConfig().getString("language", null));
                 playerService = new YamlPlayerService(this);
                 effectService = new SimpleEffectService(this);
@@ -118,6 +121,11 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
             itemService = null;
             playerService = null;
             metrics = null;
+            try {
+                DebugLogger.getInstance().close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -210,6 +218,16 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
             aClass.getDeclaredMethod("start").invoke(null);
         } catch (Exception ignore) {
 
+        }
+    }
+
+    private void setupDebugTools() {
+        if (getConfig().getBoolean("debug", false)) {
+            try {
+                new DebugLogger(getLogger(), new File(getDataFolder(), "debug.log"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

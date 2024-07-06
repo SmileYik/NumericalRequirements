@@ -29,4 +29,6 @@ findProject(':Core:NbtItem:craftbukkit_1_21')?.name = 'craftbukkit_1_21'
 include 'Commons'
 include 'Commons:ReflectTool'
 findProject(':Commons:ReflectTool')?.name = 'ReflectTool'
+include 'Commons:DebugTool'
+findProject(':Commons:DebugTool')?.name = 'DebugTool'
 

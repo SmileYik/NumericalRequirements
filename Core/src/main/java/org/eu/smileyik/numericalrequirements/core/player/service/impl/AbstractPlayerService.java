@@ -45,7 +45,7 @@ public abstract class AbstractPlayerService implements PlayerService {
     }
 
     @Override
-    public NumericalPlayer getNumericalPlayer(Player player) {
+    public synchronized NumericalPlayer getNumericalPlayer(Player player) {
         return players.get(player);
     }
 
@@ -97,7 +97,7 @@ public abstract class AbstractPlayerService implements PlayerService {
     @Override
     public void removeDisabledKey() {
         savePlayerData();
-        synchronized (this) {
+        {
             players.forEach((k, v) -> {
                 v.removeDisabledKey();
             });
@@ -107,7 +107,7 @@ public abstract class AbstractPlayerService implements PlayerService {
     @Override
     public void shutdown() {
         savePlayerData();
-        synchronized (this) {
+        {
             players.clear();
             stop();
             // executorService.shutdownNow();

@@ -7,27 +7,27 @@ public class DoubleEffectData extends AbstractEffectData {
     private double data;
     private boolean recovered = false;
 
-    public synchronized double getData() {
+    public double getData() {
         return data;
     }
 
-    public synchronized void setData(double data) {
+    public void setData(double data) {
         this.data = data;
     }
 
-    public synchronized void recovery() {
+    public void recovery() {
         recovered = true;
     }
 
     @Override
-    public synchronized void load(ConfigurationSection section) {
+    public void load(ConfigurationSection section) {
         super.load(section);
         data = section.getDouble("data");
         recovered = section.getBoolean("recovered", false);
     }
 
     @Override
-    public synchronized void store(ConfigurationSection section) {
+    public void store(ConfigurationSection section) {
         super.store(section);
         section.set("data", data);
         section.set("recovered", recovered);

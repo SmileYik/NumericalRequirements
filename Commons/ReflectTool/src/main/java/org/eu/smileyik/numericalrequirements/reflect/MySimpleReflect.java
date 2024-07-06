@@ -1,5 +1,9 @@
 package org.eu.smileyik.numericalrequirements.reflect;
 
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
+
+import java.util.*;
+
 public interface MySimpleReflect {
     static <T extends MySimpleReflect> T get(String path) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
         return get(path, false);
@@ -10,6 +14,7 @@ public interface MySimpleReflect {
     }
 
     static <T extends MySimpleReflect> T get(String path, boolean forceAccess) throws ClassNotFoundException, NoSuchFieldException, NoSuchMethodException {
+        DebugLogger.debug("开始处理单个反射路径. path = %s, forceAccess = %s", path, forceAccess);
         path = path.replace("\\$", "+");
         String[] $s = path.split("\\\\$");
         String classAndOther;
@@ -31,6 +36,78 @@ public interface MySimpleReflect {
         } else {
             return (T) new ReflectConstructor(targetClass, classAndOther, forceAccess);
         }
+    }
+
+    static ReflectClass getReflectClass(String path) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
+        return new ReflectClass(getAll(path, false));
+    }
+
+    static ReflectClass getReflectClass(String path, boolean forceAccess) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
+        return new ReflectClass(getAll(path, forceAccess));
+    }
+
+    static <T> List<T> getAll(String path) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
+        return getAll(path, false);
+    }
+
+    static <T> List<T> getAllForce(String path) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
+        return getAll(path, true);
+    }
+
+    static <T> List<T> getAll(String path, boolean forceAccess) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
+        path = path.replace(" ", "").replace("\n", "");
+        DebugLogger.debug("开始处理多个反射路径. path = %s, forceAccess = %s", path, forceAccess);
+        if (!path.endsWith("}")) {
+            DebugLogger.debug("该反射路径不为集合： %s", path);
+            return List.of(get(path, forceAccess));
+        }
+
+        String prefix = path.substring(0, path.indexOf("{"));
+        path = path.substring(path.indexOf("{") + 1, path.length() - 1);
+        DebugLogger.debug("该反射路径除去前缀后的集合为： {%s}", path);
+
+        List<String> elements = getElements(path);
+        DebugLogger.debug("分析出集合元素为： %s", elements);
+
+        List<T> list = new LinkedList<>();
+        for (String s : elements) {
+            if (!s.isEmpty()) {
+                list.addAll(getAll(prefix + s, forceAccess));
+            }
+
+        }
+        return list;
+    }
+
+    private static List<String> getElements(String collection) {
+        List<String> elements = null;
+        if (collection.contains("}")) {
+            int left = 0;
+            int deep = 0;
+            char[] charArray = collection.toCharArray();
+            elements = new ArrayList<>();
+            for (int i = 0; i < charArray.length; i++) {
+                if (charArray[i] == '{') {
+                    ++deep;
+                } else if (charArray[i] == '}') {
+                    --deep;
+                    if (deep == 0) {
+                        String element = collection.substring(left, i + 1);
+                        left = i + 1;
+                        elements.add(element);
+                    }
+                } else if (charArray[i] == ';' && deep == 0) {
+                    String element = collection.substring(left, i);
+                    left = i + 1;
+                    elements.add(element);
+                }
+            }
+        }
+
+        if (elements == null) {
+            elements = Arrays.asList(collection.split(";"));
+        }
+        return elements;
     }
 
     static Class<?> forName(String className) throws ClassNotFoundException {
@@ -79,4 +156,6 @@ public interface MySimpleReflect {
         }
         return null;
     }
+
+    String getName();
 }

@@ -17,7 +17,7 @@ public class ElementBoundedEffect extends AbstractEffect {
     private static final class ElementBoundedEffectData extends DoubleEffectData {
         private double upperData;
 
-        public synchronized void setUpperData(double upperData) {
+        public void setUpperData(double upperData) {
             this.upperData = upperData;
         }
 
@@ -25,7 +25,7 @@ public class ElementBoundedEffect extends AbstractEffect {
             setData(lowerData);
         }
 
-        public synchronized double getUpperData() {
+        public double getUpperData() {
             return upperData;
         }
 

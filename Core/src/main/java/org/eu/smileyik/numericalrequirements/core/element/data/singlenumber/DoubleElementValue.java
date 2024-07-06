@@ -15,22 +15,22 @@ public abstract class DoubleElementValue extends AbstractUpdatable implements Si
     private double previousValue;
 
     @Override
-    public synchronized double getRate() {
+    public double getRate() {
         return rate;
     }
 
     @Override
-    public synchronized double setRate(double rate) {
+    public double setRate(double rate) {
         return this.rate = rate;
     }
 
     @Override
-    public synchronized double calculateRateAndGet(double num, DoubleBinaryOperator operator) {
+    public double calculateRateAndGet(double num, DoubleBinaryOperator operator) {
         return rate = operator.applyAsDouble(rate, num);
     }
 
     @Override
-    public synchronized double getAndCalculateRate(double num, DoubleBinaryOperator operator) {
+    public double getAndCalculateRate(double num, DoubleBinaryOperator operator) {
         double rate = this.rate;
         this.rate = operator.applyAsDouble(rate, num);
         return rate;
@@ -41,7 +41,7 @@ public abstract class DoubleElementValue extends AbstractUpdatable implements Si
      * @param naturalDepletionValue
      */
     @Override
-    public synchronized void setNaturalDepletionValue(double naturalDepletionValue) {
+    public void setNaturalDepletionValue(double naturalDepletionValue) {
         this.naturalDepletionValue = naturalDepletionValue;
     }
 
@@ -55,28 +55,28 @@ public abstract class DoubleElementValue extends AbstractUpdatable implements Si
     }
 
     @Override
-    public synchronized double calculateNaturalDepletionAndGet(double other, BinaryOperator<Double> operator) {
+    public double calculateNaturalDepletionAndGet(double other, BinaryOperator<Double> operator) {
         naturalDepletionValue = operator.apply(naturalDepletionValue, other);
         return naturalDepletionValue;
     }
 
     @Override
-    public synchronized Double getValue() {
+    public Double getValue() {
         return value;
     }
 
     @Override
-    public synchronized Double getPreviousValue() {
+    public Double getPreviousValue() {
         return previousValue;
     }
 
     @Override
-    public synchronized Pair<Double, Double> getValues() {
+    public Pair<Double, Double> getValues() {
         return Pair.newUnchangablePair(previousValue, value);
     }
 
     @Override
-    public synchronized Double setValue(Double value) {
+    public Double setValue(Double value) {
         double ret = previousValue;
         previousValue = this.value;
         this.value = value;
@@ -84,21 +84,21 @@ public abstract class DoubleElementValue extends AbstractUpdatable implements Si
     }
 
     @Override
-    public synchronized Double calculateAndGet(Double second, BiFunction<Double, Double, Double> operator) {
+    public Double calculateAndGet(Double second, BiFunction<Double, Double, Double> operator) {
         previousValue = this.value;
         this.value = operator.apply(this.value, second);
         return this.value;
     }
 
     @Override
-    public synchronized Double getAndCalculate(Double second, BiFunction<Double, Double, Double> operator) {
+    public Double getAndCalculate(Double second, BiFunction<Double, Double, Double> operator) {
         previousValue = this.value;
         this.value = operator.apply(this.value, second);
         return previousValue;
     }
 
     @Override
-    public synchronized void store(ConfigurationSection section) {
+    public void store(ConfigurationSection section) {
         section.set("rate", rate);
         section.set("value", value);
         section.set("previous-value", previousValue);
@@ -106,7 +106,7 @@ public abstract class DoubleElementValue extends AbstractUpdatable implements Si
     }
 
     @Override
-    public synchronized void load(ConfigurationSection section) {
+    public void load(ConfigurationSection section) {
         rate = section.getDouble("rate");
         value = section.getDouble("value");
         previousValue = section.getDouble("previous-value");

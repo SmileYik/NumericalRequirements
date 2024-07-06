@@ -69,18 +69,18 @@ public class ChatMessageEffect extends AbstractEffect {
         }
 
         @Override
-        public synchronized boolean isTimeout() {
+        public boolean isTimeout() {
             return true;
         }
 
         @Override
-        public synchronized void load(ConfigurationSection section) {
+        public void load(ConfigurationSection section) {
             super.load(section);
             message = section.getString("message");
         }
 
         @Override
-        public synchronized void store(ConfigurationSection section) {
+        public void store(ConfigurationSection section) {
             super.store(section);
             section.set("message", message);
         }

@@ -18,7 +18,7 @@ public class LuaEffectData extends AbstractEffectData {
         this.entity = entity;
     }
 
-    public synchronized void setLuaData(Object luaData) {
+    public void setLuaData(Object luaData) {
         this.luaData = luaData;
     }
 
@@ -47,7 +47,7 @@ public class LuaEffectData extends AbstractEffectData {
     }
 
     @Override
-    public synchronized void store(ConfigurationSection section) {
+    public void store(ConfigurationSection section) {
         super.store(section);
         if (entity.dataStore != null) {
             luaConfig.callClosureReturnObject(entity.dataStore, luaData, section);
@@ -55,7 +55,7 @@ public class LuaEffectData extends AbstractEffectData {
     }
 
     @Override
-    public synchronized void load(ConfigurationSection section) {
+    public void load(ConfigurationSection section) {
         super.load(section);
         if (entity.dataLoad != null) {
             luaConfig.callClosureReturnObject(entity.dataLoad, luaData, section);
@@ -63,7 +63,7 @@ public class LuaEffectData extends AbstractEffectData {
     }
 
     @Override
-    public synchronized void setDuration(double duration) {
+    public void setDuration(double duration) {
         super.setDuration(duration);
     }
 

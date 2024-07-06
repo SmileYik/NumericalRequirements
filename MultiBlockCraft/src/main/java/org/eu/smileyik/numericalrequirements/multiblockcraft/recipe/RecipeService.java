@@ -13,16 +13,16 @@ public abstract class RecipeService {
         this.extension = extension;
     }
 
-    public synchronized void addRecipe(Recipe recipe) {
+    public void addRecipe(Recipe recipe) {
         idRecipeMap.put(recipe.getName(), recipe);
     }
 
-    public synchronized void createRecipe(Recipe recipe) {
+    public void createRecipe(Recipe recipe) {
         idRecipeMap.put(recipe.getName(), recipe);
         storeRecipe(recipe);
     }
 
-    public synchronized Recipe getRecipe(String id) {
+    public Recipe getRecipe(String id) {
         return idRecipeMap.get(id);
     }
 

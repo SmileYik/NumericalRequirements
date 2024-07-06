@@ -29,12 +29,12 @@ public class SimpleEffectService implements Listener, EffectService {
     }
 
     @Override
-    public synchronized Effect findEffectById(String id) {
+    public Effect findEffectById(String id) {
         return idEffectMap.get(id.toLowerCase());
     }
 
     @Override
-    public synchronized List<Effect> getRegisteredEffects() {
+    public List<Effect> getRegisteredEffects() {
         return Collections.unmodifiableList(
                 idEffectMap.values()
                         .stream()
@@ -44,7 +44,7 @@ public class SimpleEffectService implements Listener, EffectService {
     }
 
     @Override
-    public synchronized void registerEffect(Effect effect) {
+    public void registerEffect(Effect effect) {
         String id = effect.getId().toLowerCase();
         if (idEffectMap.containsKey(id)) {
             return;
@@ -54,7 +54,7 @@ public class SimpleEffectService implements Listener, EffectService {
     }
 
     @Override
-    public synchronized void unregisterEffect(Effect effect) {
+    public void unregisterEffect(Effect effect) {
         Effect removed = idEffectMap.remove(effect.getId().toLowerCase());
         effect.onUnregister();
         if (removed != null) {
@@ -63,12 +63,12 @@ public class SimpleEffectService implements Listener, EffectService {
     }
 
     @Override
-    public synchronized Collection<String> getEffectBundleIds() {
+    public Collection<String> getEffectBundleIds() {
         return effectBundleConfig.getKeys(false);
     }
 
     @Override
-    public synchronized ConfigurationSection getBundleConfigById(String id) {
+    public ConfigurationSection getBundleConfigById(String id) {
         if (effectBundleConfig == null || !effectBundleConfig.isConfigurationSection(id)) {
             return null;
         }
@@ -76,7 +76,7 @@ public class SimpleEffectService implements Listener, EffectService {
     }
 
     @Override
-    public synchronized void addBundleConfigSection(ConfigurationSection section) {
+    public void addBundleConfigSection(ConfigurationSection section) {
         for (String key : section.getKeys(false)) {
             effectBundleConfig.set(key, section.getConfigurationSection(key));
         }
@@ -88,8 +88,8 @@ public class SimpleEffectService implements Listener, EffectService {
     }
 
     @EventHandler
-    public synchronized void onLoadPlayerData(NumericalPlayerLoadEvent event) {
-        synchronized (this) {
+    public void onLoadPlayerData(NumericalPlayerLoadEvent event) {
+        {
             idEffectMap.values().forEach(effect -> {
                 EffectPlayer.load(event.getPlayer(), event.getSection(), effect);
             });

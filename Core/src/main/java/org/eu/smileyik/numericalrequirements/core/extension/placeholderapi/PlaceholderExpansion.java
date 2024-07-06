@@ -35,10 +35,10 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
         callbackList.clear();
     }
 
-    protected synchronized void addCallback(PlaceholderRequestCallback callback) {
+    protected void addCallback(PlaceholderRequestCallback callback) {
         callbackList.add(callback);
     }
-    protected synchronized void removeCallback(PlaceholderRequestCallback callback) {
+    protected void removeCallback(PlaceholderRequestCallback callback) {
         callbackList.remove(callback);
     }
     @Override
@@ -48,7 +48,7 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
         if (numericalPlayer == null) {
             return null;
         }
-        synchronized (this) {
+        {
             for (PlaceholderRequestCallback callback : callbackList) {
                 String s = callback.onRequest(numericalPlayer, params);
                 if (s != null) {

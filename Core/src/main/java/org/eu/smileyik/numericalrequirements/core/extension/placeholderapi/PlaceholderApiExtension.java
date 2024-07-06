@@ -17,7 +17,7 @@ public class PlaceholderApiExtension extends Extension {
 
     }
 
-    public synchronized void addPlaceholder(PlaceholderRequestCallback callback) {
+    public void addPlaceholder(PlaceholderRequestCallback callback) {
         if (placeholder != null) {
             placeholder.addCallback(callback);
             return;
@@ -32,7 +32,7 @@ public class PlaceholderApiExtension extends Extension {
         }
     }
 
-    public synchronized void removePlaceholder(PlaceholderRequestCallback callback) {
+    public void removePlaceholder(PlaceholderRequestCallback callback) {
         if (placeholder != null) {
             placeholder.removeCallback(callback);
         }

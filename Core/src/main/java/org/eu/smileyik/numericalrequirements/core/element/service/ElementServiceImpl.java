@@ -20,7 +20,7 @@ public class ElementServiceImpl implements ElementService, Listener {
     }
 
     @Override
-    public synchronized void registerElement(Element element) {
+    public void registerElement(Element element) {
         Element elementById = findElementById(element.getId());
         if (elementById != null) {
             throw new RuntimeException("Already registered a element named " + elementById.getId());
@@ -31,7 +31,7 @@ public class ElementServiceImpl implements ElementService, Listener {
     }
 
     @Override
-    public synchronized void unregisterElement(Element element) {
+    public void unregisterElement(Element element) {
         Element elementById = findElementById(element.getId());
         if (elementById == null) {
             return;
@@ -42,7 +42,7 @@ public class ElementServiceImpl implements ElementService, Listener {
     }
 
     @Override
-    public synchronized Element findElementById(String id) {
+    public Element findElementById(String id) {
         for (Element registeredElement : registeredElements) {
             if (id.equals(registeredElement.getId())) {
                 return registeredElement;
@@ -53,7 +53,7 @@ public class ElementServiceImpl implements ElementService, Listener {
 
     @EventHandler
     public void onLoadPlayerData(NumericalPlayerLoadEvent event) {
-        synchronized (this) {
+        {
             registeredElements.forEach(element -> {
                 ElementPlayer.load(event.getPlayer(), event.getSection(), element, element.newElementData());
             });
@@ -61,7 +61,7 @@ public class ElementServiceImpl implements ElementService, Listener {
     }
 
     @Override
-    public synchronized void shutdown() {
+    public void shutdown() {
         registeredElements.clear();
     }
 }

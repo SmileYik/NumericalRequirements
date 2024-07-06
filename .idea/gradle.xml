@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Commons" />
+            <option value="$PROJECT_DIR$/Commons/DebugTool" />
             <option value="$PROJECT_DIR$/Commons/ReflectTool" />
             <option value="$PROJECT_DIR$/Core" />
             <option value="$PROJECT_DIR$/Core/Command" />

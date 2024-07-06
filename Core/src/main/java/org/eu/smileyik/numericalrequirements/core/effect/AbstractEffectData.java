@@ -8,22 +8,22 @@ public class AbstractEffectData extends AbstractUpdatable implements EffectData,
     private double duration;
 
     @Override
-    public synchronized double getDuration() {
+    public double getDuration() {
         return duration;
     }
 
     @Override
-    public synchronized void setDuration(double duration) {
+    public void setDuration(double duration) {
         this.duration = duration;
     }
 
     @Override
-    public synchronized void store(ConfigurationSection section) {
+    public void store(ConfigurationSection section) {
         section.set("duration", duration);
     }
 
     @Override
-    public synchronized void load(ConfigurationSection section) {
+    public void load(ConfigurationSection section) {
         duration = section.getDouble("duration");
     }
 
@@ -34,7 +34,7 @@ public class AbstractEffectData extends AbstractUpdatable implements EffectData,
     }
 
     @Override
-    public synchronized boolean isTimeout() {
+    public boolean isTimeout() {
         return duration <= 0;
     }
 

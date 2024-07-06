@@ -16,39 +16,39 @@ public abstract class DoubleElementBar extends DoubleElementValue implements Bou
     }
 
     @Override
-    public synchronized Double getLowerBound() {
+    public Double getLowerBound() {
         return bounds.getFirst();
     }
 
     @Override
-    public synchronized Double getUpperBound() {
+    public Double getUpperBound() {
         return bounds.getSecond();
     }
 
     @Override
-    public synchronized void setLowerBound(Double bound) {
+    public void setLowerBound(Double bound) {
         bounds.setFirst(bound);
     }
 
     @Override
-    public synchronized void setUpperBound(Double bound) {
+    public void setUpperBound(Double bound) {
         bounds.setSecond(bound);
     }
 
     @Override
-    public synchronized Pair<Double, Double> getBounds() {
+    public Pair<Double, Double> getBounds() {
         return Pair.newUnchangablePair(bounds);
     }
 
     @Override
-    public synchronized void setBounds(Pair<Double, Double> bounds) {
+    public void setBounds(Pair<Double, Double> bounds) {
         this.bounds = Pair.newPair(
                 bounds.getFirst(), bounds.getSecond()
         );
     }
 
     @Override
-    public synchronized Pair<Double, Double> getBoundsByRate(double rate) {
+    public Pair<Double, Double> getBoundsByRate(double rate) {
         return Pair.newUnchangablePair(
                 rate * bounds.getFirst(),
                 rate * bounds.getSecond()
@@ -56,7 +56,7 @@ public abstract class DoubleElementBar extends DoubleElementValue implements Bou
     }
 
     @Override
-    public synchronized Pair<Double, Double> calculateBoundsAndGet(Pair<Double, Double> other,
+    public Pair<Double, Double> calculateBoundsAndGet(Pair<Double, Double> other,
                                                                    BinaryOperator<Pair<Double, Double>> operator) {
         Pair<Double, Double> apply = operator.apply(bounds, other);
         bounds = Pair.newPair(apply.getFirst(), apply.getSecond());
@@ -69,7 +69,7 @@ public abstract class DoubleElementBar extends DoubleElementValue implements Bou
     }
 
     @Override
-    public synchronized Double setValue(Double value) {
+    public Double setValue(Double value) {
         if (value < bounds.getFirst()) {
             return super.setValue(bounds.getFirst());
         } else if (value > bounds.getSecond()) {
@@ -79,14 +79,14 @@ public abstract class DoubleElementBar extends DoubleElementValue implements Bou
     }
 
     @Override
-    public synchronized void store(ConfigurationSection section) {
+    public void store(ConfigurationSection section) {
         super.store(section);
         section.set("lower-bound", bounds.getFirst());
         section.set("upper-bound", bounds.getSecond());
     }
 
     @Override
-    public synchronized void load(ConfigurationSection section) {
+    public void load(ConfigurationSection section) {
         super.load(section);
         bounds = Pair.newPair(
                 section.getDouble("lower-bound"),

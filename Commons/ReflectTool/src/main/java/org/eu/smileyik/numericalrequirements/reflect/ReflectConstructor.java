@@ -5,9 +5,26 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ReflectConstructor implements MySimpleReflect {
     private final Constructor<?> constructor;
+    private final String name;
 
+    /**
+     *
+     * @param clazz
+     * @param path
+     * @param forceAccess
+     * @throws ClassNotFoundException
+     * @throws NoSuchMethodException
+     */
+    // "a.b.c.D$DA$DAA<constructor name>(fields...)"
     public ReflectConstructor(Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchMethodException {
         String className = path.substring(0, path.indexOf('(')).strip().replace("+", "$");
+        if (className.contains("<")) {
+            name = className.substring(className.indexOf("<") + 1, className.indexOf(">"));
+            className = className.substring(0, className.lastIndexOf("<"));
+        } else {
+            name = "init";
+        }
+
         if (clazz == null) {
             clazz = Class.forName(className);
         } else {
@@ -45,5 +62,10 @@ public class ReflectConstructor implements MySimpleReflect {
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

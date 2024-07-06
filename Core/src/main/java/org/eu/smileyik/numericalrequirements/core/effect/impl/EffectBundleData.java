@@ -26,11 +26,11 @@ public class EffectBundleData extends AbstractEffectData {
         this.effectService = effectService;
     }
 
-    public synchronized String getBundleId() {
+    public String getBundleId() {
         return bundleId;
     }
 
-    public synchronized void setBundleId(String bundleId) {
+    public void setBundleId(String bundleId) {
         this.bundleId = bundleId;
         ConfigurationSection config = effectService.getBundleConfigById(bundleId);
         if (config == null) {
@@ -56,7 +56,7 @@ public class EffectBundleData extends AbstractEffectData {
         }
     }
 
-    public synchronized void onRegisterToPlayerData(NumericalPlayer player) {
+    public void onRegisterToPlayerData(NumericalPlayer player) {
         if (map != null) {
             map.forEach((effect, data) -> {
                 data.forEach(it -> {
@@ -66,7 +66,7 @@ public class EffectBundleData extends AbstractEffectData {
         }
     }
 
-    public synchronized void onUnregisterFromPlayerData(NumericalPlayer player) {
+    public void onUnregisterFromPlayerData(NumericalPlayer player) {
         if (map != null) {
             map.forEach((effect, data) -> {
                 data.forEach(it -> {
@@ -76,7 +76,7 @@ public class EffectBundleData extends AbstractEffectData {
         }
     }
 
-    public synchronized void handlePlayer(NumericalPlayer player) {
+    public void handlePlayer(NumericalPlayer player) {
         if (map != null) {
             map.forEach((effect, data) -> {
                 data.forEach(it -> {
@@ -87,7 +87,7 @@ public class EffectBundleData extends AbstractEffectData {
     }
 
     @Override
-    public synchronized void load(ConfigurationSection section) {
+    public void load(ConfigurationSection section) {
         super.load(section);
         bundleId = section.getString("bundle-id");
         bundleType = section.getString("type");
@@ -114,7 +114,7 @@ public class EffectBundleData extends AbstractEffectData {
     }
 
     @Override
-    public synchronized void store(ConfigurationSection section) {
+    public void store(ConfigurationSection section) {
         super.store(section);
         section.set("bundle-id", bundleId);
         section.set("type", bundleType);

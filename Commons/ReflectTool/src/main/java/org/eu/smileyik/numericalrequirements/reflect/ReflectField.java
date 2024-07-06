@@ -27,9 +27,17 @@ public class ReflectField implements MySimpleReflect {
         return field.getName();
     }
 
-    public Object execute(Object install) {
+    public Object execute(Object instance) {
         try {
-            return field.get(install);
+            return field.get(instance);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void set(Object instance, Object value) {
+        try {
+            field.set(instance, value);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

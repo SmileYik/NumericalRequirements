@@ -85,7 +85,7 @@ public class ExtensionServiceImpl implements ExtensionService {
     }
 
     @Override
-    public synchronized boolean register(Extension extension) {
+    public boolean register(Extension extension) {
         for (Extension e : extensionList) {
             if (e.getInfo().getId().equals(extension.getInfo().getId())) {
                 return false;
@@ -98,7 +98,7 @@ public class ExtensionServiceImpl implements ExtensionService {
     }
 
     @Override
-    public synchronized Extension getExtensionById(String id) {
+    public Extension getExtensionById(String id) {
         for (Extension e : extensionList) {
             if (e.getInfo().getId().equals(id)) {
                 return e;
@@ -109,22 +109,22 @@ public class ExtensionServiceImpl implements ExtensionService {
     }
 
     @Override
-    public synchronized void registerTask(ExtensionTask task) {
+    public void registerTask(ExtensionTask task) {
         taskMap.put(task.getId().toLowerCase(), task);
     }
 
     @Override
-    public synchronized ExtensionTask getTaskByTaskId(String id) {
+    public ExtensionTask getTaskByTaskId(String id) {
         return taskMap.get(id.toLowerCase());
     }
 
     @Override
-    public synchronized Collection<ExtensionTask> getRegisteredTasks() {
+    public Collection<ExtensionTask> getRegisteredTasks() {
         return Collections.unmodifiableCollection(taskMap.values());
     }
 
     @Override
-    public synchronized void unregisterAll() {
+    public void unregisterAll() {
         for (Extension extension : extensionList) {
             try {
                 extension.onDisable();

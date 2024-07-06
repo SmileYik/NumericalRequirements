@@ -3,28 +3,37 @@ package org.eu.smileyik.numericalrequirements.core.item;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.item.serialization.ItemSerialization;
+import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemSerialization;
 import org.eu.smileyik.numericalrequirements.core.item.tag.service.*;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
+import org.eu.smileyik.numericalrequirements.core.util.YamlUtil;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class ItemServiceImpl implements Listener, ItemService {
+    private static final String NBT_ITEM_KEY = "NREQ_ITEM";
+
     private final NumericalRequirements plugin;
     private final Map<String, ItemTag> idTagMap = new HashMap<>();
     private final Collection<ItemTag> normalItemTags = new ArrayList<>();
@@ -34,6 +43,8 @@ public class ItemServiceImpl implements Listener, ItemService {
 
     private final File itemFile;
     private final YamlConfiguration itemConfig;
+    private final ItemSerialization itemSerialization = new YamlItemSerialization();
+    private final ConcurrentMap<String, ItemStack> itemStackCache = new ConcurrentHashMap<>();
 
     public ItemServiceImpl(NumericalRequirements plugin) {
         this.plugin = plugin;
@@ -83,12 +94,12 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     @Override
-    public ItemTag getItemTagById(String id) {
+    public synchronized ItemTag getItemTagById(String id) {
         return idTagMap.get(id.toLowerCase());
     }
 
     @Override
-    public List<String> getTagIds() {
+    public synchronized List<String> getTagIds() {
         return new ArrayList<>(idTagMap.keySet());
     }
 
@@ -153,65 +164,50 @@ public class ItemServiceImpl implements Listener, ItemService {
 
     @Override
     public ItemStack loadItem(String id, int amount) {
-        if (!itemConfig.isConfigurationSection(id)) {
-            return null;
+        ItemStack cache = getCachedItem(id);
+        if (cache == null) {
+            if (itemConfig.isConfigurationSection(id)) {
+                ConfigurationSection section = itemConfig.getConfigurationSection(id);
+                cache = itemSerialization.deserialize(YamlUtil.saveToString(section));
+                cache = updateCachedItem(id, cache, false);
+            }
+        } else {
+            cache = cache.clone();
         }
-        ConfigurationSection section = itemConfig.getConfigurationSection(id);
-        if (!section.contains("material")) {
-            return null;
-        }
-        ItemStack stack = new ItemStack(Material.matchMaterial(section.getString("material")));
-        ItemMeta meta = stack.getItemMeta();
 
-        if (section.contains("name")) {
-            meta.setDisplayName(section.getString("name"));
-        }
-        if (section.contains("lore")) {
-            meta.setLore(section.getStringList("lore"));
-        }
-        if (section.contains("durability")) {
-            stack.setDurability((short) section.getInt("durability"));
-        }
-        if (section.contains("enchantment")) {
-            ConfigurationSection ench = section.getConfigurationSection("enchantment");
-            for (String key : ench.getKeys(false)) {
-                meta.addEnchant(Enchantment.getByName(key), ench.getInt(key), true);
-            }
-        }
-        if (section.contains("flags")) {
-            for (String flag : section.getStringList("flags")) {
-                meta.addItemFlags(ItemFlag.valueOf(flag));
-            }
-        }
-        stack.setItemMeta(meta);
-        stack.setAmount(amount);
-        return stack;
+        if (cache == null) return null;
+        cache.setAmount(amount);
+        return cache;
     }
 
     @Override
     public void storeItem(String id, ItemStack stack) {
-        ConfigurationSection section = itemConfig.createSection(id);
-        section.set("material", stack.getType().name());
-        section.set("durability", stack.getDurability());
-        if (stack.hasItemMeta()) {
-            ItemMeta meta = stack.getItemMeta();
-            if (meta.hasDisplayName()) {
-                section.set("name", meta.getDisplayName());
-            }
-            if (meta.hasLore()) {
-                section.set("lore", meta.getLore());
-            }
-            if (meta.hasEnchants()) {
-                meta.getEnchants().forEach((k, v) -> {
-                    section.set("enchantment." + k, v);
-                });
-            }
-            Set<ItemFlag> itemFlags = meta.getItemFlags();
-            if (!itemFlags.isEmpty()) {
-                section.set("flags", new ArrayList<>(itemFlags));
-            }
+        try {
+            String serialize = itemSerialization.serialize(stack);
+            System.out.println(serialize);
+            ConfigurationSection section = YamlUtil.loadFromString(serialize);
+            itemConfig.set(id, section);
+            saveItemFile();
+            updateCachedItem(id, stack, true);
+        } catch (InvalidConfigurationException e) {
+            throw new RuntimeException(e);
         }
-        saveItemFile();
+    }
+
+    private ItemStack getCachedItem(String id) {
+        return itemStackCache.get(id);
+    }
+
+    private ItemStack updateCachedItem(String id, ItemStack itemStack, boolean isStore) {
+        if (isStore && !idTagMap.containsKey(id)) {
+            return null;
+        }
+
+        itemStack = Objects.requireNonNull(NBTItemHelper.cast(itemStack.clone()))
+                .append(NBT_ITEM_KEY, id)
+                .getItemStack();
+        itemStackCache.put(id, itemStack);
+        return itemStack;
     }
 
     @Override
@@ -253,7 +249,22 @@ public class ItemServiceImpl implements Listener, ItemService {
         noColorTagMap.clear();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void updateUsedItem(PlayerInteractEvent event) {
+        if (!event.hasItem()) return;
+        ItemStack item = event.getItem();
+        NBTItem nbtItem = NBTItemHelper.cast(item);
+        if (nbtItem == null) return;
+        if (!nbtItem.containsKey(NBT_ITEM_KEY)) return;
+        String id = nbtItem.getString(NBT_ITEM_KEY);
+        if (id == null) return;
+        ItemStack itemStack = loadItem(id, item.getAmount());
+        if (itemStack == null) return;
+        DebugLogger.debug(e -> DebugLogger.debug(e, "为玩家 %s 更新物品，物品 ID 为： %s", event.getPlayer().getName(), id));
+        item.setItemMeta(itemStack.getItemMeta());
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerInteractItem(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         NumericalPlayer numericalPlayer = plugin.getPlayerService().getNumericalPlayer(player);
@@ -269,7 +280,7 @@ public class ItemServiceImpl implements Listener, ItemService {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerConsumeItem(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
         NumericalPlayer numericalPlayer = plugin.getPlayerService().getNumericalPlayer(player);

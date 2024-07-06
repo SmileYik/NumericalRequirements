@@ -22,7 +22,7 @@ public abstract class Extension {
     public final RegisterInfo getInfo() {
         return info;
     }
-    protected synchronized final void setPlugin(Plugin plugin) {
+    protected final void setPlugin(Plugin plugin) {
         if (this.plugin == null) {
             this.plugin = (NumericalRequirements) plugin;
             this.dataFolder = new File(this.plugin.getDataFolder(), info.getId());
