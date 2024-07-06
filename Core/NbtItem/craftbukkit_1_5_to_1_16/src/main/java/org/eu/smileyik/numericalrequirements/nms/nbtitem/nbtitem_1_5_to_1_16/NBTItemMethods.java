@@ -46,8 +46,8 @@ public class NBTItemMethods {
     public static final Method getString;
     public static final Method setByteArray;
     public static final Method getByteArray;
-    public static final Method getUUID;
-    public static final Method setUUID;
+    public static Method getUUID;
+    public static Method setUUID;
     public static final Method remove;
 
     static {
@@ -88,7 +88,6 @@ public class NBTItemMethods {
             getFloat = NBTTagCompoundClass.getDeclaredMethod("getFloat", String.class);
             getString = NBTTagCompoundClass.getDeclaredMethod("getString", String.class);
             getByteArray = NBTTagCompoundClass.getDeclaredMethod("getByteArray", String.class);
-            getUUID = NBTTagCompoundClass.getDeclaredMethod("a", String.class);
 
             setInt = NBTTagCompoundClass.getDeclaredMethod("setInt", String.class, int.class);
             setDouble = NBTTagCompoundClass.getDeclaredMethod("setDouble", String.class, double.class);
@@ -100,7 +99,13 @@ public class NBTItemMethods {
             setLong = NBTTagCompoundClass.getDeclaredMethod("setLong", String.class, long.class);
             setString = NBTTagCompoundClass.getDeclaredMethod("setString", String.class, String.class);
             setShort = NBTTagCompoundClass.getDeclaredMethod("setShort", String.class, short.class);
-            setUUID = NBTTagCompoundClass.getDeclaredMethod("a", String.class, UUID.class);
+
+            try {
+                getUUID = NBTTagCompoundClass.getDeclaredMethod("a", String.class);
+                setUUID = NBTTagCompoundClass.getDeclaredMethod("a", String.class, UUID.class);
+            } catch (Exception ignore) {
+
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

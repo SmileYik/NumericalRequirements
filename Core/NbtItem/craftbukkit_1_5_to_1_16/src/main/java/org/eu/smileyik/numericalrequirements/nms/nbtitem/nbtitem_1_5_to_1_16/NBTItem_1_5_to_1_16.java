@@ -48,7 +48,11 @@ public class NBTItem_1_5_to_1_16 extends AbstractNBTItem {
     protected void doPut(Object tags, String key, Object value) {
         try {
             if (value instanceof UUID) {
-                setUUID.invoke(tags, key, (UUID) value);
+                if (setUUID == null) {
+                    doPut(tags, key, ((UUID) value).toString());
+                } else {
+                    setUUID.invoke(tags, key, (UUID) value);
+                }
             } else if (value instanceof String) {
                 setString.invoke(tags, key, (String) value);
             } else if (value instanceof Integer) {
@@ -209,6 +213,9 @@ public class NBTItem_1_5_to_1_16 extends AbstractNBTItem {
     @Override
     protected UUID doGetUUID(Object tags, String key) {
         try {
+            if (getUUID == null) {
+                return UUID.fromString(doGetString(tags, key));
+            }
             return (UUID) getUUID.invoke(tags, key);
         } catch (Exception e) {
             e.printStackTrace();
