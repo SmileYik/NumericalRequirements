@@ -249,20 +249,42 @@ public class ItemServiceImpl implements Listener, ItemService {
         noColorTagMap.clear();
     }
 
+    private boolean updateItem(ItemStack item) {
+        NBTItem nbtItem = NBTItemHelper.cast(item);
+        if (nbtItem == null) return false;
+        if (!nbtItem.containsKey(NBT_ITEM_KEY)) return false;
+        String id = nbtItem.getString(NBT_ITEM_KEY);
+        if (id == null) return false;
+        ItemStack itemStack = loadItem(id, item.getAmount());
+        if (itemStack == null || itemStack.isSimilar(item)) return false;
+        item.setItemMeta(itemStack.getItemMeta());
+        DebugLogger.debug(e -> DebugLogger.debug(e, "更新物品：%s", id));
+        return true;
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void updateUsedItem(PlayerInteractEvent event) {
+    public void updateOnInteractItem(PlayerInteractEvent event) {
         if (!event.hasItem()) return;
         ItemStack item = event.getItem();
-        NBTItem nbtItem = NBTItemHelper.cast(item);
-        if (nbtItem == null) return;
-        if (!nbtItem.containsKey(NBT_ITEM_KEY)) return;
-        String id = nbtItem.getString(NBT_ITEM_KEY);
-        if (id == null) return;
-        ItemStack itemStack = loadItem(id, item.getAmount());
-        if (itemStack == null) return;
-        DebugLogger.debug(e -> DebugLogger.debug(e, "为玩家 %s 更新物品，物品 ID 为： %s", event.getPlayer().getName(), id));
-        item.setItemMeta(itemStack.getItemMeta());
+        boolean ret = updateItem(item);
+        DebugLogger.debug(e -> {
+            if (ret) DebugLogger.debug(e, "尝试为为玩家 %s 更新物品", event.getPlayer().getName());
+        });
     }
+
+//    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+//    public void updateOnConsumeItem(PlayerItemConsumeEvent event) {
+//        ItemStack item = event.getItem();
+//        if (item == null) return;
+//        boolean ret = updateItem(item);
+//        if (ret) {
+//            // event.setCancelled(true);
+//            event.setItem(item);
+//            DebugLogger.debug(e -> {
+//                DebugLogger.debug(e, "尝试为为玩家 %s 更新物品", event.getPlayer().getName());
+//            });
+//        }
+//    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteractItem(PlayerInteractEvent event) {
@@ -287,26 +309,20 @@ public class ItemServiceImpl implements Listener, ItemService {
         if (numericalPlayer == null) return;
 
         ItemStack item = event.getItem();
+        if (updateItem(item)) {
+            event.setItem(item);
+        }
+
         boolean potion = item.getType() == Material.POTION;
         if (useItem(numericalPlayer, item)) {
-            event.setCancelled(true);
+            // event.setCancelled(true);
+
             PlayerInventory inventory = player.getInventory();
-            boolean mainHand = inventory.getItemInMainHand().isSimilar(item);
-            if (item.getAmount() == 1) {
-                item = null;
-            } else {
-                item.setAmount(item.getAmount() - 1);
-            }
-            if (mainHand) {
-                inventory.setItemInMainHand(item);
-            } else {
-                inventory.setItemInOffHand(item);
-            }
-            if (potion) {
-                inventory.addItem(new ItemStack(Material.GLASS_BOTTLE, 1)).forEach((key, value) -> {
-                    player.getWorld().dropItem(player.getLocation(), value);
-                });
-            }
+//            if (potion) {
+//                inventory.addItem(new ItemStack(Material.GLASS_BOTTLE, 1)).forEach((key, value) -> {
+//                    player.getWorld().dropItem(player.getLocation(), value);
+//                });
+//            }
         }
     }
 }

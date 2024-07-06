@@ -29,6 +29,7 @@ public class YamlItemSerialization implements ItemSerialization {
         entries.add(new EnchantmentNewEntry());
         entries.add(new EnchantmentOldEntry());
         entries.add(new LoreEntry());
+        entries.add(new ItemFlagEntry());
 
         entries.sort(Comparator.comparingInt(YamlItemEntry::getPriority));
     }
@@ -115,11 +116,6 @@ public class YamlItemSerialization implements ItemSerialization {
         if (section.contains("durability")) {
             stack.setDurability((short) section.getInt("durability"));
         }
-        if (section.contains("flags")) {
-            for (String flag : section.getStringList("flags")) {
-                meta.addItemFlags(ItemFlag.valueOf(flag));
-            }
-        }
         stack.setItemMeta(meta);
         return stack;
     }
@@ -130,10 +126,6 @@ public class YamlItemSerialization implements ItemSerialization {
         if (meta != null) {
             if (meta.hasDisplayName()) {
                 section.set("name", meta.getDisplayName());
-            }
-            Set<ItemFlag> itemFlags = meta.getItemFlags();
-            if (!itemFlags.isEmpty()) {
-                section.set("flags", new ArrayList<>(itemFlags.stream().map(Enum::name).toList()));
             }
         }
     }
