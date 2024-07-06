@@ -3,6 +3,7 @@ package org.eu.smileyik.numericalrequirements.test.nbtItem;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 import org.eu.smileyik.numericalrequirements.test.NeedTest;
@@ -26,17 +27,19 @@ public class NbtItemTest {
         ItemStack item = new ItemStack(Material.APPLE);
         NBTItem cast = NBTItemHelper.cast(item);
         assert cast != null : "NBT Item cast returned null";
-        cast.put("string", "string");
-        cast.put("int", (int) 32);
-        cast.put("long", (long) 64);
-        cast.put("byte", (byte) 8);
-        cast.put("short", (short) 16);
-        cast.put("boolean", true);
-        cast.put("float", 3.14f);
-        cast.put("double", 3.141592653589793d);
-        cast.put("intArray", new int[] { 1, 2, 3 });
-        cast.put("byteArray", new byte[] { 4, 5, 6 });
-        cast.put("uuid", UUID.randomUUID());
+        NBTTagCompound tag = cast.getTag();
+        assert tag != null : "getTag returned null";
+        tag.put("string", "string");
+        tag.put("int", (int) 32);
+        tag.put("long", (long) 64);
+        tag.put("byte", (byte) 8);
+        tag.put("short", (short) 16);
+        tag.put("boolean", true);
+        tag.put("float", 3.14f);
+        tag.put("double", 3.141592653589793d);
+        tag.put("intArray", new int[] { 1, 2, 3 });
+        tag.put("byteArray", new byte[] { 4, 5, 6 });
+        tag.put("uuid", UUID.randomUUID());
         ItemStack copy = cast.getItemStack();
         assert copy != null : "NBT Item copy returned null";
         System.out.println("item == copy: " + (copy == item));
@@ -50,18 +53,20 @@ public class NbtItemTest {
         ItemStack item = new ItemStack(Material.APPLE);
         NBTItem cast = NBTItemHelper.cast(item);
         assert cast != null : "NBT Item cast returned null";
-        ItemStack copy = cast.append("string", "string")
-                            .append("int", (int) 32)
-                            .append("long", (long) 64)
-                            .append("byte", (byte) 8)
-                            .append("short", (short) 16)
-                            .append("boolean", true)
-                            .append("float", 3.14f)
-                            .append("double", 3.141592653589793d)
-                            .append("intArray", new int[] { 1, 2, 3 })
-                            .append("byteArray", new byte[] { 4, 5, 6 })
-                            .append("uuid", UUID.randomUUID())
-                            .getItemStack();
+        NBTTagCompound tag = cast.getTag();
+        assert tag != null : "getTag returned null";
+        tag.append("string", "string")
+                .append("int", (int) 32)
+                .append("long", (long) 64)
+                .append("byte", (byte) 8)
+                .append("short", (short) 16)
+                .append("boolean", true)
+                .append("float", 3.14f)
+                .append("double", 3.141592653589793d)
+                .append("intArray", new int[] { 1, 2, 3 })
+                .append("byteArray", new byte[] { 4, 5, 6 })
+                .append("uuid", UUID.randomUUID());
+        ItemStack copy = cast.getItemStack();
         assert copy != null : "NBT Item copy returned null";
         System.out.println("item == copy: " + (copy == item));
         System.out.println(saveItemToString("item", item));
@@ -74,17 +79,20 @@ public class NbtItemTest {
         ItemStack item = appendNBTTest();
         NBTItem cast = NBTItemHelper.cast(item);
         assert cast != null : "NBT Item cast returned null";
-        System.out.println("Key 'string': " + cast.containsKey("string"));
-        System.out.println("Key 'int': " + cast.containsKey("int"));
-        System.out.println("Key 'byte': " + cast.containsKey("byte"));
-        System.out.println("Key 'short': " + cast.containsKey("short"));
-        System.out.println("Key 'long': " + cast.containsKey("long"));
-        System.out.println("Key 'intArray': " + cast.containsKey("intArray"));
-        System.out.println("Key 'byteArray': " + cast.containsKey("byteArray"));
-        System.out.println("Key 'boolean': " + cast.containsKey("boolean"));
-        System.out.println("Key 'float': " + cast.containsKey("float"));
-        System.out.println("Key 'double': " + cast.containsKey("double"));
-        System.out.println("Key 'uuid': " + cast.containsKey("uuid"));
+        NBTTagCompound tag = cast.getTag();
+        assert tag != null : "getTag returned null";
+
+        System.out.println("Key 'string': " + tag.hasKey("string"));
+        System.out.println("Key 'int': " + tag.hasKey("int"));
+        System.out.println("Key 'byte': " + tag.hasKey("byte"));
+        System.out.println("Key 'short': " + tag.hasKey("short"));
+        System.out.println("Key 'long': " + tag.hasKey("long"));
+        System.out.println("Key 'intArray': " + tag.hasKey("intArray"));
+        System.out.println("Key 'byteArray': " + tag.hasKey("byteArray"));
+        System.out.println("Key 'boolean': " + tag.hasKey("boolean"));
+        System.out.println("Key 'float': " + tag.hasKey("float"));
+        System.out.println("Key 'double': " + tag.hasKey("double"));
+        System.out.println("Key 'uuid': " + tag.hasKey("uuid"));
     }
 
     @NeedTest
@@ -92,18 +100,20 @@ public class NbtItemTest {
         ItemStack item = putNBTTest();
         NBTItem cast = NBTItemHelper.cast(item);
         assert cast != null : "NBT Item cast returned null";
+        NBTTagCompound tag = cast.getTag();
+        assert tag != null : "getTag returned null";
 
-        System.out.println("Key 'string': " + cast.getString("string"));
-        System.out.println("Key 'int': " + cast.getInt("int"));
-        System.out.println("Key 'byte': " + cast.getByte("byte"));
-        System.out.println("Key 'short': " + cast.getShort("short"));
-        System.out.println("Key 'long': " + cast.getLong("long"));
-        System.out.println("Key 'intArray': " + Arrays.toString(cast.getIntArray("intArray")));
-        System.out.println("Key 'byteArray': " + Arrays.toString(cast.getByteArray("byteArray")));
-        System.out.println("Key 'boolean': " + cast.getBoolean("boolean"));
-        System.out.println("Key 'float': " + cast.containsKey("float"));
-        System.out.println("Key 'double': " + cast.getDouble("double"));
-        System.out.println("Key 'uuid': " + cast.getUUID("uuid"));
+        System.out.println("Key 'string': " + tag.getString("string"));
+        System.out.println("Key 'int': " + tag.getInt("int"));
+        System.out.println("Key 'byte': " + tag.getByte("byte"));
+        System.out.println("Key 'short': " + tag.getShort("short"));
+        System.out.println("Key 'long': " + tag.getLong("long"));
+        System.out.println("Key 'intArray': " + Arrays.toString(tag.getIntArray("intArray")));
+        System.out.println("Key 'byteArray': " + Arrays.toString(tag.getByteArray("byteArray")));
+        System.out.println("Key 'boolean': " + tag.getBoolean("boolean"));
+        System.out.println("Key 'float': " + tag.hasKey("float"));
+        System.out.println("Key 'double': " + tag.getDouble("double"));
+        System.out.println("Key 'uuid': " + tag.getUUID("uuid"));
     }
 
     @NeedTest
@@ -119,10 +129,12 @@ public class NbtItemTest {
         ItemStack item = putNBTTest();
         NBTItem cast = NBTItemHelper.cast(item);
         assert cast != null : "NBT Item cast returned null";
-        System.out.println("Key 'uuid': " + Objects.toString(cast.getUUID("uuid")));
-        cast.put("uuid", null);
-        System.out.println("Has key 'uuid': " + cast.containsKey("uuid"));
-        assert !cast.containsKey("uuid") : "Key 'uuid' does not be delete";
+        NBTTagCompound tag = cast.getTag();
+        assert tag != null : "getTag returned null";
+        System.out.println("Key 'uuid': " + Objects.toString(tag.getUUID("uuid")));
+        tag.put("uuid", null);
+        System.out.println("Has key 'uuid': " + tag.hasKey("uuid"));
+        assert !tag.hasKey("uuid") : "Key 'uuid' does not be delete";
     }
 
     @NeedTest
@@ -130,10 +142,12 @@ public class NbtItemTest {
         ItemStack item = putNBTTest();
         NBTItem cast = NBTItemHelper.cast(item);
         assert cast != null : "NBT Item cast returned null";
-        System.out.println("Key 'uuid': " + Objects.toString(cast.getUUID("uuid")));
-        cast.remove("uuid");
-        System.out.println("Has key 'uuid': " + cast.containsKey("uuid"));
-        assert !cast.containsKey("uuid") : "Key 'uuid' does not be delete.";
+        NBTTagCompound tag = cast.getTag();
+        assert tag != null : "getTag returned null";
+        System.out.println("Key 'uuid': " + Objects.toString(tag.getUUID("uuid")));
+        tag.remove("uuid");
+        System.out.println("Has key 'uuid': " + tag.hasKey("uuid"));
+        assert !tag.hasKey("uuid") : "Key 'uuid' does not be delete.";
     }
 
     private String saveItemToString(String key, ItemStack itemStack) {

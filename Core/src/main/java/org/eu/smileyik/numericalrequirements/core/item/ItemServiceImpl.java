@@ -22,6 +22,7 @@ import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.util.YamlUtil;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
+import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 
@@ -199,13 +200,16 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     private ItemStack updateCachedItem(String id, ItemStack itemStack, boolean isStore) {
-        if (isStore && !idTagMap.containsKey(id)) {
+        if (itemStack == null || isStore && !idTagMap.containsKey(id)) {
             return null;
         }
 
-        itemStack = Objects.requireNonNull(NBTItemHelper.cast(itemStack.clone()))
-                .append(NBT_ITEM_KEY, id)
-                .getItemStack();
+        NBTItem cast = NBTItemHelper.cast(itemStack.clone());
+        if (cast != null) {
+            cast.getTag().setString(NBT_ITEM_KEY, id);
+            itemStack = cast.getItemStack();
+        }
+
         itemStackCache.put(id, itemStack);
         return itemStack;
     }
@@ -252,8 +256,10 @@ public class ItemServiceImpl implements Listener, ItemService {
     private boolean updateItem(ItemStack item) {
         NBTItem nbtItem = NBTItemHelper.cast(item);
         if (nbtItem == null) return false;
-        if (!nbtItem.containsKey(NBT_ITEM_KEY)) return false;
-        String id = nbtItem.getString(NBT_ITEM_KEY);
+        NBTTagCompound tag = nbtItem.getTag();
+        if (tag == null) return false;
+        if (!tag.hasKey(NBT_ITEM_KEY)) return false;
+        String id = tag.getString(NBT_ITEM_KEY);
         if (id == null) return false;
         ItemStack itemStack = loadItem(id, item.getAmount());
         if (itemStack == null || itemStack.isSimilar(item)) return false;
