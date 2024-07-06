@@ -1,10 +1,12 @@
 package org.eu.smileyik.numericalrequirements.luaeffect.effect;
 
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.effect.AbstractEffect;
 import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
 import org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectEntity;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.player.PlayerDataValue;
+import org.keplerproject.luajava.LuaException;
 import tk.smileyik.luainminecraftbukkit.api.luaconfig.LuaConfig;
 
 import java.io.File;
@@ -39,7 +41,13 @@ public class LuaEffect extends AbstractEffect {
     @Override
     public EffectData newEffectData() {
         LuaEffectData luaEffectData = new LuaEffectData(luaConfig, entity);
-        Object luaObject = luaConfig.callClosureReturnObject(entity.newEffectData, luaEffectData);
+        Object luaObject = null;
+        try {
+            luaObject = luaConfig.callClosureReturnObject(entity.newEffectData, luaEffectData);
+        } catch (LuaException e) {
+            I18N.severe("extensions.lua-effect.run-new-effect-failed", entity.id, entity.name);
+            e.printStackTrace();
+        }
         luaEffectData.setLuaData(luaObject);
         return luaEffectData;
     }
@@ -47,7 +55,13 @@ public class LuaEffect extends AbstractEffect {
     @Override
     public EffectData newEffectData(String[] args) {
         LuaEffectData luaEffectData = new LuaEffectData(luaConfig, entity);
-        Object luaObject = luaConfig.callClosureReturnObject(entity.newEffectDataByStringArray, luaEffectData, (Object) args);
+        Object luaObject = null;
+        try {
+            luaObject = luaConfig.callClosureReturnObject(entity.newEffectDataByStringArray, luaEffectData, (Object) args);
+        } catch (LuaException e) {
+            I18N.severe("extensions.lua-effect.run-new-effect-by-string-array-failed", entity.id, entity.name);
+            e.printStackTrace();
+        }
         luaEffectData.setLuaData(luaObject);
         return luaEffectData;
     }
@@ -56,23 +70,38 @@ public class LuaEffect extends AbstractEffect {
     public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
         if (entity.handlePlayer == null) return;
         LuaEffectData data = (LuaEffectData) value;
-        luaConfig.callClosureReturnObject(
-                entity.handlePlayer,
-                player, data.getLuaData(), data.getDuration());
+        try {
+            luaConfig.callClosureReturnObject(
+                    entity.handlePlayer,
+                    player, data.getLuaData(), data.getDuration());
+        } catch (LuaException e) {
+            I18N.severe("extensions.lua-effect.run-method-handle-player-failed", entity.id, entity.name);
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onRegisterToPlayerData(NumericalPlayer player, PlayerDataValue value) {
         if (entity.onRegisterToPlayerData == null) return;
         Object luaData = ((LuaEffectData) value).getLuaData();
-        luaConfig.callClosureReturnObject(entity.onRegisterToPlayerData, player, luaData);
+        try {
+            luaConfig.callClosureReturnObject(entity.onRegisterToPlayerData, player, luaData);
+        } catch (LuaException e) {
+            I18N.severe("extensions.lua-effect.register-player-data-failed", entity.id, entity.name);
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerDataValue value) {
         if (entity.onUnregisterFromPlayerData == null) return;
         Object luaData = ((LuaEffectData) value).getLuaData();
-        luaConfig.callClosureReturnObject(entity.onUnregisterFromPlayerData, player, luaData);
+        try {
+            luaConfig.callClosureReturnObject(entity.onUnregisterFromPlayerData, player, luaData);
+        } catch (LuaException e) {
+            I18N.severe("extensions.lua-effect.unregister-player-data-failed", entity.id, entity.name);
+            e.printStackTrace();
+        }
     }
 
     public LuaConfig getLuaConfig() {

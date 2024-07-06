@@ -1,9 +1,11 @@
 package org.eu.smileyik.numericalrequirements.luaeffect.effect;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.effect.AbstractEffectData;
 import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
 import org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectEntity;
+import org.keplerproject.luajava.LuaException;
 import tk.smileyik.luainminecraftbukkit.api.luaconfig.LuaConfig;
 
 public class LuaEffectData extends AbstractEffectData {
@@ -26,7 +28,13 @@ public class LuaEffectData extends AbstractEffectData {
     protected boolean doUpdate(double second) {
         super.doUpdate(second);
         if (entity.dataUpdate == null) return true;
-        return luaConfig.callClosureReturnBoolean(entity.dataUpdate, luaData, second, getDuration());
+        try {
+            return luaConfig.callClosureReturnBoolean(entity.dataUpdate, luaData, second, getDuration());
+        } catch (LuaException e) {
+            I18N.severe("extensions.lua-effect.run-method-update-failed", entity.id, entity.name);
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -41,7 +49,12 @@ public class LuaEffectData extends AbstractEffectData {
     @Override
     public boolean canDelete() {
         if (entity.dataCanDelete != null) {
-            return luaConfig.callClosureReturnBoolean(entity.dataCanDelete, luaData, getDuration());
+            try {
+                return luaConfig.callClosureReturnBoolean(entity.dataCanDelete, luaData, getDuration());
+            } catch (LuaException e) {
+                I18N.severe("extensions.lua-effect.run-method-can-delete-failed", entity.id, entity.name);
+                e.printStackTrace();
+            }
         }
         return super.canDelete();
     }
@@ -50,7 +63,12 @@ public class LuaEffectData extends AbstractEffectData {
     public void store(ConfigurationSection section) {
         super.store(section);
         if (entity.dataStore != null) {
-            luaConfig.callClosureReturnObject(entity.dataStore, luaData, section);
+            try {
+                luaConfig.callClosureReturnObject(entity.dataStore, luaData, section);
+            } catch (LuaException e) {
+                I18N.severe("extensions.lua-effect.run-method-store-failed", entity.id, entity.name);
+                e.printStackTrace();
+            }
         }
     }
 
@@ -58,7 +76,12 @@ public class LuaEffectData extends AbstractEffectData {
     public void load(ConfigurationSection section) {
         super.load(section);
         if (entity.dataLoad != null) {
-            luaConfig.callClosureReturnObject(entity.dataLoad, luaData, section);
+            try {
+                luaConfig.callClosureReturnObject(entity.dataLoad, luaData, section);
+            } catch (LuaException e) {
+                I18N.severe("extensions.lua-effect.run-method-load-failed", entity.id, entity.name);
+                e.printStackTrace();
+            }
         }
     }
 

@@ -3,7 +3,9 @@ package org.eu.smileyik.numericalrequirements.luaeffect;
 import org.bukkit.Color;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
+import org.keplerproject.luajava.LuaException;
 import org.keplerproject.luajava.LuaObject;
 import tk.smileyik.luainminecraftbukkit.api.luaconfig.LuaConfig;
 import tk.smileyik.luainminecraftbukkit.api.luaconfig.LuaConfigEntity;
@@ -150,7 +152,12 @@ public class LuaEffectEntity implements LuaConfigEntity {
      */
     public void runTask(Object obj) {
         extension.getPlugin().getServer().getScheduler().runTask(extension.getPlugin(), () -> {
-            config.callClosureReturnObject(obj);
+            try {
+                config.callClosureReturnObject(obj);
+            } catch (LuaException e) {
+                I18N.severe("extensions.lua-effect.run-closure-failed", id, name);
+                e.printStackTrace();
+            }
         });
     }
 
@@ -161,7 +168,12 @@ public class LuaEffectEntity implements LuaConfigEntity {
      */
     public void runTask(Object obj, LuaObject luaObject) {
         extension.getPlugin().getServer().getScheduler().runTask(extension.getPlugin(), () -> {
-            config.callClosureReturnObject(obj, luaObject);
+            try {
+                config.callClosureReturnObject(obj, luaObject);
+            } catch (LuaException e) {
+                I18N.severe("extensions.lua-effect.run-closure-failed", id, name);
+                e.printStackTrace();
+            }
         });
     }
 

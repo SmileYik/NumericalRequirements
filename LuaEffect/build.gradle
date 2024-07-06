@@ -7,9 +7,6 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    flatDir {
-        dirs "${rootProject.projectDir}/libs/"
-    }
 }
 
 dependencies {
@@ -18,5 +15,5 @@ dependencies {
     implementation project(':Core')
     implementation project(':Core:Command')
     implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
-    implementation 'tk.smileyik:LuaInMinecraftBukkit:1.7.2'
+    implementation 'org.eu.smileyik:LuaInMinecraftBukkit:1.7.4-SNAPSHOT'
 }
