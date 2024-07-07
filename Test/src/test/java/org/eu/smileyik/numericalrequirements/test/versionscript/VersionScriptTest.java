@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.test.versionscript;
 
+import org.bukkit.Bukkit;
 import org.eu.smileyik.numericalrequirements.test.NeedTest;
 import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 
@@ -65,5 +66,21 @@ public class VersionScriptTest {
         String ret = VersionScript.runScriptByResource("/version-script/NMSItemStack.txt");
         System.out.println(ret);
         assert ret != null && ret.equals("/reflect-class/NMSItemStack_1_18_2.txt") : "ret is not /reflect-class/NMSItemStack_1_18_2.txt";
+    }
+
+    @NeedTest
+    public void testCurrentVersion1Script() throws IOException {
+        VersionScript.VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        System.out.println("Version: " + VersionScript.VERSION);
+        String ret = VersionScript.runScriptByResource("/version-script/NMSItemStack.txt");
+        System.out.println(ret);
+    }
+
+    @NeedTest
+    public void testCurrentVersion2Script() throws IOException {
+        VersionScript.VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        System.out.println("Version: " + VersionScript.VERSION);
+        String ret = VersionScript.runScriptByResource("/version-script/NBTTagCompound.txt");
+        System.out.println(ret);
     }
 }
