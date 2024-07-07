@@ -1,0 +1,43 @@
+net.minecraft.nbt.NBTTagCompound{
+    #{
+        e<getKeys>();
+        b<getTypeId>();
+        f<size>();
+        a<set>(java.lang.String, net.minecraft.nbt.NBTBase);
+        a<setByte>(java.lang.String, byte);
+        a<setShort>(java.lang.String, short);
+        a<setInt>(java.lang.String, int);
+        a<setLong>(java.lang.String, long);
+        a<setUUID>(java.lang.String, java.util.UUID);
+        a<getUUID>(java.lang.String);
+        b<isUUID>(java.lang.String);
+        a<setFloat>(java.lang.String, float);
+        a<setDouble>(java.lang.String, double);
+        a<setString>(java.lang.String, java.lang.String);
+        a<setByteArray>(java.lang.String, byte[]);
+        a<setIntArray>(java.lang.String, int[]);
+        a<setBoolean>(java.lang.String, boolean);
+        c<get>(java.lang.String);
+        d<getKeyTypeId>(java.lang.String);
+        e<hasKey>(java.lang.String);
+        b<hasKeyOfType>(java.lang.String, int);
+        f<getByte>(java.lang.String);
+        g<getShort>(java.lang.String);
+        h<getInt>(java.lang.String);
+        i<getLong>(java.lang.String);
+        j<getFloat>(java.lang.String);
+        k<getDouble>(java.lang.String);
+        l<getString>(java.lang.String);
+        m<getByteArray>(java.lang.String);
+        n<getIntArray>(java.lang.String);
+        p<getCompound>(java.lang.String);
+        c<getList>(java.lang.String, int);
+        q<getBoolean>(java.lang.String);
+        r<remove>(java.lang.String);
+        g<isEmpty>();
+        a<merge>(net.minecraft.nbt.NBTTagCompound);
+    }
+    {
+        <new>();
+    }
+}

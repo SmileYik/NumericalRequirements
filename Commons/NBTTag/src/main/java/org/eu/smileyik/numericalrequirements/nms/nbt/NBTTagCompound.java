@@ -67,6 +67,9 @@ public class NBTTagCompound {
     }
 
     public void set(String key, Object value) {
+        if (value instanceof NBTTagCompound) {
+            value = ((NBTTagCompound) value).instance;
+        }
         CLAZZ.execute("set", instance, key, value);
     }
 
@@ -114,6 +117,10 @@ public class NBTTagCompound {
 
     public void setByteArray(String key, byte[] value) {
         CLAZZ.execute("setByteArray", instance, key, value);
+    }
+
+    public void setIntArray(String key, int[] value) {
+        CLAZZ.execute("setIntArray", instance, key, value);
     }
 
     public void setBoolean(String key, boolean value) {
@@ -244,5 +251,9 @@ public class NBTTagCompound {
     @Override
     public String toString() {
         return Objects.toString(instance);
+    }
+
+    public static boolean hasMethod(String method) {
+        return CLAZZ != null && CLAZZ.hasMethod(method);
     }
 }

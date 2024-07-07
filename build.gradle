@@ -91,17 +91,6 @@ task deleteOldBuilds(type: Delete) {
             delete f
         }
     }
-
-    for (final def d in file("${projectDir}/servers/").listFiles()) {
-        if (!d.isFile()) {
-            for (final def f in file("${d}/plugins/").listFiles()) {
-                if (f.isFile() && f.getName().startsWith("${archivesBaseName}")) {
-                    printf("Remove old build: %s\n", f.toString())
-                    delete f
-                }
-            }
-        }
-    }
 }
 
 // 复制当前版本到plugins文件夹中z
@@ -113,12 +102,12 @@ task copyTask(type: Copy) {
 
     doLast {
         for (final def d in file("${projectDir}/servers/").listFiles()) {
+            if (d.isFile()) continue
             def dir = file("${d}/plugins")
-            if (dir.exists()) {
-                copy {
-                    from "${buildDir}/libs/${archivesBaseName}-${version}.jar"
-                    into "${dir}/"
-                }
+            if (!dir.exists()) {
+                println "ln -s ${projectDir}/server/plugins/ ${dir}"
+                def proc = "ln -s ${projectDir}/server/plugins/ ${d}".execute()
+                proc.waitForProcessOutput(System.out, System.err)
             }
         }
     }

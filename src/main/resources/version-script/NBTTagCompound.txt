@@ -1,3 +1,5 @@
+$1  > 19; /reflect-class/NBTTagCompound_1_19_R3.txt
+$1  = 19; $2 = R3; /reflect-class/NBTTagCompound_1_19_R3.txt
 $1 >= 18; /reflect-class/NBTTagCompound_1_18.txt
 $1  = 17; /reflect-class/NBTTagCompound_1_17.txt
 $1 >= 9;  /reflect-class/NBTTagCompound_1_9_to_1_16.txt

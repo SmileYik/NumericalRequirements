@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.yaml.*;
@@ -30,6 +29,7 @@ public class YamlItemSerialization implements ItemSerialization {
         entries.add(new EnchantmentOldEntry());
         entries.add(new LoreEntry());
         entries.add(new ItemFlagEntry());
+        entries.add(new NBTEntry());
 
         entries.sort(Comparator.comparingInt(YamlItemEntry::getPriority));
     }
