@@ -17,7 +17,10 @@ import org.bukkit.inventory.PlayerInventory;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.ItemSerialization;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemSerialization;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.*;
+import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagPattern;
+import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagService;
+import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagValue;
+import org.eu.smileyik.numericalrequirements.core.item.tag.service.SimpleLoreTagService;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.util.YamlUtil;
@@ -33,8 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class ItemServiceImpl implements Listener, ItemService {
-    private static final String NBT_ITEM_KEY = "NREQ_ITEM";
-
     private final NumericalRequirements plugin;
     private final Map<String, ItemTag> idTagMap = new HashMap<>();
     private final Collection<ItemTag> normalItemTags = new ArrayList<>();
@@ -52,6 +53,7 @@ public class ItemServiceImpl implements Listener, ItemService {
         loreTagService = new SimpleLoreTagService();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
+        itemSerialization.configure(plugin.getConfig().getConfigurationSection("item.serialization"));
         itemFile = new File(plugin.getDataFolder(), "items.yml");
         if (!itemFile.exists()) {
             try {
@@ -206,7 +208,7 @@ public class ItemServiceImpl implements Listener, ItemService {
 
         NBTItem cast = NBTItemHelper.cast(itemStack.clone());
         if (cast != null) {
-            cast.getTag().setString(NBT_ITEM_KEY, id);
+            cast.getTag().setString(NBT_KEY_ID, id);
             itemStack = cast.getItemStack();
         }
 
@@ -253,13 +255,17 @@ public class ItemServiceImpl implements Listener, ItemService {
         noColorTagMap.clear();
     }
 
-    private boolean updateItem(ItemStack item) {
+    @Override
+    public boolean updateItem(ItemStack item) {
         NBTItem nbtItem = NBTItemHelper.cast(item);
         if (nbtItem == null) return false;
         NBTTagCompound tag = nbtItem.getTag();
         if (tag == null) return false;
-        if (!tag.hasKey(NBT_ITEM_KEY)) return false;
-        String id = tag.getString(NBT_ITEM_KEY);
+        if (!tag.hasKey(NBT_KEY_ID) ||
+                tag.hasKey(NBT_KEY_SYNC) && !tag.getBoolean(NBT_KEY_SYNC)) {
+            return false;
+        }
+        String id = tag.getString(NBT_KEY_ID);
         if (id == null) return false;
         ItemStack itemStack = loadItem(id, item.getAmount());
         if (itemStack == null || itemStack.isSimilar(item)) return false;

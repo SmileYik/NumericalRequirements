@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface ItemService {
+    String NBT_KEY_ID = "nreq-item";
+    String NBT_KEY_SYNC = "nreq-sync";
+
     /**
      * 所有种类的Tag.
      */
@@ -98,6 +101,13 @@ public interface ItemService {
      * @return
      */
     Collection<String> getItemIds();
+
+    /**
+     * 更新物品。
+     * @param itemStack 要更新的物品
+     * @return 如果更新成功返回true, 无需更新或无法更新等其他情况返回false.
+     */
+    boolean updateItem(ItemStack itemStack);
 
     void shutdown();
 }

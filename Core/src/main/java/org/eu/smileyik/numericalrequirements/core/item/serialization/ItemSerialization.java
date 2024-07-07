@@ -1,8 +1,15 @@
 package org.eu.smileyik.numericalrequirements.core.item.serialization;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 public interface ItemSerialization {
+    /**
+     * 初始化配置。
+     * @param section 配置片段。
+     */
+    void configure(ConfigurationSection section);
+
     /**
      * 序列化物品为字符串。
      * @param itemStack 物品

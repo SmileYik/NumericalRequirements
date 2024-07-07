@@ -12,6 +12,14 @@ public interface YamlItemEntry {
     }
 
     /**
+     * 初始化配置。
+     * @param section
+     */
+    default void configure(ConfigurationSection section) {
+
+    }
+
+    /**
      * 获取配置的片段的Key, 若能直接读出来，不需要分新片段则返回null。
      * @return
      */

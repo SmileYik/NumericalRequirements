@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.eu.smileyik.numericalrequirements.core.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
@@ -15,8 +16,10 @@ import java.util.*;
 
 public class NBTEntry implements YamlItemEntry {
     final boolean flag;
-    Map<String, NBTTypeCast> castMap;
-    Map<Byte, NBTTypeSerialize> serializeMap;
+    private Map<String, NBTTypeCast> castMap;
+    private Map<Byte, NBTTypeSerialize> serializeMap;
+    private Set<String> ignoreKeys;
+
     public NBTEntry() {
         boolean flag0 = true;
 
@@ -71,12 +74,18 @@ public class NBTEntry implements YamlItemEntry {
                 return String.format("%sia", Arrays.toString(tag.getIntArray(key)));
             });
             serializeMap.put(NBTTagTypeId.BYTE_ARRAY, (tag, key) -> String.format("%sba", Arrays.toString(tag.getByteArray(key))));
-
         } catch (Exception e) {
             DebugLogger.debug(e);
             flag0 = false;
         }
         flag = flag0;
+    }
+
+    @Override
+    public void configure(ConfigurationSection section) {
+        ignoreKeys = new HashSet<>(section.getStringList("ignore-keys"));
+        ignoreKeys.add(ItemService.NBT_KEY_ID);
+
     }
 
     @Override
@@ -100,6 +109,7 @@ public class NBTEntry implements YamlItemEntry {
 
     private void serialize(NBTTagCompound tag, ConfigurationSection section) {
         for (String key : tag.getKeys()) {
+            if (ignoreKeys.contains(key)) continue;
             if (tag.hasKeyOfType(key, NBTTagTypeId.COMPOUND)) {
                 serialize(tag.getCompound(key), section.createSection(key));
                 continue;
@@ -127,10 +137,11 @@ public class NBTEntry implements YamlItemEntry {
     private void deserialize(NBTTagCompound tag, ConfigurationSection section) {
         Set<String> keys = section.getKeys(false);
         for (String key : keys) {
+            if (ignoreKeys.contains(key)) continue;
             if (section.isConfigurationSection(key)) {
                 NBTTagCompound subTag = new NBTTagCompound();
                 deserialize(subTag, section.getConfigurationSection(key));
-                tag.set(key, subTag.getInstance());
+                tag.set(key, subTag);
                 continue;
             }
             String str = section.getString(key);

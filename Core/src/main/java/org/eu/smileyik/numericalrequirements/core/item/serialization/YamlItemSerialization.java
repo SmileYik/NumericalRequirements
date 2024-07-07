@@ -30,8 +30,19 @@ public class YamlItemSerialization implements ItemSerialization {
         entries.add(new LoreEntry());
         entries.add(new ItemFlagEntry());
         entries.add(new NBTEntry());
+        entries.add(new NBTSyncEntry());
 
         entries.sort(Comparator.comparingInt(YamlItemEntry::getPriority));
+    }
+
+    @Override
+    public void configure(ConfigurationSection section) {
+        if (section == null) return;
+        entries.forEach(entry -> {
+            if (section.isConfigurationSection(entry.getId())) {
+                entry.configure(section.getConfigurationSection(entry.getId()));
+            }
+        });
     }
 
     @Override
