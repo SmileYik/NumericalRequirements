@@ -1,0 +1,38 @@
+net.minecraft.server.${version}.NBTTagCompound{
+    #{
+        c<getKeys>();
+        getTypeId<getTypeId>();
+        set<set>(java.lang.String, net.minecraft.server.${version}.NBTBase);
+        setByte<setByte>(java.lang.String, byte);
+        setShort<setShort>(java.lang.String, short);
+        setInt<setInt>(java.lang.String, int);
+        setLong<setLong>(java.lang.String, long);
+        setFloat<setFloat>(java.lang.String, float);
+        setDouble<setDouble>(java.lang.String, double);
+        setString<setString>(java.lang.String, java.lang.String);
+        setByteArray<setByteArray>(java.lang.String, byte[]);
+        setIntArray<setIntArray>(java.lang.String, int[]);
+        setBoolean<setBoolean>(java.lang.String, boolean);
+        get<get>(java.lang.String);
+        b<getKeyTypeId>(java.lang.String);
+        hasKey<hasKey>(java.lang.String);
+        hasKeyOfType<hasKeyOfType>(java.lang.String, int);
+        getByte<getByte>(java.lang.String);
+        getShort<getShort>(java.lang.String);
+        getInt<getInt>(java.lang.String);
+        getLong<getLong>(java.lang.String);
+        getFloat<getFloat>(java.lang.String);
+        getDouble<getDouble>(java.lang.String);
+        getString<getString>(java.lang.String);
+        getByteArray<getByteArray>(java.lang.String);
+        getIntArray<getIntArray>(java.lang.String);
+        getCompound<getCompound>(java.lang.String);
+        getList<getList>(java.lang.String, int);
+        getBoolean<getBoolean>(java.lang.String);
+        remove<remove>(java.lang.String);
+        isEmpty<isEmpty>();
+    }
+    {
+        <new>();
+    }
+}

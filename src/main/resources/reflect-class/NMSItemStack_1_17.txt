@@ -1,0 +1,7 @@
+net.minecraft.world.item.ItemStack{
+    #{
+        hasTag<hasTag>();
+        getTag<getTag>();
+        setTag<setTag>(net.minecraft.nbt.NBTTagCompound);
+    }
+}

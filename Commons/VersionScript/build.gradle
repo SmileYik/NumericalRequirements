@@ -14,13 +14,4 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
-    implementation(project(":Commons:ReflectTool"))
-    implementation(project(":Commons:DebugTool"))
-    implementation(project(":Commons:NBTTag"))
-    implementation(project(":Commons:VersionScript"))
-    implementation(project(":Core:NbtItem:NbtItemInterface"))
 }
-
-//test {
-//    useJUnitPlatform()
-//}

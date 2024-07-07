@@ -1,27 +1,34 @@
 package org.eu.smileyik.numericalrequirements.nms.nbt;
 
+import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
-import org.eu.smileyik.numericalrequirements.reflect.builder.ReflectClassBuilder;
+import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 public class NBTTagCompound {
+    private static final String SCRIPT_PATH = "/version-script/NBTTagCompound.txt";
     private static final ReflectClass CLAZZ;
     private static final Class<?> NBTBASE_CLASS;
 
     static {
-        ReflectClassBuilder currentVersion = NBTTagCompoundHelper.getCurrentVersion();
-        if (currentVersion != null) {
-            try {
-                CLAZZ = currentVersion.toClassForce();
-            } catch (NoSuchFieldException | ClassNotFoundException | NoSuchMethodException e) {
-                throw new RuntimeException(e);
+        try {
+            String currentVersion = VersionScript.runScriptByResource(SCRIPT_PATH);
+            if (currentVersion != null) {
+                CLAZZ = MySimpleReflect.readByResource(
+                        currentVersion, false,
+                        "${version}", VersionScript.VERSION
+                );
+            } else {
+                CLAZZ = null;
             }
-        } else {
-            CLAZZ = null;
+        } catch (NoSuchFieldException | ClassNotFoundException | NoSuchMethodException | IOException e) {
+            throw new RuntimeException(e);
         }
+
         if (CLAZZ == null) {
             NBTBASE_CLASS = null;
         } else {

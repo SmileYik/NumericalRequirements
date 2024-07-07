@@ -7,12 +7,6 @@ import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
  * 使用NBTItemHelper将Bukkit物品转换为NBTItem.
  */
 public interface NBTItem {
-
-    static String getBukkitVersion() {
-        return Bukkit.getServer().getClass()
-                .getPackage().getName().replace(".", ",").split(",")[3];
-    }
-
     /**
      * 获取或者创建一个NBT.
      * @return

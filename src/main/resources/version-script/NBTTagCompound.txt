@@ -1,0 +1,5 @@
+$1 >= 18; /reflect-class/NBTTagCompound_1_18.txt
+$1  = 17; /reflect-class/NBTTagCompound_1_17.txt
+$1 >= 9;  /reflect-class/NBTTagCompound_1_9_to_1_16.txt
+$1 >= 5;  /reflect-class/NBTTagCompound_1_5_to_1_8.txt
+true; null

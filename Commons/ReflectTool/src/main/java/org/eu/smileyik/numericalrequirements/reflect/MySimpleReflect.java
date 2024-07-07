@@ -2,6 +2,7 @@ package org.eu.smileyik.numericalrequirements.reflect;
 
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
+import java.io.*;
 import java.util.*;
 
 public interface MySimpleReflect {
@@ -76,9 +77,31 @@ public interface MySimpleReflect {
             if (!s.isEmpty()) {
                 list.addAll(getAll(prefix + s, forceAccess));
             }
-
         }
         return list;
+    }
+
+    static ReflectClass readByResource(String path, boolean forceAccess, String ... placeholders) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException, IOException {
+        Map<String, String> map = new HashMap<>();
+        for (int i = 1; i < placeholders.length; i += 2) {
+            map.put(placeholders[i - 1], placeholders[i]);
+        }
+        return readByResource(path, map, forceAccess);
+    }
+
+    static ReflectClass readByResource(String path, Map<String, String> placeholders, boolean forceAccess) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException, IOException {
+        InputStream resourceAsStream = MySimpleReflect.class.getResourceAsStream(path);
+        if (resourceAsStream == null) return null;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resourceAsStream))) {
+            StringBuilder sb = new StringBuilder();
+            reader.lines().forEach(s -> sb.append(s).append("\n"));
+            String string = sb.toString();
+            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+                string = string.replace(entry.getKey(), entry.getValue());
+            }
+            DebugLogger.debug("read '%s': \n%s", path, string);
+            return getReflectClass(string, forceAccess);
+        }
     }
 
     private static List<String> getElements(String collection) {

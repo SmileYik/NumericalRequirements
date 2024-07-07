@@ -1,0 +1,6 @@
+net.minecraft.world.item.ItemStack{
+    #{
+        c<getDataComponent>(net.minecraft.core.component.DataComponentType);
+        b<setDataComponent>(net.minecraft.core.component.DataComponentType, java.lang.Object);
+    }
+}

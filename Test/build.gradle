@@ -16,6 +16,7 @@ dependencies {
     implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
 
     implementation project(":Commons:NBTTag")
+    implementation project(":Commons:VersionScript")
     implementation project(":Core:NbtItem")
     implementation project(":Core:NbtItem:NbtItemInterface")
     implementation project(":Core:Command")

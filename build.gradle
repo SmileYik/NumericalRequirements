@@ -23,17 +23,7 @@ repositories {
 
 dependencies {
     testImplementation 'junit:junit:4.13.1'
-
-    implementation name: 'LuaInMinecraftBukkit-1.7.2'
-    implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
-
-    implementation project(":Core:NbtItem")
-    implementation project(":Core:Command")
-    implementation project(":Core")
-    implementation project(":Thirst")
-    implementation project(":LuaEffect")
-    implementation project(":MultiBlockCraft")
-    implementation project(":Test")
+    implementation project(":Commons:ReflectTool")
 }
 
 def getModelClass(model) {

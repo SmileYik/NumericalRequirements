@@ -17,4 +17,6 @@ include 'Commons:DebugTool'
 findProject(':Commons:DebugTool')?.name = 'DebugTool'
 include 'Commons:NBTTag'
 findProject(':Commons:NBTTag')?.name = 'NBTTag'
+include 'Commons:VersionScript'
+findProject(':Commons:VersionScript')?.name = 'VersionScript'
 

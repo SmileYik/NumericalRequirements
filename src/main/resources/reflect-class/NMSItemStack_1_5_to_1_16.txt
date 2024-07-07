@@ -1,0 +1,7 @@
+net.minecraft.server.${version}.ItemStack{
+    #{
+        hasTag<hasTag>();
+        getTag<getTag>();
+        setTag<setTag>(net.minecraft.server.${version}.NBTTagCompound);
+    }
+}

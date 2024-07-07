@@ -1,0 +1,8 @@
+$1 >= 21;          /reflect-class/NMSItemStack_1_21.txt
+$1  = 20;          /reflect-class/NMSItemStack_1_20.txt
+$1  = 19;          /reflect-class/NMSItemStack_1_19.txt
+$1  = 18; $2 = R1; /reflect-class/NMSItemStack_1_18.txt
+$1  = 18;          /reflect-class/NMSItemStack_1_18_2.txt
+$1  = 17;          /reflect-class/NMSItemStack_1_17.txt
+$1 >= 5;           /reflect-class/NMSItemStack_1_5_to_1_16.txt
+true; null

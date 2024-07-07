@@ -1,33 +1,38 @@
-package org.eu.smileyik.numericalrequirements.nms.nbt;
+package org.eu.smileyik.numericalrequirements;
 
-import org.bukkit.Bukkit;
 import org.eu.smileyik.numericalrequirements.reflect.builder.ReflectClassBuilder;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
-public interface NBTTagCompoundHelper {
+public class ReflectPathGenerator {
+    private static final String CURRENT_PACKET = "${version}";
 
-    String CURRENT_PACKET = Bukkit.getServer().getClass()
-            .getPackage().getName().replace(".", ",").split(",")[3];
+    public static void main(String[] args) throws InvocationTargetException, IllegalAccessException, IOException {
+        for (Method declaredMethod : ReflectPathGenerator.class.getDeclaredMethods()) {
+            if (declaredMethod.getName().equalsIgnoreCase("main")) {
+                continue;
+            }
 
-    static ReflectClassBuilder getCurrentVersion() {
-        String version = Bukkit.getServer().getClass()
-                .getPackage().getName().replace(".", ",").split(",")[3];
-        String[] versions = version.split("_");
-        int i = Integer.parseInt(versions[1]);
-        if (i >= 18) {
-            return getVersion_1_18();
-        } else if (i == 17) {
-            return getVersion_1_17();
-        } else if (i >= 9) {
-            return getVersion_1_9_to_1_16();
-        } else if (i >= 5) {
-            return getVersion_1_5_to_1_8();
+            ReflectClassBuilder builder = (ReflectClassBuilder) declaredMethod.invoke(null);
+            String prettyString = builder.toPrettyString();
+            File file = new File("src/main/resources/reflect-class", String.format("%s.txt", declaredMethod.getName()));
+            System.out.println(file.getCanonicalPath());
+            Path path = file.toPath();
+            Files.writeString(
+                    path, prettyString,
+                    StandardOpenOption.CREATE_NEW, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
+            );
         }
-        return null;
     }
 
-    private static ReflectClassBuilder getVersion_1_5_to_1_8() {
+    private static ReflectClassBuilder NBTTagCompound_1_5_to_1_8() {
         return new ReflectClassBuilder(String.format("net.minecraft.server.%s.NBTTagCompound", CURRENT_PACKET))
                 .constructor("new").finished()
                 .method("c", "getKeys").finished()
@@ -63,7 +68,7 @@ public interface NBTTagCompoundHelper {
                 .method("isEmpty", "isEmpty").finished();
     }
 
-    private static ReflectClassBuilder getVersion_1_9_to_1_16() {
+    private static ReflectClassBuilder NBTTagCompound_1_9_to_1_16() {
         return new ReflectClassBuilder(String.format("net.minecraft.server.%s.NBTTagCompound", CURRENT_PACKET))
                 .constructor("new").finished()
                 .method("c", "getKeys").finished()
@@ -104,7 +109,7 @@ public interface NBTTagCompoundHelper {
                 .method("a", "merge").args(String.format("net.minecraft.server.%s.NBTTagCompound", CURRENT_PACKET));
     }
 
-    private static ReflectClassBuilder getVersion_1_17() {
+    private static ReflectClassBuilder NBTTagCompound_1_17() {
         return new ReflectClassBuilder("net.minecraft.nbt.NBTTagCompound")
                 .constructor("new").finished()
                 .method("getKeys", "getKeys").finished()
@@ -145,7 +150,7 @@ public interface NBTTagCompoundHelper {
                 .method("a", "merge").args("net.minecraft.nbt.NBTTagCompound");
     }
 
-    private static ReflectClassBuilder getVersion_1_18() {
+    private static ReflectClassBuilder NBTTagCompound_1_18() {
         return new ReflectClassBuilder("net.minecraft.nbt.NBTTagCompound")
                 .constructor("new").finished()
                 .method("d", "getKeys").finished()
@@ -184,5 +189,53 @@ public interface NBTTagCompoundHelper {
                 .method("r", "remove").args("java.lang.String")
                 .method("f", "isEmpty").finished()
                 .method("a", "merge").args("net.minecraft.nbt.NBTTagCompound");
+    }
+
+    private static ReflectClassBuilder NMSItemStack_1_5_to_1_16() {
+        return new ReflectClassBuilder(String.format("net.minecraft.server.%s.ItemStack", CURRENT_PACKET))
+                .method("hasTag", "hasTag").finished()
+                .method("getTag", "getTag").finished()
+                .method("setTag", "setTag").args(String.format("net.minecraft.server.%s.NBTTagCompound", CURRENT_PACKET));
+    }
+
+    private static ReflectClassBuilder NMSItemStack_1_17() {
+        return new ReflectClassBuilder("net.minecraft.world.item.ItemStack")
+                .method("hasTag", "hasTag").finished()
+                .method("getTag", "getTag").finished()
+                .method("setTag", "setTag").args("net.minecraft.nbt.NBTTagCompound");
+    }
+
+    private static ReflectClassBuilder NMSItemStack_1_18() {
+        return new ReflectClassBuilder("net.minecraft.world.item.ItemStack")
+                .method("r", "hasTag").finished()
+                .method("t", "getTag").finished()
+                .method("c", "setTag").args("net.minecraft.nbt.NBTTagCompound");
+    }
+
+    private static ReflectClassBuilder NMSItemStack_1_18_2() {
+        return new ReflectClassBuilder("net.minecraft.world.item.ItemStack")
+                .method("s", "hasTag").finished()
+                .method("t", "getTag").finished()
+                .method("c", "setTag").args("net.minecraft.nbt.NBTTagCompound");
+    }
+
+    private static ReflectClassBuilder NMSItemStack_1_19() {
+        return new ReflectClassBuilder("net.minecraft.world.item.ItemStack")
+                .method("t", "hasTag").finished()
+                .method("u", "getTag").finished()
+                .method("c", "setTag").args("net.minecraft.nbt.NBTTagCompound");
+    }
+
+    private static ReflectClassBuilder NMSItemStack_1_20() {
+        return new ReflectClassBuilder("net.minecraft.world.item.ItemStack")
+                .method("u", "hasTag").finished()
+                .method("v", "getTag").finished()
+                .method("c", "setTag").args("net.minecraft.nbt.NBTTagCompound");
+    }
+
+    private static ReflectClassBuilder NMSItemStack_1_21() {
+        return new ReflectClassBuilder("net.minecraft.world.item.ItemStack")
+                .method("c", "getDataComponent").args("net.minecraft.core.component.DataComponentType")
+                .method("b", "setDataComponent").args("net.minecraft.core.component.DataComponentType", "java.lang.Object");
     }
 }

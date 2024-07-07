@@ -2,17 +2,24 @@ package org.eu.smileyik.numericalrequirements.nms.nbtitem;
 
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
+import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
+import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 
-import java.util.Objects;
+import java.io.IOException;
 
 public class NMSItemStack {
+    private static final String SCRIPT_PATH = "/version-script/NMSItemStack.txt";
     private static final ReflectClass CLAZZ;
 
     static {
         try {
-            CLAZZ = Objects.requireNonNull(NBTItemHelper.getCurrentVersionNMSItemStack()).toClass();
-        } catch (NoSuchFieldException | ClassNotFoundException | NoSuchMethodException e) {
+            String currentVersion = VersionScript.runScriptByResource(SCRIPT_PATH);
+            CLAZZ = MySimpleReflect.readByResource(
+                    currentVersion, false,
+                    "${version}", VersionScript.VERSION
+            );
+        } catch (NoSuchFieldException | ClassNotFoundException | NoSuchMethodException | IOException e) {
             DebugLogger.debug(e);
             throw new RuntimeException(e);
         }
