@@ -99,6 +99,11 @@ public class NBTEntry implements YamlItemEntry {
     }
 
     @Override
+    public int getPriority() {
+        return -1;
+    }
+
+    @Override
     public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
         NBTItem nbtItem = NBTItemHelper.cast(itemStack);
         if (nbtItem == null) return;
@@ -127,7 +132,7 @@ public class NBTEntry implements YamlItemEntry {
         NBTItem nbtItem = NBTItemHelper.cast(itemStack);
         if (nbtItem == null) return null;
 
-        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagCompound tag = nbtItem.getTag();
         deserialize(tag, section);
         nbtItem.setTag(tag);
 

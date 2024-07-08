@@ -58,6 +58,11 @@ public class NBTSyncEntry implements YamlItemEntry {
     }
 
     @Override
+    public int getPriority() {
+        return -1;
+    }
+
+    @Override
     public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
         if (!section.contains(getId())) return null;
         NBTItem item = NBTItemHelper.cast(itemStack);
