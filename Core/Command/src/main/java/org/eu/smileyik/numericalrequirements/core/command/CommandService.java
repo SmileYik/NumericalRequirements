@@ -3,7 +3,6 @@ package org.eu.smileyik.numericalrequirements.core.command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
@@ -105,7 +104,7 @@ public class CommandService implements CommandExecutor, TabExecutor {
                         CommandMethod suggestion = result.getSuggestion();
                         StringBuilder sb = new StringBuilder();
                         while (suggestion != null) {
-                            sb.append('\n').append(suggestion.getHelp(sender instanceof Player ? ("/" + label) : label));
+                            sb.append('\n').append(suggestion.getHelp(sender, label));
                             suggestion = suggestion.getNext();
                         }
                         sender.sendMessage(format.notFound(sb.substring(1)));
@@ -118,7 +117,7 @@ public class CommandService implements CommandExecutor, TabExecutor {
                         CommandMethod suggestion = result.getSuggestion();
                         StringBuilder sb = new StringBuilder();
                         while (suggestion != null) {
-                            sb.append('\n').append(suggestion.getHelp(sender instanceof Player ? ("/" + label) : label));
+                            sb.append('\n').append(suggestion.getHelp(sender, label));
                             suggestion = suggestion.getNext();
                         }
                         sender.sendMessage(format.commandError(sb.substring(1)));
@@ -158,7 +157,7 @@ public class CommandService implements CommandExecutor, TabExecutor {
     private Result doExecute(CommandSender sender, String label, String[] args) throws InvocationTargetException, IllegalAccessException {
         CommandMethod commandMethod = commandMethodMap.get(label.toLowerCase());
         if (commandMethod != null) {
-            if (args.length == 0) return Result.RESULT_WRONG_COMMAND;
+            if (args.length == 0) return new Result(ExecuteResult.CommandError, commandMethod);
             if (!commandMethod.hasPermission(sender)) {
                 return Result.RESULT_NO_PERMISSION;
             }

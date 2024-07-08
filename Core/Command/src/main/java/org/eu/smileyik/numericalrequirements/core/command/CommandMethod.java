@@ -167,7 +167,8 @@ public class CommandMethod {
         }
     }
 
-    public String getHelp(String alias) {
+    public String getHelp(CommandSender sender, String alias) {
+        if (sender instanceof Player) alias = "/" + alias;
         if (canExecute()) {
             return helpCache == null ? null : helpCache.replace("<%:root_command>", alias);
         }
@@ -175,7 +176,9 @@ public class CommandMethod {
         if (children != null) {
             StringBuilder sb = new StringBuilder();
             sortedMethod.forEach(it -> {
-                sb.append("\n").append(it.helpCache);
+                if (it.hasPermission(sender)) {
+                    sb.append("\n").append(it.helpCache);
+                }
             });
             return sb.substring(1).replace("<%:root_command>", alias);
         }
@@ -187,7 +190,7 @@ public class CommandMethod {
     }
 
     public boolean hasPermission(CommandSender sender) {
-        return !(permission != null && !sender.isOp() && !sender.hasPermission(permission));
+        return permission == null || sender.isOp() || sender.hasPermission(permission);
     }
 
     public List<String> getTabSuggest(List<DefaultTabSuggest> defaultSuggests, Map<String, TabSuggest> tabSuggestMap, CommandSender sender, String[] args, int idx, int step) {
@@ -228,13 +231,16 @@ public class CommandMethod {
     }
 
     public Result execute(CommandSender sender, String label, String[] args, int idx) throws InvocationTargetException, IllegalAccessException {
+        if (!hasPermission(sender)) {
+                return Result.RESULT_NO_PERMISSION;
+        }
         if (args.length == idx + 1 && args[idx].equalsIgnoreCase("help")) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes(
                     '&',
                     String.format(
                             "&e------------&rHELP&e-----------------\n" +
                             "%s\n" +
-                            "&e---------------------------------", getHelp(sender instanceof Player ? ("/" + label) : label)
+                            "&e---------------------------------", getHelp(sender, label)
                     )
             ));
             return Result.RESULT_SUCCEED;
@@ -243,9 +249,6 @@ public class CommandMethod {
             if (args.length - idx == commandInfo.args().length || commandInfo.isUnlimitedArgs()) {
                 if (commandInfo.needPlayer() && !(sender instanceof Player)) {
                     return Result.RESULT_NOT_PLAYER;
-                }
-                if (permission != null && !sender.isOp() && !sender.hasPermission(permission)) {
-                    return Result.RESULT_NO_PERMISSION;
                 }
                 String[] strings = Arrays.copyOfRange(args, idx, args.length);
                 method.invoke(instance, sender, strings);
