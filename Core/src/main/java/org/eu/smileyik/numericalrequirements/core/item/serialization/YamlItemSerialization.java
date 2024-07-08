@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.item.serialization;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -8,13 +9,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.yaml.*;
 import org.eu.smileyik.numericalrequirements.core.util.YamlUtil;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 import java.util.*;
 
 public class YamlItemSerialization implements ItemSerialization {
-    private final List<YamlItemEntry> entries = new LinkedList<>();
+    private final List<YamlItemEntry> entries;
 
     public YamlItemSerialization() {
+        List<YamlItemEntry> entries = new ArrayList<>();
         entries.add(new AttributeEntry.Attribute1Entry());
         entries.add(new AttributeEntry.Attribute2Entry());
         entries.add(new AttributeEntry.Attribute3Entry());
@@ -31,8 +34,22 @@ public class YamlItemSerialization implements ItemSerialization {
         entries.add(new ItemFlagEntry());
         entries.add(new NBTEntry());
         entries.add(new NBTSyncEntry());
+        entries.add(new PotionEntry.Potion1Entry());
 
-        entries.sort(Comparator.comparingInt(YamlItemEntry::getPriority));
+        DebugLogger.debug((d) -> {
+            entries.forEach(it -> {
+                DebugLogger.debug("Entry Init:\nAvailable: %s\nClass: %s\ninstance: %s", it.isAvailable(), it.getClass().getName(), it);
+            });
+        });
+
+        this.entries = entries.stream().filter(YamlItemEntry::isAvailable).sorted(Comparator.comparingInt(YamlItemEntry::getPriority)).toList();
+
+        DebugLogger.debug((d) -> {
+            this.entries.forEach(it -> {
+                DebugLogger.debug("YamlItemSerialization Entry Enabled:\nAvailable: %s\nClass: %s\ninstance: %s", it.isAvailable(), it.getClass().getName(), it);
+            });
+        });
+        entries.clear();
     }
 
     @Override
@@ -101,15 +118,19 @@ public class YamlItemSerialization implements ItemSerialization {
             }
 
             SimpleHandler handler = new SimpleHandler();
+            DebugLogger.debug("Before: \n item: %s\nmeta: %s", itemStack, meta);
+            DebugLogger.debug("Serialization class: %s", entry.getClass().getName());
             ItemStack deserialize = entry.deserialize(handler, section, itemStack, meta);
             if (!handler.isDeny()) {
+                itemStack.setItemMeta(meta);
+                meta = itemStack.getItemMeta();
+                DebugLogger.debug("After: \n item: %s\nmeta: %s", itemStack, meta);
                 if (deserialize != null) {
                     itemStack = deserialize;
                     meta = itemStack.getItemMeta();
                 }
                 ids.add(entry.getId());
             }
-            itemStack.setItemMeta(meta);
         }
         return itemStack;
     }
@@ -122,7 +143,7 @@ public class YamlItemSerialization implements ItemSerialization {
         ItemMeta meta = stack.getItemMeta();
 
         if (section.contains("name")) {
-            meta.setDisplayName(section.getString("name"));
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', section.getString("name")));
         }
         if (section.contains("durability")) {
             stack.setDurability((short) section.getInt("durability"));
