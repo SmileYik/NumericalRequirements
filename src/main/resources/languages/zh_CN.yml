@@ -25,11 +25,35 @@ command:
     reload:
       color: "&e"
       description: "重新加载物品配置"
+      reloaded: "重新加载成功！"
+    get:
+      color: "&b"
+      description: "获取物品"
+      item-id: "物品ID"
+      item-amount: "数量"
+    give:
+      color: "&b"
+      description: "给予物品"
+      player: "玩家名"
+      item-id: "物品ID"
+      item-amount: "数量"
+    store:
+      color: "&b"
+      description: "保存物品"
+      item-id: "物品ID"
+      success: "成功存储物品至ID {0}"
+    info:
+      full-inv: "你的物品栏好像塞不下了，那就把{1}个{0}中的部分物品都放在你脚边好啦～"
+      inform-sender: "你给 {0} 邮寄的 {2} 个 {1} 已经签收啦～"
+      inform-target: "{0} 给你邮寄了 {2} 个 {1} 已经到啦～"
     error:
       no-item-in-hand: "你手上好像没有物品哦！"
       no-tag-id: "你还没有输入词条ID嘞！"
       not-valid-tag: "你输入的词条ID[{0}]好像有点错误嘞！"
       wrong-tag-value: "你输入的词条参数好像有点问题哦！"
+      not-number: "{0} 可不是一个数字哦！"
+      item-not-found: "没有找到ID为{0}的物品啦！"
+      player-not-online: "人家 {0} 现在还不在线嘞！"
   effect:
     color: "&2"
     description: "数字化效果"

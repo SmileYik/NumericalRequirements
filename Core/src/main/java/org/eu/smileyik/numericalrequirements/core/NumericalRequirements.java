@@ -79,6 +79,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                     commandService.registerTabSuggest(new TaskIdSuggest(extensionService));
                     commandService.registerTabSuggest(new EffectBundleSuggest());
                     commandService.registerTabSuggest(new PotionEffectSuggest());
+                    commandService.registerTabSuggest(new ItemIdSuggest(this));
                 } catch (InvalidClassException e) {
                     throw new RuntimeException(e);
                 } catch (InvocationTargetException e) {
@@ -112,7 +113,9 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
             effectService.shutdown();
             elementService.shutdown();
             itemService.shutdown();
-            metrics.shutdown();
+            if (metrics != null) {
+                metrics.shutdown();
+            }
             I18N.clear();
             extensionService = null;
             commandService = null;

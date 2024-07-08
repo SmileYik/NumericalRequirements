@@ -13,7 +13,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.ItemSerialization;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemSerialization;
@@ -305,16 +304,15 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     private synchronized boolean useItem(NumericalPlayer player, ItemStack item) {
-        Map<ItemTag<?>, List<Object>> itemTagListMap =
+        Map<ItemTag<?>, List<Object>> map =
                 analyzeItem(item, (byte) (TAG_TYPE_NBT | TAG_TYPE_LORE | TAG_TYPE_CONSUME));
-        itemTagListMap.forEach((k, v) -> {
-            ((ConsumableTag<Object>) k).onConsume(player, v);
-        });
+        if (map.isEmpty()) return false;
+        map.forEach((k, v) -> ((ConsumableTag<Object>) k).onConsume(player, v));
         return true;
     }
 
     @Override
-    public void reloadItems() {
+    public synchronized void reloadItems() {
         if (!itemFile.exists()) {
             try {
                 itemFile.createNewFile();
@@ -322,6 +320,7 @@ public class ItemServiceImpl implements Listener, ItemService {
                 throw new RuntimeException(e);
             }
         }
+        itemStackCache.clear();
         itemConfig = YamlConfiguration.loadConfiguration(itemFile);
     }
 
@@ -405,16 +404,8 @@ public class ItemServiceImpl implements Listener, ItemService {
             event.setItem(item);
         }
 
-        boolean potion = item.getType() == Material.POTION;
         if (useItem(numericalPlayer, item)) {
-            // event.setCancelled(true);
-
-            PlayerInventory inventory = player.getInventory();
-//            if (potion) {
-//                inventory.addItem(new ItemStack(Material.GLASS_BOTTLE, 1)).forEach((key, value) -> {
-//                    player.getWorld().dropItem(player.getLocation(), value);
-//                });
-//            }
+            // TODO
         }
     }
 }

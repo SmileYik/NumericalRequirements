@@ -1,0 +1,71 @@
+id:
+  name: aaa
+  material: APPLE
+  durability: 0
+  hide-tooltip: false
+  unbreakable: false
+  fire-resistant: false
+  rarity: EPIC
+  custom-model-data: 1
+  nbt-sync: false
+  lore:
+  - aaaa
+  - aaaaaaaaaaaaaaaaaaaa
+  - '${Thirst: 10}'
+  - '${Thirst: ;10}'
+  - '${Thirst: 1;0}'
+  - '${Thirst: 10;}'
+  - '${Thirst: ;;10}'
+  - '${Thirst: 1;;0}'
+  - '${Thirst: 10;;}'
+  - '${Thirst: ;;;10}'
+  - '${Thirst: 1;;;0}'
+  - '${Thirst: 10;;;}'
+  enchantment:
+    thorns: 1
+  flags:
+  - HIDE_ATTRIBUTES
+  - a
+  - b
+  attribute:
+    724fb7e3-a-4e1c-95e7-61eba0a31b36:
+      attribute: GENERIC_MAX_HEALTH
+      operation: ADD_NUMBER
+      amount: 100.0
+      uuid: 724fb7e3-bd96-4e1c-95e7-61eba0a31b36
+      slot-group: any
+  food:
+    can-always-eat: true
+    eat-seconds: 1
+    nutrition: 100
+    saturation: 10.0
+    effects:
+      SPEED:
+        probability: 1.0
+        duration: 100
+        amplifier: 0
+id2:
+  material: APPLE
+  durability: 0
+  name: aaa
+  unbreakable: false
+  lore:
+  - aaaa
+  - aaaaaaaaaaaaaaaaaaaa
+  - '${Thirst: 10}'
+  - '${Thirst: 10}'
+  - '${Thirst: 10}'
+  flags:
+  - HIDE_ATTRIBUTES
+  nbt:
+    HideFlags: 2i
+  nbt-sync: false
+  enchantment: {}
+default-water:
+  name: '&b未知的水'
+  material: POTION
+  lore:
+    - 这是一瓶未知的水，不过在野外也不能这么挑剔啦～
+    - '${Thirst: 10}'
+  potion:
+    color: '#00F0000F'

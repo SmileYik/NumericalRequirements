@@ -1,6 +1,7 @@
 package org.eu.smileyik.numericalrequirements.core.command;
 
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -173,7 +174,92 @@ public class ItemCommand {
             isUnlimitedArgs = false,
             needPlayer = false
     )
-    public void reload(Player player, String[] args) {
+    public void reload(CommandSender sender, String[] args) {
+        NumericalRequirements.getInstance().getItemService().reloadItems();
+        sender.sendMessage(I18N.trp("command", "command.item.reload.reloaded"));
+    }
 
+    @CommandI18N("command.item")
+    @Command(
+            value = "get",
+            colorCode = "color",
+            args = {"item-id", "item-amount"},
+            isUnlimitedArgs = false,
+            needPlayer = true
+    )
+    public void getItem(Player sender, String[] args) {
+        int amount;
+        try {
+            amount = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            sender.sendMessage(I18N.trp("command", "command.item.error.not-number", args[1]));
+            return;
+        }
+        ItemStack itemStack = NumericalRequirements.getInstance().getItemService().loadItem(args[0], amount);
+        if (itemStack == null) {
+            sender.sendMessage(I18N.trp("command", "command.item.error.item-not-found", args[0]));
+            return;
+        }
+        String itemName = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : itemStack.getType().name();
+        HashMap<Integer, ItemStack> map = sender.getInventory().addItem(itemStack);
+        if (map != null && !map.isEmpty()) {
+            sender.sendMessage(I18N.tr("command.item.info.full-inv", itemName, amount));
+            map.forEach((k, v) -> sender.getWorld().dropItem(sender.getLocation(), v));
+        }
+        sender.sendMessage(I18N.tr("command.item.info.inform-sender", sender.getName(), itemName, amount));
+    }
+
+    @CommandI18N("command.item")
+    @Command(
+            value = "give",
+            colorCode = "color",
+            args = {"player", "item-id", "item-amount"},
+            isUnlimitedArgs = false,
+            needPlayer = false
+    )
+    public void giveItem(CommandSender sender, String[] args) {
+        Player player = NumericalRequirements.getPlugin().getServer().getPlayer(args[0]);
+        if (player == null) {
+            sender.sendMessage(I18N.trp("command", "command.item.error.player-not-online", args[0]));
+            return;
+        }
+        int amount;
+        try {
+            amount = Integer.parseInt(args[2]);
+        } catch (NumberFormatException e) {
+            sender.sendMessage(I18N.trp("command", "command.item.error.not-number", args[2]));
+            return;
+        }
+        ItemStack itemStack = NumericalRequirements.getInstance().getItemService().loadItem(args[1], amount);
+        if (itemStack == null) {
+            sender.sendMessage(I18N.trp("command", "command.item.error.item-not-found", args[1]));
+            return;
+        }
+        String itemName = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : itemStack.getType().name();
+        player.sendMessage(I18N.tr("command.item.info.inform-target", sender.getName(), itemName, amount));
+        HashMap<Integer, ItemStack> map = player.getInventory().addItem(itemStack);
+        if (map != null && !map.isEmpty()) {
+            player.sendMessage(I18N.tr("command.item.info.full-inv", itemName, amount));
+            map.forEach((k, v) -> player.getWorld().dropItem(player.getLocation(), v));
+        }
+        player.sendMessage(I18N.tr("command.item.info.inform-sender", player.getName(), itemName, amount));
+    }
+
+    @CommandI18N("command.item")
+    @Command(
+            value = "store",
+            colorCode = "color",
+            args = {"item-id"},
+            isUnlimitedArgs = false,
+            needPlayer = true
+    )
+    public void storeItem(Player sender, String[] args) {
+        ItemStack itemInMainHand = sender.getInventory().getItemInMainHand();
+        if (itemInMainHand == null || itemInMainHand.getType() == Material.AIR) {
+            sender.sendMessage(I18N.trp("command", "command.item.error.no-item-in-hand"));
+            return;
+        }
+        NumericalRequirements.getInstance().getItemService().storeItem(args[0], itemInMainHand);
+        sender.sendMessage(I18N.trp("command", "command.item.store.success", args[0]));
     }
 }

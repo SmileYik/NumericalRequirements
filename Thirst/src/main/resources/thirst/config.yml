@@ -36,3 +36,6 @@ thirst:
       message: "你好滋润啊！！！"
 tag:
   thirst: "§b增加 §2<%:numf1> §b滋润度."
+water:
+  default: default-water
+  biome: {}
