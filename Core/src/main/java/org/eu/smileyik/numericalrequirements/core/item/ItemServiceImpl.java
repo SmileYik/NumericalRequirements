@@ -45,8 +45,8 @@ public class ItemServiceImpl implements Listener, ItemService {
     private final Set<String> nbtTagSet = new HashSet<>();
     private final Set<String> loreTagSet = new HashSet<>();
 
+    private YamlConfiguration itemConfig;
     private final File itemFile;
-    private final YamlConfiguration itemConfig;
     private final ItemSerialization itemSerialization = new YamlItemSerialization();
     private final ConcurrentMap<String, ItemStack> itemStackCache = new ConcurrentHashMap<>();
 
@@ -58,14 +58,7 @@ public class ItemServiceImpl implements Listener, ItemService {
 
         itemSerialization.configure(plugin.getConfig().getConfigurationSection("item.serialization"));
         itemFile = new File(plugin.getDataFolder(), "items.yml");
-        if (!itemFile.exists()) {
-            try {
-                itemFile.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        itemConfig = YamlConfiguration.loadConfiguration(itemFile);
+        reloadItems();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -150,7 +143,7 @@ public class ItemServiceImpl implements Listener, ItemService {
         return result;
     }
 
-    private Map<ItemTag<?>, List<Object>> analyzeNBTTag(NBTTagCompound tagCompound, Set<String> ids) {
+    private synchronized Map<ItemTag<?>, List<Object>> analyzeNBTTag(NBTTagCompound tagCompound, Set<String> ids) {
         Map<ItemTag<?>, List<Object>> map = new HashMap<>();
         for (String id : ids) {
             ItemTag<?> itemTag = idTagMap.get(id);
@@ -163,18 +156,18 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     @Override
-    public Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, byte ... tagType) {
+    public synchronized Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, byte ... tagType) {
         byte type = 0;
         for (byte b : tagType) type |= b;
         return analyzeLore(loreList, type);
     }
 
     @Override
-    public Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, byte tagType) {
+    public synchronized Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, byte tagType) {
         return analyzeLore(loreList, getTagIdsByType(tagType));
     }
 
-    private Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, Set<String> ids) {
+    private synchronized Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, Set<String> ids) {
         Map<LoreTag, List<LoreValue>> result = new LinkedHashMap<>();
         for (String lore : loreList) {
             lore = ChatColor.stripColor(lore);
@@ -200,14 +193,14 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     @Override
-    public Pair<LoreTag, LoreValue> analyzeLore(String lore, byte ... tagType) {
+    public synchronized Pair<LoreTag, LoreValue> analyzeLore(String lore, byte ... tagType) {
         byte type = 0;
         for (byte b : tagType) type |= b;
         return analyzeLore(lore, type);
     }
 
     @Override
-    public Pair<LoreTag, LoreValue> analyzeLore(String lore, byte tagType) {
+    public synchronized Pair<LoreTag, LoreValue> analyzeLore(String lore, byte tagType) {
         lore = ChatColor.stripColor(lore);
         Set<String> ids = getTagIdsByType(tagType);
         for (String id : ids) {
@@ -220,7 +213,7 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
 
-    private Set<String> getTagIdsByType(byte tagType) {
+    private synchronized Set<String> getTagIdsByType(byte tagType) {
         Set<String> set = new HashSet<>();
         if ((tagType & 0x40) == 0x40) {
             set.addAll(loreTagSet);
@@ -279,11 +272,11 @@ public class ItemServiceImpl implements Listener, ItemService {
         }
     }
 
-    private ItemStack getCachedItem(String id) {
+    private synchronized ItemStack getCachedItem(String id) {
         return itemStackCache.get(id);
     }
 
-    private ItemStack updateCachedItem(String id, ItemStack itemStack, boolean isStore) {
+    private synchronized ItemStack updateCachedItem(String id, ItemStack itemStack, boolean isStore) {
         if (itemStack == null || isStore && !idTagMap.containsKey(id)) {
             return null;
         }
@@ -311,13 +304,25 @@ public class ItemServiceImpl implements Listener, ItemService {
         }
     }
 
-    private boolean useItem(NumericalPlayer player, ItemStack item) {
+    private synchronized boolean useItem(NumericalPlayer player, ItemStack item) {
         Map<ItemTag<?>, List<Object>> itemTagListMap =
                 analyzeItem(item, (byte) (TAG_TYPE_NBT | TAG_TYPE_LORE | TAG_TYPE_CONSUME));
         itemTagListMap.forEach((k, v) -> {
             ((ConsumableTag<Object>) k).onConsume(player, v);
         });
         return true;
+    }
+
+    @Override
+    public void reloadItems() {
+        if (!itemFile.exists()) {
+            try {
+                itemFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        itemConfig = YamlConfiguration.loadConfiguration(itemFile);
     }
 
     @Override
@@ -331,7 +336,7 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     @Override
-    public boolean updateItem(ItemStack item) {
+    public synchronized boolean updateItem(ItemStack item) {
         NBTItem nbtItem = NBTItemHelper.cast(item);
         if (nbtItem == null) return false;
         NBTTagCompound tag = nbtItem.getTag();

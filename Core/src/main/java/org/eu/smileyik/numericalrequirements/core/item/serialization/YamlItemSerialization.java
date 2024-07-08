@@ -109,8 +109,8 @@ public class YamlItemSerialization implements ItemSerialization {
                 }
                 ids.add(entry.getId());
             }
+            itemStack.setItemMeta(meta);
         }
-        itemStack.setItemMeta(meta);
         return itemStack;
     }
 

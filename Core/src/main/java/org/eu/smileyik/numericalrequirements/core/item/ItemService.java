@@ -30,6 +30,8 @@ public interface ItemService {
     byte TAG_TYPE_NBT = (byte) (1 << 7);
     byte TAG_TYPE_MASK = 0x7;
 
+    byte TAG_TYPE_ALL_LORE = TAG_TYPE_LORE | TAG_TYPE_NORMAL | TAG_TYPE_CONSUME | TAG_TYPE_FUNCTIONAL;
+
     /**
      * 注册一个 ItemTag
      * @param tag
@@ -64,7 +66,7 @@ public interface ItemService {
     /**
      * 分析Lore列表。
      * @param loreList 需要分析的lore
-     * @param tagType 需要分析的ItemTag种类
+     * @param tagTypes 需要分析的ItemTag种类
      * @return 每个ItemTag及其对应的值，未找到符合要求的Tag则返回空Map
      */
     Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, byte... tagTypes);
@@ -108,6 +110,8 @@ public interface ItemService {
      * @return 如果更新成功返回true, 无需更新或无法更新等其他情况返回false.
      */
     boolean updateItem(ItemStack itemStack);
+
+    void reloadItems();
 
     void shutdown();
 }
