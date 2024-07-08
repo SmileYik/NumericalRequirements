@@ -66,12 +66,12 @@ public class ItemCommand {
         if (tag instanceof MergeableLore) {
             for (int i = 0; i < size; ++i) {
                 String line = lore.get(i);
-                Pair<LoreTag, LoreValue> pair1 = itemService.analyzeLore(line, (byte) (ItemService.TAG_TYPE_MASK | ItemService.TAG_TYPE_LORE));
+                Pair<LoreTag, LoreValue> pair1 = itemService.analyzeLore(line, ItemService.TAG_TYPE_ALL_LORE);
                 if (pair1 == null || pair1.getFirst() != tag) {
                     continue;
                 }
                 Pair<LoreTag, LoreValue> pair2 =
-                        itemService.analyzeLore(tag.buildLore(list), (byte) (ItemService.TAG_TYPE_MASK | ItemService.TAG_TYPE_LORE));
+                        itemService.analyzeLore(tag.buildLore(list), ItemService.TAG_TYPE_ALL_LORE);
                 if (pair2 == null) {
                     continue;
                 }
@@ -144,10 +144,10 @@ public class ItemCommand {
         if (lore == null) {
             return;
         }
-        Map<LoreTag, List<LoreValue>> result = itemService.analyzeLore(lore, (byte) (ItemService.TAG_TYPE_MASK | ItemService.TAG_TYPE_LORE));
+        Map<LoreTag, List<LoreValue>> result = itemService.analyzeLore(lore, ItemService.TAG_TYPE_ALL_LORE);
         List<String> newLore = new ArrayList<>();
         for (String line : lore) {
-            Pair<LoreTag, LoreValue> pair = itemService.analyzeLore(line, (byte) (ItemService.TAG_TYPE_MASK | ItemService.TAG_TYPE_LORE));
+            Pair<LoreTag, LoreValue> pair = itemService.analyzeLore(line, ItemService.TAG_TYPE_ALL_LORE);
             if (pair == null) {
                 newLore.add(line);
                 continue;
@@ -164,5 +164,16 @@ public class ItemCommand {
         meta.setLore(newLore);
         item.setItemMeta(meta);
         player.getInventory().setItemInMainHand(item);
+    }
+
+    @CommandI18N("command.item")
+    @Command(
+            value = "reload",
+            colorCode = "color",
+            isUnlimitedArgs = false,
+            needPlayer = false
+    )
+    public void reload(Player player, String[] args) {
+
     }
 }
