@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.core.item.tag.type;
+package org.eu.smileyik.numericalrequirements.core.item.tagold.type;
 
 public interface LoreTagType <T> {
     String getTypeName();

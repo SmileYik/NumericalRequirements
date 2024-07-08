@@ -9,8 +9,8 @@ import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.item.ItemTag;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagTypeValue;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagValue;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagTypeValue;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagValue;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 

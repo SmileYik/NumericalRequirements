@@ -10,7 +10,7 @@ import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
 import org.eu.smileyik.numericalrequirements.core.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.item.ItemTag;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagValue;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagValue;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 
 import java.util.*;

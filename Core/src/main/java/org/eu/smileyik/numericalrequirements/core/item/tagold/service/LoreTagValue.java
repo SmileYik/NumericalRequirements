@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.core.item.tag.service;
+package org.eu.smileyik.numericalrequirements.core.item.tagold.service;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,10 +1,10 @@
-package org.eu.smileyik.numericalrequirements.core.item.tag.service;
+package org.eu.smileyik.numericalrequirements.core.item.tagold.service;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.type.impl.IntTag;
-import org.eu.smileyik.numericalrequirements.core.item.tag.type.impl.NumberF1Type;
-import org.eu.smileyik.numericalrequirements.core.item.tag.type.impl.NumberTag;
-import org.eu.smileyik.numericalrequirements.core.item.tag.type.impl.StringTag;
-import org.eu.smileyik.numericalrequirements.core.item.tag.type.LoreTagType;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.type.LoreTagType;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.type.impl.IntTag;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.type.impl.NumberF1Type;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.type.impl.NumberTag;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.type.impl.StringTag;
 
 import java.util.HashMap;
 import java.util.Map;

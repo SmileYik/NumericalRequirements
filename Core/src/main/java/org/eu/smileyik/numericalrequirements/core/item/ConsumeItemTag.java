@@ -1,7 +1,7 @@
 package org.eu.smileyik.numericalrequirements.core.item;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagPattern;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagValue;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagPattern;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagValue;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 
 import java.util.List;

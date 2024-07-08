@@ -1,7 +1,6 @@
-package org.eu.smileyik.numericalrequirements.core.item.tag.type;
+package org.eu.smileyik.numericalrequirements.core.item.tagold.type;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public abstract class AbstractLoreTagType<T> implements LoreTagType<T> {
     private final String typeName;

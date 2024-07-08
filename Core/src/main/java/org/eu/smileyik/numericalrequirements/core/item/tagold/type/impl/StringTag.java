@@ -1,6 +1,6 @@
-package org.eu.smileyik.numericalrequirements.core.item.tag.type.impl;
+package org.eu.smileyik.numericalrequirements.core.item.tagold.type.impl;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.type.AbstractLoreTagType;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.type.AbstractLoreTagType;
 
 public class StringTag extends AbstractLoreTagType<String> {
     public StringTag() {

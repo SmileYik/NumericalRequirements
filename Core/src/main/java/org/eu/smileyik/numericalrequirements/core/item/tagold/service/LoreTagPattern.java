@@ -1,8 +1,7 @@
-package org.eu.smileyik.numericalrequirements.core.item.tag.service;
+package org.eu.smileyik.numericalrequirements.core.item.tagold.service;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.type.LoreTagType;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.type.LoreTagType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;

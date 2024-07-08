@@ -1,9 +1,6 @@
-package org.eu.smileyik.numericalrequirements.core.item.tag.type.impl;
+package org.eu.smileyik.numericalrequirements.core.item.tagold.type.impl;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.type.AbstractLoreTagType;
-
-import java.text.NumberFormat;
-import java.text.ParseException;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.type.AbstractLoreTagType;
 
 public class NumberF1Type extends AbstractLoreTagType<Number> {
     public NumberF1Type() {

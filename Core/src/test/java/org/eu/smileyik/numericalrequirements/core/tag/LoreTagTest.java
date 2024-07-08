@@ -1,6 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.tag;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.*;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.*;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package org.eu.smileyik.numericalrequirements.core.item;
 
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagService;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagValue;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagService;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagValue;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 
 import java.util.Collection;

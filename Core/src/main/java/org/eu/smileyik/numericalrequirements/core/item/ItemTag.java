@@ -1,11 +1,8 @@
 package org.eu.smileyik.numericalrequirements.core.item;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagPattern;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagTypeValue;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagValue;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagPattern;
+import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagTypeValue;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
