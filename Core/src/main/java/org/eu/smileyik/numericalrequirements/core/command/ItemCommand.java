@@ -9,8 +9,9 @@ import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
 import org.eu.smileyik.numericalrequirements.core.item.ItemService;
-import org.eu.smileyik.numericalrequirements.core.item.ItemTag;
-import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagValue;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreTag;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreValue;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.MergeableLore;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 
 import java.util.*;
@@ -44,7 +45,7 @@ public class ItemCommand {
             player.sendMessage(I18N.trp("command", "command.item.error.no-tag-id"));
             return;
         }
-        ItemTag tag = itemService.getItemTagById(args[0]);
+        LoreTag tag = (LoreTag) itemService.getItemTagById(args[0]);
         if (tag == null) {
             player.sendMessage(I18N.trp("command", "command.item.error.not-valid-tag", args[0]));
             return;
@@ -62,29 +63,28 @@ public class ItemCommand {
         }
         int size = lore.size();
         boolean added = false;
-        if (tag.canMerge()) {
+        if (tag instanceof MergeableLore) {
             for (int i = 0; i < size; ++i) {
                 String line = lore.get(i);
-                Pair<ItemTag, LoreTagValue> pair1 = itemService.analyzeLore(line, ItemService.TAG_ALL);
+                Pair<LoreTag, LoreValue> pair1 = itemService.analyzeLore(line, (byte) (ItemService.TAG_TYPE_MASK | ItemService.TAG_TYPE_LORE));
                 if (pair1 == null || pair1.getFirst() != tag) {
                     continue;
                 }
-                Pair<ItemTag, LoreTagValue> pair2 =
-                        itemService.analyzeLore(tag.getPattern().buildLoreByStringList(list), ItemService.TAG_ALL);
+                Pair<LoreTag, LoreValue> pair2 =
+                        itemService.analyzeLore(tag.buildLore(list), (byte) (ItemService.TAG_TYPE_MASK | ItemService.TAG_TYPE_LORE));
                 if (pair2 == null) {
                     continue;
                 }
                 added = true;
-                String replaceLore = tag.getPattern().buildLore(
-                        pair1.getSecond().merge(pair2.getSecond(), tag)
-                );
+                ((MergeableLore) tag).merge(pair1.getSecond(), pair2.getSecond());
+                String replaceLore = tag.buildLore(pair1.getSecond());
                 lore.set(i, replaceLore);
                 break;
             }
         }
 
         if (!added) {
-            lore.add(tag.getPattern().buildLoreByStringList(list));
+            lore.add(tag.buildLore(list));
         }
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -105,7 +105,7 @@ public class ItemCommand {
             player.sendMessage(I18N.trp("command", "command.item.error.no-item-in-hand"));
             return;
         }
-        ItemTag tag = itemService.getItemTagById(args[0]);
+        LoreTag tag = (LoreTag) itemService.getItemTagById(args[0]);
         if (tag == null) {
             player.sendMessage(I18N.trp("command", "command.item.error.not-valid-tag", args[0]));
             return;
@@ -117,7 +117,7 @@ public class ItemCommand {
         }
         int size = lore.size();
         for (int i = 0; i < size; ++i) {
-            if (!itemService.matches(tag, lore.get(i))) continue;
+            if (!tag.matches(lore.get(i))) continue;
             lore.remove(i);
             break;
         }
@@ -144,14 +144,24 @@ public class ItemCommand {
         if (lore == null) {
             return;
         }
-        Map<ItemTag, List<LoreTagValue>> result = itemService.analyzeLoreList(lore, ItemService.TAG_ALL);
-        lore.clear();
-        result.forEach((tag, value) -> {
-            value.forEach(it -> {
-                lore.add(tag.getPattern().buildLore(it));
-            });
-        });
-        meta.setLore(lore);
+        Map<LoreTag, List<LoreValue>> result = itemService.analyzeLore(lore, (byte) (ItemService.TAG_TYPE_MASK | ItemService.TAG_TYPE_LORE));
+        List<String> newLore = new ArrayList<>();
+        for (String line : lore) {
+            Pair<LoreTag, LoreValue> pair = itemService.analyzeLore(line, (byte) (ItemService.TAG_TYPE_MASK | ItemService.TAG_TYPE_LORE));
+            if (pair == null) {
+                newLore.add(line);
+                continue;
+            }
+            LoreTag tag = pair.getFirst();
+            if (result.containsKey(pair.getFirst())) {
+                List<LoreValue> loreValues = result.get(tag);
+                newLore.add(tag.buildLore(loreValues.remove(0)));
+                if (loreValues.isEmpty()) {
+                    result.remove(tag);
+                }
+            }
+        }
+        meta.setLore(newLore);
         item.setItemMeta(meta);
         player.getInventory().setItemInMainHand(item);
     }

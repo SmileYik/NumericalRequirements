@@ -1,6 +1,9 @@
 package org.eu.smileyik.numericalrequirements.core.tag;
 
-import org.eu.smileyik.numericalrequirements.core.item.tagold.service.*;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LorePattern;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreValue;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.ValueTranslator;
+import org.eu.smileyik.numericalrequirements.core.util.Pair;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -8,9 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LoreTagTest {
-
-    LoreTagService service = new SimpleLoreTagService();
-
     @Test
     public void test1() {
         List<String> testStringList = Arrays.asList(
@@ -24,14 +24,14 @@ public class LoreTagTest {
                 "&4服用后将在未来&b1.&4秒内减轻&b啊吧啊吧的效果！",
                 "&4服用后将在未来&b.&4秒内减轻&b啊吧啊吧的效果！"
         );
-        LoreTagPattern pattern = service.compile(
+        LorePattern pattern = LorePattern.compile(
                 "&4服用后将在未来&b<%:num>&4秒内减轻&b<%:str>的效果！");
         for (String test : testStringList) {
             if (pattern.matches(test)) {
-                LoreTagValue valueList = pattern.getValue(test);
+                LoreValue value = pattern.getValue(test);
                 List<String> strings = new ArrayList<>();
-                for (LoreTagTypeValue value : valueList) {
-                    strings.add(value.getValueString());
+                for (Pair<ValueTranslator<?>, String> v : value) {
+                    strings.add(v.getSecond());
                 }
                 System.out.println(strings);
             } else {
@@ -56,13 +56,13 @@ public class LoreTagTest {
                 "121.45.111111111",
                 "120450.111111111"
         );
-        LoreTagPattern pattern = service.compile("12<%:int>45<%:num>11111111");
+        LorePattern pattern = LorePattern.compile("12<%:int>45<%:num>11111111");
         for (String test : testStringList) {
             if (pattern.matches(test)) {
-                LoreTagValue valueList = pattern.getValue(test);
+                LoreValue value = pattern.getValue(test);
                 List<String> strings = new ArrayList<>();
-                for (LoreTagTypeValue value : valueList) {
-                    strings.add(value.getValueString());
+                for (Pair<ValueTranslator<?>, String> v : value) {
+                    strings.add(v.getSecond());
                 }
                 System.out.println(strings);
             } else {
@@ -84,13 +84,13 @@ public class LoreTagTest {
                 "&4服用合成时不被消耗后将在未来&b1.&4秒内减轻&b啊吧啊吧的效果！",
                 "合成时不被消耗"
         );
-        LoreTagPattern pattern = service.compile("合成时不被消耗");
+        LorePattern pattern = LorePattern.compile("合成时不被消耗");
         for (String test : testStringList) {
             if (pattern.matches(test)) {
-                LoreTagValue valueList = pattern.getValue(test);
+                LoreValue value = pattern.getValue(test);
                 List<String> strings = new ArrayList<>();
-                for (LoreTagTypeValue value : valueList) {
-                    strings.add(value.getValueString());
+                for (Pair<ValueTranslator<?>, String> v : value) {
+                    strings.add(v.getSecond());
                 }
                 System.out.println(strings);
             } else {

@@ -17,6 +17,11 @@ public class NBTItemImplFor_1_21 implements NBTItem {
     }
 
     @Override
+    public boolean hasTag() {
+        return nmsItem.getCustomData() != null;
+    }
+
+    @Override
     public NBTTagCompound getTag() {
         if (tag == null) {
             CustomData customData = nmsItem.getCustomData();

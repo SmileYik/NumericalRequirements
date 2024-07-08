@@ -1,8 +1,9 @@
 package org.eu.smileyik.numericalrequirements.core.item;
 
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagService;
-import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagValue;
+import org.eu.smileyik.numericalrequirements.core.item.tag.ItemTag;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreTag;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 
 import java.util.Collection;
@@ -14,42 +15,39 @@ public interface ItemService {
     String NBT_KEY_SYNC = "nreq-sync";
 
     /**
-     * 所有种类的Tag.
+     * Tag种类：不可消耗、无功能性
      */
-    byte TAG_ALL = 0;
+    byte TAG_TYPE_NORMAL = 1;
     /**
-     * 仅分析可消耗的Tag.
+     * Tag种类：可消耗。
      */
-    byte TAG_CONSUME = 1;
+    byte TAG_TYPE_CONSUME = 1 << 1;
     /**
-     * 仅分析不可消耗的Tag.
+     * Tag种类：功能性
      */
-    byte TAG_UNCONSUME = 2;
-
-    /**
-     * 获取 Lore Tag 服务。
-     * @return
-     */
-    LoreTagService getLoreTagService();
+    byte TAG_TYPE_FUNCTIONAL = 1 << 2;
+    byte TAG_TYPE_LORE = (byte) (1 << 6);
+    byte TAG_TYPE_NBT = (byte) (1 << 7);
+    byte TAG_TYPE_MASK = 0x7;
 
     /**
      * 注册一个 ItemTag
      * @param tag
      */
-    void registerItemTag(ItemTag tag);
+    void registerItemTag(ItemTag<?> tag);
 
     /**
      * 取消注册指定 ItemTag
      * @param tag
      */
-    void unregisterItemTag(ItemTag tag);
+    void unregisterItemTag(ItemTag<?> tag);
 
     /**
      * 根据ID获取一个ItemTag
      * @param id
      * @return
      */
-    ItemTag getItemTagById(String id);
+    ItemTag<?> getItemTagById(String id);
 
     /**
      * 获取全部ItemTag的ID
@@ -57,13 +55,21 @@ public interface ItemService {
      */
     List<String> getTagIds();
 
+    List<String> getTagIds(byte tagType);
+
+    List<String> getTagIds(byte ... tagType);
+
+    Map<ItemTag<?>, List<Object>> analyzeItem(ItemStack itemStack, byte tagType);
+
     /**
      * 分析Lore列表。
      * @param loreList 需要分析的lore
      * @param tagType 需要分析的ItemTag种类
      * @return 每个ItemTag及其对应的值，未找到符合要求的Tag则返回空Map
      */
-    Map<ItemTag, List<LoreTagValue>> analyzeLoreList(List<String> loreList, byte tagType);
+    Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, byte... tagTypes);
+
+    Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, byte tagType);
 
     /**
      * 分析单条Lore.
@@ -71,15 +77,9 @@ public interface ItemService {
      * @param tagType 需要分析的ItemTag种类
      * @return 返回符合的ItemTag以及其对应的值, 未找到符合的Tag则返回null
      */
-    Pair<ItemTag, LoreTagValue> analyzeLore(String lore, byte tagType);
+    Pair<LoreTag, LoreValue> analyzeLore(String lore, byte tagType);
 
-    /**
-     * 判断ItemTag和Lore是否匹配。
-     * @param tag
-     * @param lore
-     * @return 匹配返回true 反之返回false
-     */
-    boolean matches(ItemTag tag, String lore);
+    Pair<LoreTag, LoreValue> analyzeLore(String lore, byte ... tagTypes);
 
     /**
      * 通过ID加载一个物品。

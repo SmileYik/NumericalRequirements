@@ -2,13 +2,12 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagPattern;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LorePattern;
 
 import java.util.Collection;
 
 public interface Recipe {
-    LoreTagPattern UNCONSUME_TAG = NumericalRequirements.getInstance().getItemService().getLoreTagService().compile("不在合成时消耗");
+    LorePattern UNCONSUME_TAG = LorePattern.compile("不在合成时消耗");
 
     /**
      * 获取配方名.

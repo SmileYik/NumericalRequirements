@@ -1,29 +1,26 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.tag;
 
-import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.item.ItemTag;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagPattern;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagTypeValue;
-import org.eu.smileyik.numericalrequirements.core.item.tag.service.LoreTagValue;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreTag;
 
-public class NotConsumeTag extends ItemTag {
-    protected NotConsumeTag() {
-        super(
-                "mbc_no_consume",
-                "不在合成时消耗",
-                "不在合成时消耗",
-                NumericalRequirements.getInstance().getItemService().getLoreTagService().compile("不在合成时消耗")
-        );
+public class NotConsumeTag extends LoreTag {
+
+    @Override
+    protected String getModeString() {
+        return "不在合成时消耗";
     }
 
     @Override
-    public boolean canMerge() {
-        return false;
+    public String getId() {
+        return "mbc_no_consume";
     }
 
     @Override
-    public String apply(LoreTagTypeValue value, LoreTagTypeValue value2) {
-        return null;
+    public String getName() {
+        return "不在合成时消耗";
+    }
+
+    @Override
+    public String getDescription() {
+        return "不在合成时消耗";
     }
 }

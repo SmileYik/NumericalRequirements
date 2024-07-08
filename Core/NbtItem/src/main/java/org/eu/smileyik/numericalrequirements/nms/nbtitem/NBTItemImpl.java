@@ -16,6 +16,11 @@ public class NBTItemImpl implements NBTItem {
     }
 
     @Override
+    public boolean hasTag() {
+        return nmsItem.hasTag();
+    }
+
+    @Override
     public NBTTagCompound getTag() {
         if (tag == null) {
             tag = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();

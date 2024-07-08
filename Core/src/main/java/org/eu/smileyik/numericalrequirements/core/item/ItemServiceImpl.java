@@ -17,10 +17,13 @@ import org.bukkit.inventory.PlayerInventory;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.ItemSerialization;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemSerialization;
-import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagPattern;
-import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagService;
-import org.eu.smileyik.numericalrequirements.core.item.tagold.service.LoreTagValue;
-import org.eu.smileyik.numericalrequirements.core.item.tagold.service.SimpleLoreTagService;
+import org.eu.smileyik.numericalrequirements.core.item.tag.ConsumableTag;
+import org.eu.smileyik.numericalrequirements.core.item.tag.FunctionalTag;
+import org.eu.smileyik.numericalrequirements.core.item.tag.ItemTag;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreTag;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreValue;
+import org.eu.smileyik.numericalrequirements.core.item.tag.lore.MergeableLore;
+import org.eu.smileyik.numericalrequirements.core.item.tag.nbt.NBTTag;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.util.YamlUtil;
@@ -37,11 +40,10 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ItemServiceImpl implements Listener, ItemService {
     private final NumericalRequirements plugin;
-    private final Map<String, ItemTag> idTagMap = new HashMap<>();
-    private final Collection<ItemTag> normalItemTags = new ArrayList<>();
-    private final Collection<ItemTag> consumeItemTags = new ArrayList<>();
-    private final Map<ItemTag, LoreTagPattern> noColorTagMap = new HashMap<>();
-    private final LoreTagService loreTagService;
+    private final Map<String, ItemTag<?>> idTagMap = new HashMap<>();
+    private final Map<Byte, Set<String>> typeTagMap = new HashMap<>();
+    private final Set<String> nbtTagSet = new HashSet<>();
+    private final Set<String> loreTagSet = new HashSet<>();
 
     private final File itemFile;
     private final YamlConfiguration itemConfig;
@@ -50,8 +52,9 @@ public class ItemServiceImpl implements Listener, ItemService {
 
     public ItemServiceImpl(NumericalRequirements plugin) {
         this.plugin = plugin;
-        loreTagService = new SimpleLoreTagService();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        typeTagMap.put(TAG_TYPE_NORMAL, new HashSet<>());
+        typeTagMap.put(TAG_TYPE_CONSUME, new HashSet<>());
+        typeTagMap.put(TAG_TYPE_FUNCTIONAL, new HashSet<>());
 
         itemSerialization.configure(plugin.getConfig().getConfigurationSection("item.serialization"));
         itemFile = new File(plugin.getDataFolder(), "items.yml");
@@ -63,41 +66,48 @@ public class ItemServiceImpl implements Listener, ItemService {
             }
         }
         itemConfig = YamlConfiguration.loadConfiguration(itemFile);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
-    public LoreTagService getLoreTagService() {
-        return loreTagService;
-    }
-
-    @Override
-    public synchronized void registerItemTag(ItemTag tag) {
-        String id = tag.getTagId().toLowerCase();
+    public synchronized void registerItemTag(ItemTag<?> tag) {
+        String id = tag.getId().toLowerCase();
         if (idTagMap.containsKey(id)) {
-            // throw error
             return;
         }
         idTagMap.put(id, tag);
-        if (tag instanceof ConsumeItemTag) {
-            consumeItemTags.add(tag);
+        boolean flag = true;
+        if (tag instanceof NBTTag<?>) {
+            nbtTagSet.add(id);
         } else {
-            normalItemTags.add(tag);
+            loreTagSet.add(id);
         }
-        noColorTagMap.put(tag, loreTagService.compile(ChatColor.stripColor(tag.getPattern().getModeString())));
+        if (tag instanceof ConsumableTag<?>) {
+            typeTagMap.get(TAG_TYPE_CONSUME).add(id);
+            flag = false;
+        }
+        if (tag instanceof FunctionalTag<?>) {
+            typeTagMap.get(TAG_TYPE_FUNCTIONAL).add(id);
+            flag = false;
+        }
+        if (flag) {
+            typeTagMap.get(TAG_TYPE_NORMAL).add(id);
+        }
     }
 
     @Override
-    public synchronized void unregisterItemTag(ItemTag tag) {
-        String id = tag.getTagId().toLowerCase();
+    public synchronized void unregisterItemTag(ItemTag<?> tag) {
+        String id = tag.getId().toLowerCase();
         idTagMap.remove(id);
-        idTagMap.remove(id);
-        consumeItemTags.remove(tag);
-        normalItemTags.remove(tag);
-        noColorTagMap.remove(tag);
+        typeTagMap.get(TAG_TYPE_NORMAL).remove(id);
+        typeTagMap.get(TAG_TYPE_CONSUME).remove(id);
+        typeTagMap.get(TAG_TYPE_FUNCTIONAL).remove(id);
+        nbtTagSet.remove(id);
+        loreTagSet.remove(id);
     }
 
     @Override
-    public synchronized ItemTag getItemTagById(String id) {
+    public synchronized ItemTag<?> getItemTagById(String id) {
         return idTagMap.get(id.toLowerCase());
     }
 
@@ -107,62 +117,134 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     @Override
-    public Map<ItemTag, List<LoreTagValue>> analyzeLoreList(List<String> loreList, byte tagType) {
-        Collection<ItemTag> tags = getTagsByTagType(tagType);
-        Map<ItemTag, List<LoreTagValue>> result = new LinkedHashMap<>();
+    public synchronized List<String> getTagIds(byte ... types) {
+        byte type = 0;
+        for (byte b : types) type |= b;
+        return getTagIds(type);
+    }
+
+    @Override
+    public synchronized List<String> getTagIds(byte type) {
+        return new ArrayList<>(getTagIdsByType(type));
+    }
+
+    @Override
+    public synchronized Map<ItemTag<?>, List<Object>> analyzeItem(ItemStack itemStack, byte tagType) {
+        if (itemStack == null) return new HashMap<>();
+        Set<String> allIds = getTagIdsByType(tagType);
+        Map<ItemTag<?>, List<Object>> result = new HashMap<>();
+        if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore()) {
+            Set<String> loreIds = new HashSet<>(allIds);
+            loreIds.removeAll(nbtTagSet);
+            Map<LoreTag, List<LoreValue>> loreTagListMap = analyzeLore(itemStack.getItemMeta().getLore(), loreIds);
+            loreTagListMap.forEach((k, v) -> result.put(k, new ArrayList<>(v)));
+        }
+        NBTItem item = NBTItemHelper.cast(itemStack);
+        if (item != null && item.hasTag()) {
+            NBTTagCompound tagCompound = item.getTag();
+            if (tagCompound != null) {
+                allIds.removeAll(loreTagSet);
+                result.putAll(analyzeNBTTag(tagCompound, allIds));
+            }
+        }
+        return result;
+    }
+
+    private Map<ItemTag<?>, List<Object>> analyzeNBTTag(NBTTagCompound tagCompound, Set<String> ids) {
+        Map<ItemTag<?>, List<Object>> map = new HashMap<>();
+        for (String id : ids) {
+            ItemTag<?> itemTag = idTagMap.get(id);
+            if (itemTag instanceof NBTTag<?>) {
+                NBTTag<?> nbtTag = (NBTTag<?>) itemTag;
+                map.put(itemTag, List.of(nbtTag.getValue(tagCompound)));
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, byte ... tagType) {
+        byte type = 0;
+        for (byte b : tagType) type |= b;
+        return analyzeLore(loreList, type);
+    }
+
+    @Override
+    public Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, byte tagType) {
+        return analyzeLore(loreList, getTagIdsByType(tagType));
+    }
+
+    private Map<LoreTag, List<LoreValue>> analyzeLore(List<String> loreList, Set<String> ids) {
+        Map<LoreTag, List<LoreValue>> result = new LinkedHashMap<>();
         for (String lore : loreList) {
-            for (ItemTag tag : tags) {
-                LoreTagValue value = noColorTagMap.get(tag).getValue(ChatColor.stripColor(lore));
+            lore = ChatColor.stripColor(lore);
+            for (String id : ids) {
+                LoreTag tag = (LoreTag) idTagMap.get(id);
+                LoreValue value = tag.getValue(lore);
                 if (value == null) {
                     continue;
                 }
-                if (result.containsKey(tag)) {
-                    List<LoreTagValue> values = result.get(tag);
-                    if (tag.canMerge()) {
-                        values.add(values.remove(0).merge(value, tag));
-                    } else {
-                        values.add(value);
-                    }
+
+                if (!result.containsKey(tag)) {
+                    result.put(tag, new ArrayList<>());
+                }
+                List<LoreValue> loreValues = result.get(tag);
+                if (!loreValues.isEmpty() && tag instanceof MergeableLore) {
+                    ((MergeableLore) tag).merge(loreValues.get(0), value);
                 } else {
-                    List<LoreTagValue> values = new ArrayList<>();
-                    values.add(value);
-                    result.put(tag, values);
+                    loreValues.add(value);
                 }
             }
         }
         return result;
     }
 
-    private Collection<ItemTag> getTagsByTagType(byte tagType) {
-        Collection<ItemTag> tags = null;
-        if (tagType == TAG_ALL) {
-            tags = idTagMap.values();
-        } else if (tagType == TAG_CONSUME) {
-            tags = consumeItemTags;
-        } else if (tagType == TAG_UNCONSUME) {
-            tags = normalItemTags;
-        } else {
-            tags = Collections.emptyList();
-        }
-        return tags;
+    @Override
+    public Pair<LoreTag, LoreValue> analyzeLore(String lore, byte ... tagType) {
+        byte type = 0;
+        for (byte b : tagType) type |= b;
+        return analyzeLore(lore, type);
     }
 
     @Override
-    public Pair<ItemTag, LoreTagValue> analyzeLore(String lore, byte tagType) {
-        Collection<ItemTag> tags = getTagsByTagType(tagType);
-        for (ItemTag tag : tags) {
-            LoreTagValue valueList = noColorTagMap.get(tag).getValue(ChatColor.stripColor(lore));
-            if (valueList == null) {
-                continue;
-            }
-            return Pair.newUnchangablePair(tag, valueList);
+    public Pair<LoreTag, LoreValue> analyzeLore(String lore, byte tagType) {
+        lore = ChatColor.stripColor(lore);
+        Set<String> ids = getTagIdsByType(tagType);
+        for (String id : ids) {
+            LoreTag tag = (LoreTag) idTagMap.get(id);
+            LoreValue v = tag.getValue(lore);
+            if (v == null) continue;
+            return Pair.newUnchangablePair(tag, v);
         }
         return null;
     }
 
-    @Override
-    public boolean matches(ItemTag tag, String lore) {
-        return tag != null && noColorTagMap.containsKey(tag) && noColorTagMap.get(tag).matches(ChatColor.stripColor(lore));
+
+    private Set<String> getTagIdsByType(byte tagType) {
+        Set<String> set = new HashSet<>();
+        if ((tagType & 0x40) == 0x40) {
+            set.addAll(loreTagSet);
+        }
+        if ((tagType & 0x80) == 0x80) {
+            set.addAll(nbtTagSet);
+        }
+
+        tagType = (byte) (tagType & TAG_TYPE_MASK);
+        byte pos = 1;
+        Set<String> need = new HashSet<>();
+        Set<String> other = new HashSet<>();
+        while (tagType != 0) {
+            if ((tagType & 0x1) == 1) {
+                need.addAll(typeTagMap.get(pos));
+            } else {
+                other.addAll(typeTagMap.get(pos));
+            }
+            pos <<= 1;
+            tagType >>>= 1;
+        }
+        other.removeAll(need);
+        set.removeAll(other);
+        return set;
     }
 
     @Override
@@ -230,16 +312,10 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     private boolean useItem(NumericalPlayer player, ItemStack item) {
-        if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
-            return false;
-        }
-        List<String> lore = item.getItemMeta().getLore();
-        Map<ItemTag, List<LoreTagValue>> consumeItemTagListMap = analyzeLoreList(lore, TAG_CONSUME);
-        if (consumeItemTagListMap.isEmpty()) {
-            return false;
-        }
-        consumeItemTagListMap.forEach((key, value) -> {
-            ((ConsumeItemTag) key).handlePlayer(player, value);
+        Map<ItemTag<?>, List<Object>> itemTagListMap =
+                analyzeItem(item, (byte) (TAG_TYPE_NBT | TAG_TYPE_LORE | TAG_TYPE_CONSUME));
+        itemTagListMap.forEach((k, v) -> {
+            ((ConsumableTag<Object>) k).onConsume(player, v);
         });
         return true;
     }
@@ -247,12 +323,11 @@ public class ItemServiceImpl implements Listener, ItemService {
     @Override
     public void shutdown() {
         saveItemFile();
-
-        loreTagService.shutdown();
         idTagMap.clear();
-        normalItemTags.clear();
-        consumeItemTags.clear();
-        noColorTagMap.clear();
+        nbtTagSet.clear();
+        loreTagSet.clear();
+        typeTagMap.clear();
+        itemStackCache.clear();
     }
 
     @Override

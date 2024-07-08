@@ -1,6 +1,5 @@
 package org.eu.smileyik.numericalrequirements.nms.nbtitem;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
 /**
@@ -30,4 +29,10 @@ public interface NBTItem {
      * @return
      */
     ItemStack getItemStack();
+
+    /**
+     * 是否有Tag.
+     * @return
+     */
+    boolean hasTag();
 }
