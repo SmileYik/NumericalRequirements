@@ -1,0 +1,5 @@
+net.minecraft.server.${version}.ChatComponentText{
+    {
+        <c-0>(java.lang.String);
+    }
+}

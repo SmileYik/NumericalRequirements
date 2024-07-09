@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":Commons:ReflectTool"))
     implementation(project(":Commons:VersionScript"))
     implementation 'org.bukkit:craftbukkit:1.9.2-R0.1-SNAPSHOT'
+    // implementation 'org.bukkit:craftbukkit:1.18.2-R0.1-SNAPSHOT'
 }
 
 test {

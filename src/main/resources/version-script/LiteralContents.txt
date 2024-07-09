@@ -1,0 +1,2 @@
+$1 >= 20; /reflect-class/LiteralContents_1_20.txt
+true; /reflect-class/LiteralContents.txt

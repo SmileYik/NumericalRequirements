@@ -1,0 +1,5 @@
+net.minecraft.network.protocol.game.PacketPlayOutChat{
+    {
+        <new-type-uuid>(net.minecraft.network.chat.IChatBaseComponent, net.minecraft.network.chat.ChatMessageType, java.util.UUID);
+    }
+}

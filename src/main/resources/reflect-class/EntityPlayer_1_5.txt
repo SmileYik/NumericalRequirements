@@ -1,0 +1,5 @@
+net.minecraft.server.${version}.EntityPlayer{
+    @{
+        playerConnection<playerConnection>;
+    }
+}

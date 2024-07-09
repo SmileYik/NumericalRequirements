@@ -4,9 +4,11 @@ import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClassPathBuilder;
-import org.eu.smileyik.numericalrequirements.reflect.ReflectField;
 
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReflectClassBuilder {
     final String name;
@@ -146,6 +148,43 @@ public class ReflectClassBuilder {
             sb.append(o).append(";");
         }
         return String.format("{%s}", sb.isEmpty() ? "" : sb.substring(0, sb.length() - 1));
+    }
+
+    public static ReflectClassBuilder newByClass(String className) throws ClassNotFoundException {
+        return newByClass(Class.forName(className));
+    }
+
+    public static ReflectClassBuilder newByClass(Class<?> clazz) {
+        ReflectClassBuilder builder = new ReflectClassBuilder(clazz.getName());
+        doNewByClass(builder, clazz);
+        return builder;
+    }
+
+    private static void doNewByClass(ReflectClassBuilder builder, Class<?> clazz) {
+        for (Class<?> declaredClass : clazz.getDeclaredClasses()) {
+            ReflectInnerClassBuilder inner = builder.innerClass(declaredClass.getSimpleName());
+            doNewByClass(inner, declaredClass);
+            inner.finished();
+        }
+        for (java.lang.reflect.Field declaredField : clazz.getDeclaredFields()) {
+            builder.field(declaredField.getName());
+        }
+        int constructorSize = 0;
+        for (Constructor<?> declaredConstructor : clazz.getDeclaredConstructors()) {
+            ReflectConstructorBuilder constructor = builder.constructor("c-" + constructorSize++);
+            constructor.args(paramsClassesToStrings(declaredConstructor.getParameterTypes()));
+        }
+        for (Method declaredMethod : clazz.getDeclaredMethods()) {
+            builder.method(declaredMethod.getName()).args(paramsClassesToStrings(declaredMethod.getParameterTypes()));
+        }
+    }
+
+    private static String[] paramsClassesToStrings(Class<?>[] parameterTypes) {
+        String[] str = new String[parameterTypes.length];
+        for (int i = 0; i < parameterTypes.length; i++) {
+            str[i] = parameterTypes[i].getName();
+        }
+        return str;
     }
 
     private static final class Field {

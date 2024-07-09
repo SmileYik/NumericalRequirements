@@ -1,0 +1,5 @@
+net.minecraft.network.protocol.game.ClientboundSystemChatPacket{
+    {
+        <new>(net.minecraft.network.chat.IChatBaseComponent, boolean);
+    }
+}

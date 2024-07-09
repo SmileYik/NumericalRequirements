@@ -1,11 +1,10 @@
-package org.eu.smileyik.numericalrequirements;
+package org.eu.smileyik.numericalrequirements.nms;
 
 import org.eu.smileyik.numericalrequirements.reflect.builder.ReflectClassBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -14,22 +13,64 @@ public class ReflectPathGenerator {
     private static final String CURRENT_PACKET = "${version}";
 
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException, IOException {
-        for (Method declaredMethod : ReflectPathGenerator.class.getDeclaredMethods()) {
-            if (declaredMethod.getName().equalsIgnoreCase("main")) {
-                continue;
+        String template = Files.readString(Path.of("plugins", "NumericalRequirements", "reflect_class_template.txt"));
+        for (int i = 1; i < args.length; i += 2) {
+            String name = args[i - 1];
+            String className = args[i];
+            try {
+                ReflectClassBuilder builder = ReflectClassBuilder.newByClass(className);
+                String prettyString = builder.toPrettyString();
+                File file = new File("build/generator/", String.format("%s.txt", name));
+                File parent = file.getParentFile();
+                if (!parent.exists()) {
+                    parent.mkdirs();
+                }
+                System.out.println(file.getCanonicalPath());
+                Path path = file.toPath();
+                prettyString = prettyString.replace(NMS.VERSION, CURRENT_PACKET);
+                Files.writeString(
+                        path, prettyString,
+                        StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE
+                );
+                Files.writeString(
+                        new File(parent, String.format("%s.java", name)).toPath(),
+                        template.replace("${class_name}", name).replace("${script_path}", String.format("/version-script/%s.txt", name)),
+                        StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE
+                );
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
-
-            ReflectClassBuilder builder = (ReflectClassBuilder) declaredMethod.invoke(null);
-            String prettyString = builder.toPrettyString();
-            File file = new File("src/main/resources/reflect-class", String.format("%s.txt", declaredMethod.getName()));
-            System.out.println(file.getCanonicalPath());
-            Path path = file.toPath();
-            Files.writeString(
-                    path, prettyString,
-                    StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE
-            );
         }
+
     }
+
+//    private static ReflectClassBuilder ChatMessageType_1_16() throws ClassNotFoundException {
+//        return ReflectClassBuilder.newByClass("net.minecraft.server." + NMS.VERSION + ".ChatMessageType");
+//    }
+//
+//    private static ReflectClassBuilder PacketPlayOutChat_1_16() throws ClassNotFoundException {
+//        return ReflectClassBuilder.newByClass("net.minecraft.server." + NMS.VERSION + ".PacketPlayOutChat");
+//    }
+
+//    private static ReflectClassBuilder CraftPlayer() {
+//        return ReflectClassBuilder.newByClass(CraftPlayer.class);
+//    }
+//
+//    private static ReflectClassBuilder ChatComponentText() {
+//        return ReflectClassBuilder.newByClass(ChatComponentText.class);
+//    }
+//
+//    private static ReflectClassBuilder PacketPlayOutChat_1_5() {
+//        return ReflectClassBuilder.newByClass(PacketPlayOutChat.class);
+//    }
+//
+//    private static ReflectClassBuilder EntityPlayer_1_5() {
+//        return ReflectClassBuilder.newByClass(EntityPlayer.class);
+//    }
+//
+//    private static ReflectClassBuilder PlayerConnection() {
+//        return ReflectClassBuilder.newByClass(PlayerConnection.class);
+//    }
 
 //
 //    private static ReflectClassBuilder NBTTagCompound_1_5_to_1_8() {

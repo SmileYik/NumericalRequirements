@@ -1,0 +1,5 @@
+org.bukkit.craftbukkit.${version}.entity.CraftPlayer{
+    #{
+        getHandle<getHandle>();
+    }
+}

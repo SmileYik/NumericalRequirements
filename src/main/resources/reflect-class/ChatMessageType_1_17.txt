@@ -1,0 +1,12 @@
+net.minecraft.network.chat.ChatMessageType{
+    @{
+        a<CHAT>;
+        b<SYSTEM>;
+        c<GAME_INFO>;
+    }
+    #{
+        values<values>();
+        valueOf<valueOf>(java.lang.String);
+        a<byByte>(byte);
+    }
+}

@@ -1,0 +1,5 @@
+net.minecraft.network.chat.contents.LiteralContents{
+    {
+        <new>(java.lang.String);
+    }
+}

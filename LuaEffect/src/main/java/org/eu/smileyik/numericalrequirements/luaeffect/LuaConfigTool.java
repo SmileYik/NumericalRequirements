@@ -1,9 +1,5 @@
 package org.eu.smileyik.numericalrequirements.luaeffect;
 
-import org.bukkit.*;
-import org.keplerproject.luajava.LuaException;
-import org.keplerproject.luajava.LuaObject;
-import org.keplerproject.luajava.LuaState;
 import tk.smileyik.luainminecraftbukkit.util.luahelper.LuaHelper;
 
 import java.lang.reflect.Constructor;
@@ -11,16 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public class LuaConfigTool extends LuaHelper {
-    public static final Class<Particle> Particle = org.bukkit.Particle.class;
-    public static final Class<EntityEffect> EntityEffect = org.bukkit.EntityEffect.class;
-    public static final Class<Effect> Effect = org.bukkit.Effect.class;
-    public static final Class<?> Instrument = org.bukkit.Instrument.class;
-    public static final Class<?> Note = org.bukkit.Note.class;
-    public static final Class<?> Tone = org.bukkit.Note.Tone.class;
-    public static final Class<?> Material = org.bukkit.Material.class;
-    public static final Class<?> PotionEffectType = org.bukkit.potion.PotionEffectType.class;
-    public static final Class<?> Color = org.bukkit.Color.class;
-
     public static Class<?> getClass(String clazz) throws ClassNotFoundException {
         return Class.forName(clazz);
     }

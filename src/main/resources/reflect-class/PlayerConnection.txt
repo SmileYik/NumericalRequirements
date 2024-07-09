@@ -1,0 +1,5 @@
+net.minecraft.server.${version}.PlayerConnection{
+    #{
+        sendPacket<sendPacket>(net.minecraft.server.${version}.Packet);
+    }
+}

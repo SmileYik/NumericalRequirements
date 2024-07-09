@@ -1,0 +1,5 @@
+net.minecraft.network.chat.IChatMutableComponent{
+    #{
+        a<create>(net.minecraft.network.chat.ComponentContents);
+    }
+}

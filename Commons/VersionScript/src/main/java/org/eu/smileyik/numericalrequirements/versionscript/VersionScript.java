@@ -44,7 +44,7 @@ public class VersionScript {
     }
 
     private static String runScript(String script, String[] versions) {
-        // > <
+        if (script.startsWith("//")) return null;
         for (int i = 0; i < versions.length; i++) {
             script = script.replace("$" + i, versions[i]);
         }

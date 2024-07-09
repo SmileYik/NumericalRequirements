@@ -1,0 +1,6 @@
+    net.minecraft.server.${version}.PacketPlayOutChat{
+    {
+        <new-byte>(net.minecraft.server.${version}.IChatBaseComponent, byte);
+        <new>(net.minecraft.server.${version}.IChatBaseComponent);
+    }
+}

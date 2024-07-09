@@ -1,0 +1,5 @@
+net.minecraft.server.${version}.PacketPlayOutChat{
+    {
+        <new-type>(net.minecraft.server.${version}.IChatBaseComponent, net.minecraft.server.${version}.ChatMessageType);
+    }
+}

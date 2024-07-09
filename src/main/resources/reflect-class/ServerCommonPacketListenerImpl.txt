@@ -1,0 +1,5 @@
+net.minecraft.server.network.ServerCommonPacketListenerImpl{
+    #{
+        b<sendCommonPacket>(net.minecraft.network.protocol.Packet);
+    }
+}

@@ -1,0 +1,5 @@
+net.minecraft.server.level.EntityPlayer{
+    @{
+        c<playerConnection>;
+    }
+}

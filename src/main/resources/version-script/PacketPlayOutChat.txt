@@ -1,0 +1,7 @@
+$1 >= 17; /reflect-class/PacketPlayOutChat_1_17     .txt
+$1 >= 16; /reflect-class/PacketPlayOutChat_1_16.txt
+$1 >= 12; /reflect-class/PacketPlayOutChat_1_12.txt
+$1 >= 8; /reflect-class/PacketPlayOutChat_1_7_R4.txt
+// $1  = 7; $2 = R4; /reflect-class/PacketPlayOutChat_1_7_R4.txt
+$1 >= 7; /reflect-class/PacketPlayOutChat_1_7.txt
+true; null
