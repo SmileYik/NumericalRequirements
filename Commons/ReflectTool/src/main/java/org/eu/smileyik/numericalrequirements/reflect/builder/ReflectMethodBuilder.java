@@ -8,7 +8,7 @@ public class ReflectMethodBuilder {
     public static final String PREFIX = "#";
 
     private final ReflectClassBuilder parent;
-    String name, newName;
+    String name, newName, description;
     List<String> params = new ArrayList<>();
 
     protected ReflectMethodBuilder(ReflectClassBuilder parent) {
@@ -47,6 +47,11 @@ public class ReflectMethodBuilder {
         return finished();
     }
 
+    public ReflectMethodBuilder description(String description) {
+        this.description = description;
+        return this;
+    }
+
     public ReflectClassBuilder finished() {
         if (name == null || params == null) {
             throw new IllegalArgumentException("name and params cannot be null");
@@ -66,8 +71,9 @@ public class ReflectMethodBuilder {
             sb.append(param).append(", ");
         }
         return String.format(
-                "%s<%s>(%s)", name, newName,
-                sb.isEmpty() ? "" : sb.substring(0, sb.length() - 2)
+                "%s<%s>(%s)%s", name, newName,
+                sb.isEmpty() ? "" : sb.substring(0, sb.length() - 2),
+                description == null ? "" : (" // " + description)
         );
     }
 }

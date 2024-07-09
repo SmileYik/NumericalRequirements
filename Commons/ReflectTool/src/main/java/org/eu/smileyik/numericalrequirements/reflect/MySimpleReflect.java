@@ -2,7 +2,10 @@ package org.eu.smileyik.numericalrequirements.reflect;
 
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public interface MySimpleReflect {
@@ -16,7 +19,7 @@ public interface MySimpleReflect {
 
     static <T extends MySimpleReflect> T get(String path, boolean forceAccess) throws ClassNotFoundException, NoSuchFieldException, NoSuchMethodException {
         String fullPath = path;
-        path = path.replace(" ", "");
+        path = path.replaceAll("//.*?(?=[;}])", "").replace(" ", "");
         DebugLogger.debug("开始处理单个反射路径. path = %s, forceAccess = %s", path, forceAccess);
         path = path.replace("\\$", "+");
         String[] $s = path.split("\\\\$");
@@ -58,7 +61,7 @@ public interface MySimpleReflect {
     }
 
     static <T> List<T> getAll(String path, boolean forceAccess) throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
-        path = path.replace(" ", "").replace("\n", "");
+        path = (path + "\n").replaceAll("//.*?(?=[;}\n])", "").replace(" ", "").replace("\n", "");
         DebugLogger.debug("开始处理多个反射路径. path = %s, forceAccess = %s", path, forceAccess);
         if (!path.endsWith("}")) {
             DebugLogger.debug("该反射路径不为集合： %s", path);

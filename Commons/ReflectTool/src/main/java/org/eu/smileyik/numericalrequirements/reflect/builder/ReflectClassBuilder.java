@@ -32,6 +32,11 @@ public class ReflectClassBuilder {
         return this;
     }
 
+    public ReflectClassBuilder field(String fieldName, String newFieldName, String description) {
+        fieldList.add(new Field(fieldName, newFieldName, description));
+        return this;
+    }
+
     public ReflectMethodBuilder method() {
         return new ReflectMethodBuilder(this);
     }
@@ -97,17 +102,17 @@ public class ReflectClassBuilder {
             }
             builder.endGroup();
         }
-        if (!methodBuilders.isEmpty()) {
-            builder.newGroup(ReflectMethodBuilder.PREFIX);
-            for (ReflectMethodBuilder methodBuilder : methodBuilders) {
-                builder.append(methodBuilder.toStringNoPrefix());
-            }
-            builder.endGroup();
-        }
         if (!constructorBuilders.isEmpty()) {
             builder.newGroup("");
             for (ReflectConstructorBuilder constructorBuilder : constructorBuilders) {
                 builder.append(constructorBuilder.toString());
+            }
+            builder.endGroup();
+        }
+        if (!methodBuilders.isEmpty()) {
+            builder.newGroup(ReflectMethodBuilder.PREFIX);
+            for (ReflectMethodBuilder methodBuilder : methodBuilders) {
+                builder.append(methodBuilder.toStringNoPrefix());
             }
             builder.endGroup();
         }
@@ -167,15 +172,18 @@ public class ReflectClassBuilder {
             inner.finished();
         }
         for (java.lang.reflect.Field declaredField : clazz.getDeclaredFields()) {
-            builder.field(declaredField.getName());
+            builder.field(declaredField.getName(), declaredField.getName(), declaredField.toString());
         }
         int constructorSize = 0;
         for (Constructor<?> declaredConstructor : clazz.getDeclaredConstructors()) {
             ReflectConstructorBuilder constructor = builder.constructor("c-" + constructorSize++);
+            constructor.description(declaredConstructor.toString());
             constructor.args(paramsClassesToStrings(declaredConstructor.getParameterTypes()));
         }
         for (Method declaredMethod : clazz.getDeclaredMethods()) {
-            builder.method(declaredMethod.getName()).args(paramsClassesToStrings(declaredMethod.getParameterTypes()));
+            builder.method(declaredMethod.getName())
+                    .description(declaredMethod.toString())
+                    .args(paramsClassesToStrings(declaredMethod.getParameterTypes()));
         }
     }
 
@@ -192,10 +200,16 @@ public class ReflectClassBuilder {
 
         final String name;
         final String newName;
+        final String description;
 
         private Field(String name, String newName) {
+            this(name, newName, null);
+        }
+
+        private Field(String name, String newName, String description) {
             this.name = name;
             this.newName = newName;
+            this.description = description;
         }
 
         @Override
@@ -204,7 +218,7 @@ public class ReflectClassBuilder {
         }
 
         public String toStringNoPrefix() {
-            return String.format("%s<%s>", name, newName);
+            return String.format("%s<%s>%s", name, newName, description == null ? "" : (" // " + description));
         }
     }
 }

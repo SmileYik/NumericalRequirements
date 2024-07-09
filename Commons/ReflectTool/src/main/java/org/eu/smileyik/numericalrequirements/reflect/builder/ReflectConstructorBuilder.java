@@ -8,6 +8,7 @@ public class ReflectConstructorBuilder {
     private final ReflectClassBuilder parent;
     String name;
     List<String> params = new ArrayList<>();
+    private String description = null;
 
     protected ReflectConstructorBuilder(ReflectClassBuilder parent) {
         this.parent = parent;
@@ -33,6 +34,11 @@ public class ReflectConstructorBuilder {
         return finished();
     }
 
+    public ReflectConstructorBuilder description(String description) {
+        this.description = description;
+        return this;
+    }
+
     public ReflectClassBuilder finished() {
         if (name == null || params == null) {
             throw new IllegalArgumentException("name and params cannot be null");
@@ -48,8 +54,9 @@ public class ReflectConstructorBuilder {
             sb.append(param).append(", ");
         }
         return String.format(
-                "<%s>(%s)", name,
-                sb.isEmpty() ? "" : sb.substring(0, sb.length() - 2)
+                "<%s>(%s)%s", name,
+                sb.isEmpty() ? "" : sb.substring(0, sb.length() - 2),
+                description == null ? "" : ( " // " + description )
         );
     }
 }
