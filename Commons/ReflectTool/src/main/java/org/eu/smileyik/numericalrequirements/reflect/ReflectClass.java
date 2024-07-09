@@ -8,15 +8,22 @@ public class ReflectClass implements MySimpleReflect {
     private final Map<String, ReflectConstructor> constructors = new HashMap<>();
     private final Map<String, ReflectField> fields = new HashMap<>();
     private final Map<String, ReflectMethod<?>> methods = new HashMap<>();
+    private final Map<String, Class<?>> classes = new HashMap<>();
 
     protected ReflectClass(List<MySimpleReflect> reflects) {
         for (MySimpleReflect it : reflects) {
             if (it instanceof ReflectMethod<?>) {
                 methods.put(it.getName(), (ReflectMethod<?>) it);
+                Class<?> declaringClass = ((ReflectMethod<?>) it).getMethod().getDeclaringClass();
+                classes.put(it.getName(), declaringClass);
             } else if (it instanceof ReflectField) {
                 fields.put(it.getName(), (ReflectField) it);
+                Class<?> declaringClass = ((ReflectField) it).getField().getDeclaringClass();
+                classes.put(it.getName(), declaringClass);
             } else if (it instanceof ReflectConstructor) {
                 constructors.put(it.getName(), (ReflectConstructor) it);
+                Class<?> declaringClass = ((ReflectConstructor) it).getConstructor().getDeclaringClass();
+                classes.put(it.getName(), declaringClass);
             }
         }
     }
@@ -59,6 +66,10 @@ public class ReflectClass implements MySimpleReflect {
 
     public boolean hasMethod(String method) {
         return methods.containsKey(method);
+    }
+
+    public Class<?> getClass(String className) {
+        return classes.get(className);
     }
 
     @Override
