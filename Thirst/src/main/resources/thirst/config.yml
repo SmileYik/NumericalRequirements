@@ -36,6 +36,19 @@ thirst:
       message: "你好滋润啊！！！"
 tag:
   thirst: "§b增加 §2<%:numf1> §b滋润度."
-water:
-  default: default-water
-  biome: {}
+get-liquid:
+  water:
+    enable: true
+    default-liquid: default-water
+    ignore:
+      - "WATER_CAULDRON"
+    liquid-type:
+      - "STATIONARY_WATER"
+      - "WATER"
+      - "TALL_SEAGRASS"
+      - "SEAGRASS"
+    max-distance: 2  # 水源检测最大距离
+    scan-mode: false # 是否扫描模式检测水源
+    check-air: false # 是否检测右键空气
+    biome-liquid: true
+    biome: {}

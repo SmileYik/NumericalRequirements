@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 public class DebugLogger implements Closeable {
     private static DebugLogger instance;
 
+    private boolean closed = false;
     private final Logger logger;
     private final BufferedWriter logWriter;
 
@@ -96,7 +97,9 @@ public class DebugLogger implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public synchronized void close() throws IOException {
+        if (closed) return;
+        closed = true;
         logWriter.flush();
         logWriter.close();
     }

@@ -11,6 +11,7 @@ import org.eu.smileyik.numericalrequirements.core.element.handler.ElementHandler
 import org.eu.smileyik.numericalrequirements.core.element.handler.RangeHandler;
 import org.eu.smileyik.numericalrequirements.core.extension.Extension;
 import org.eu.smileyik.numericalrequirements.thirst.listener.DeathPunishment;
+import org.eu.smileyik.numericalrequirements.thirst.listener.GetLiquid;
 
 import java.io.File;
 
@@ -59,11 +60,18 @@ public class ThirstExtension extends Extension {
         if (config.getBoolean("thirst.death-punishment.enable")) {
             ConfigurationSection section = config.getConfigurationSection("thirst.death-punishment");
             deathPunishment = new DeathPunishment(section, thirstElement);
-            NumericalRequirements
-                    .getPlugin()
-                    .getServer()
-                    .getPluginManager()
+            NumericalRequirements.getPlugin().getServer().getPluginManager()
                     .registerEvents(deathPunishment, NumericalRequirements.getPlugin());
+        }
+
+        ConfigurationSection getLiquidConfig = config.getConfigurationSection("get-liquid");
+        if (getLiquidConfig == null) getLiquidConfig = new YamlConfiguration();
+        for (String key : getLiquidConfig.getKeys(false)) {
+            ConfigurationSection section = getLiquidConfig.getConfigurationSection(key);
+            if (section.getBoolean("enable", true)) {
+                NumericalRequirements.getPlugin().getServer().getPluginManager()
+                        .registerEvents(new GetLiquid(section), NumericalRequirements.getPlugin());
+            }
         }
     }
 

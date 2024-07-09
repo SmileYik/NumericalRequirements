@@ -58,8 +58,8 @@ public abstract class PotionEntry implements YamlItemEntry {
                     .toClass();
 
             COLOR_CLASS = new ReflectClassBuilder("org.bukkit.Color")
-                    .method("fromRGB").args("int")
-                    .method("asRGB").finished()
+                    .method("fromRGB", "fromARGB").args("int")
+                    .method("asRGB", "asARGB").finished()
                     .toClass();
         }
 
@@ -85,7 +85,7 @@ public abstract class PotionEntry implements YamlItemEntry {
 
             if ((boolean) POTION_META_CLASS.execute("hasColor", itemMeta)) {
                 Object color = POTION_META_CLASS.execute("getColor", itemMeta);
-                int rgb = (int) COLOR_CLASS.execute("asRGB", color);
+                int rgb = (int) COLOR_CLASS.execute("asARGB", color);
                 section.set("color", rgbToString(rgb));
             }
         }
@@ -124,10 +124,31 @@ public abstract class PotionEntry implements YamlItemEntry {
                 }
             }
             if (section.contains("color")) {
-                Object color = COLOR_CLASS.execute("fromRGB", null, stringToRgb(section.getString("color")));
+                Object color = COLOR_CLASS.execute("fromARGB", null, stringToRgb(section.getString("color")));
                 POTION_META_CLASS.execute("setColor", itemMeta, color);
             }
             return null;
+        }
+
+        @Override
+        public int getPriority() {
+            return 5;
+        }
+    }
+
+    public static class Potion2Entry extends Potion1Entry {
+        @Override
+        public int getPriority() {
+            return 1;
+        }
+
+        @Override
+        protected void init() throws Exception {
+            super.init();
+            COLOR_CLASS = new ReflectClassBuilder("org.bukkit.Color")
+                    .method("fromARGB", "fromARGB").args("int")
+                    .method("asARGB", "asARGB").finished()
+                    .toClass();
         }
     }
 }
