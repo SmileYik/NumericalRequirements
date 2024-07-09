@@ -12,15 +12,12 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-
-    implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
-    implementation(project(":Commons:ReflectTool"))
     implementation(project(":Commons:DebugTool"))
-    implementation(project(":Commons:NBTTag"))
+    implementation(project(":Commons:ReflectTool"))
     implementation(project(":Commons:VersionScript"))
-    implementation(project(":Core:NbtItem:NbtItemInterface"))
+    implementation 'org.bukkit:craftbukkit:1.9.2-R0.1-SNAPSHOT'
 }
 
-//test {
-//    useJUnitPlatform()
-//}
+test {
+    useJUnitPlatform()
+}

@@ -1,6 +1,8 @@
 package org.eu.smileyik.numericalrequirements.nms.nbtitem;
 
 import org.bukkit.inventory.ItemStack;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.impl.NBTItemImpl;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.impl.NBTItemImplFor_1_21;
 import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 
 /**

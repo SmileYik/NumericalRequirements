@@ -1,34 +1,32 @@
-package org.eu.smileyik.numericalrequirements.nms.nbtitem;
+package org.eu.smileyik.numericalrequirements.nms.nbtitem.impl;
 
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.CraftItemStack;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.NMSItemStack;
 
 import java.util.Objects;
 
-public class NBTItemImplFor_1_21 implements NBTItem {
-
+public class NBTItemImpl implements NBTItem {
     private ItemStack item;
     private final NMSItemStack nmsItem;
     private NBTTagCompound tag;
 
-    public NBTItemImplFor_1_21(ItemStack item) {
+    public NBTItemImpl(ItemStack item) {
         this.item = item;
         nmsItem = CraftItemStack.asNMSCopy(item);
     }
 
     @Override
     public boolean hasTag() {
-        return nmsItem.getCustomData() != null;
+        return nmsItem.hasTag();
     }
 
     @Override
     public NBTTagCompound getTag() {
         if (tag == null) {
-            CustomData customData = nmsItem.getCustomData();
-            tag = customData == null ? new NBTTagCompound() : customData.getNBTTagCompound();
-        }
-        if (tag == null) {
-            tag = new NBTTagCompound();
+            tag = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
         }
         return tag;
     }
@@ -36,6 +34,7 @@ public class NBTItemImplFor_1_21 implements NBTItem {
     @Override
     public void setTag(NBTTagCompound tag) {
         this.tag = tag;
+        nmsItem.setTag(tag);
     }
 
     @Override
@@ -48,7 +47,7 @@ public class NBTItemImplFor_1_21 implements NBTItem {
 
     @Override
     public ItemStack getItemStack() {
-        nmsItem.setCustomData(CustomData.newCustomData(tag));
+        nmsItem.setTag(tag);
         item = CraftItemStack.asBukkitCopy(nmsItem);
         return item;
     }
