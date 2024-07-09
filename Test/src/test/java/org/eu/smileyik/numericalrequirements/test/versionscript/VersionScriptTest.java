@@ -22,6 +22,7 @@ public class VersionScriptTest {
                 "$1 >= 5; /reflect-class/NMSItemStack_1_5_to_1_16.txt"
         });
         System.out.println(ret);
+        VersionScript.VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         assert ret != null && ret.equals("/reflect-class/NMSItemStack_1_5_to_1_16.txt") : "ret is not /reflect-class/NMSItemStack_1_5_to_1_16.txt";
     }
 
@@ -39,6 +40,7 @@ public class VersionScriptTest {
                 "$1 >= 5; /reflect-class/NMSItemStack_1_5_to_1_16.txt"
         });
         System.out.println(ret);
+        VersionScript.VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         assert ret != null && ret.equals("/reflect-class/NMSItemStack_1_18.txt") : "ret is not /reflect-class/NMSItemStack_1_18.txt";
     }
 
@@ -56,6 +58,7 @@ public class VersionScriptTest {
                 "$1 >= 5; /reflect-class/NMSItemStack_1_5_to_1_16.txt"
         });
         System.out.println(ret);
+        VersionScript.VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         assert ret != null && ret.equals("/reflect-class/NMSItemStack_1_18_2.txt") : "ret is not /reflect-class/NMSItemStack_1_18_2.txt";
     }
 
@@ -65,6 +68,7 @@ public class VersionScriptTest {
         System.out.println("Version: " + VersionScript.VERSION);
         String ret = VersionScript.runScriptByResource("/version-script/NMSItemStack.txt");
         System.out.println(ret);
+        VersionScript.VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         assert ret != null && ret.equals("/reflect-class/NMSItemStack_1_18_2.txt") : "ret is not /reflect-class/NMSItemStack_1_18_2.txt";
     }
 
@@ -74,6 +78,7 @@ public class VersionScriptTest {
         System.out.println("Version: " + VersionScript.VERSION);
         String ret = VersionScript.runScriptByResource("/version-script/NMSItemStack.txt");
         System.out.println(ret);
+        VersionScript.VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     }
 
     @NeedTest
@@ -82,5 +87,6 @@ public class VersionScriptTest {
         System.out.println("Version: " + VersionScript.VERSION);
         String ret = VersionScript.runScriptByResource("/version-script/NBTTagCompound.txt");
         System.out.println(ret);
+        VersionScript.VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     }
 }

@@ -106,6 +106,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
     @Override
     public void onDisable() {
         synchronized (this) {
+            stopTest();
             HandlerList.unregisterAll(this);
             playerService.shutdown();
             extensionService.shutdown();
@@ -219,6 +220,15 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
         try {
             Class<?> aClass = Class.forName("org.eu.smileyik.numericalrequirements.test.Test");
             aClass.getDeclaredMethod("start").invoke(null);
+        } catch (Exception ignore) {
+
+        }
+    }
+
+    private void stopTest() {
+        try {
+            Class<?> aClass = Class.forName("org.eu.smileyik.numericalrequirements.test.Test");
+            aClass.getDeclaredMethod("stop").invoke(null);
         } catch (Exception ignore) {
 
         }

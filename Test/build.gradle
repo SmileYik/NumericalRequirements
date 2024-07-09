@@ -17,11 +17,13 @@ dependencies {
 
     implementation project(":NMS")
     implementation project(":Commons:VersionScript")
+    implementation project(":Commons:DebugTool")
     implementation project(":Core:Command")
     implementation project(":Core")
     implementation project(":Thirst")
     implementation project(":LuaEffect")
     implementation project(":MultiBlockCraft")
+    implementation 'org.eu.smileyik:LuaInMinecraftBukkit:1.7.4-SNAPSHOT'
 }
 
 //test {

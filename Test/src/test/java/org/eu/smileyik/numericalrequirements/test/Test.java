@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * 自动测试， 插件运行完毕后将会在主线程调用测试入口方法。
  */
 public class Test {
+    public static final boolean ENABLE_TEST_COMMAND_SERVER = true;
     private static final class MyLogger {
         private final Logger l = Logger.getLogger("TEST");
         private final PrintStream bw;
@@ -116,14 +117,23 @@ public class Test {
             new File(NumericalRequirements.getPlugin().getDataFolder(), "test.log")
     );
 
+    private static TestCommandServer testCommandServer;
+
     public static void start() {
         PrintStream out = System.out;
         PrintStream err = System.err;
         NumericalRequirements.getPlugin().getLogger().info("--------- Test Starting ---------");
+        if (ENABLE_TEST_COMMAND_SERVER) testCommandServer = TestCommandServer.start(60555);
         new Test().startTest();
         NumericalRequirements.getPlugin().getLogger().info("--------- Test Finished ---------");
         System.setOut(out);
         System.setErr(err);
+    }
+
+    public static void stop() {
+        if (testCommandServer != null) {
+            testCommandServer.stop();
+        }
     }
 
     public void startTest() {
@@ -225,7 +235,11 @@ public class Test {
                         if (clazz.isAnnotationPresent(NeedTest.class)) {
                             classes.add(clazz);
                         }
-                    } catch (ClassNotFoundException e) {
+                        if (testCommandServer != null && clazz.isAnnotationPresent(TestCommand.class)) {
+                            TestCommand declaredAnnotation = clazz.getDeclaredAnnotation(TestCommand.class);
+                            testCommandServer.registerCommandClass(clazz, declaredAnnotation.value());
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

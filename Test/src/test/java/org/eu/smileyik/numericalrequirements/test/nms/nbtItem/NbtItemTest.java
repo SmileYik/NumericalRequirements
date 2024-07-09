@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.test.nbtItem;
+package org.eu.smileyik.numericalrequirements.test.nms.nbtItem;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
