@@ -1,11 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eu.smileyik.numericalrequirements.core.command.*;
 import org.eu.smileyik.numericalrequirements.core.command.tabsuggests.*;
@@ -27,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,6 +59,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                 extensionService = new ExtensionServiceImpl(this);
                 placeholderApiExtension = new PlaceholderApiExtension();
                 extensionService.register(placeholderApiExtension);
+
                 SimpleCommandMessageFormat simpleCommandMessageFormat = new SimpleCommandMessageFormat();
                 try {
                     commandService = new CommandService(
@@ -80,16 +75,9 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                     commandService.registerTabSuggest(new EffectBundleSuggest());
                     commandService.registerTabSuggest(new PotionEffectSuggest());
                     commandService.registerTabSuggest(new ItemIdSuggest(this));
-                } catch (InvalidClassException e) {
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                } catch (NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                } catch (InstantiationException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
+                } catch (InvalidClassException | InvocationTargetException | NoSuchMethodException |
+                         InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
                 }
                 extensionService.loadExtensions();
                 playerService.loadOnlinePlayers();
@@ -150,21 +138,6 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
         for (String world : list) {
             worlds.add(world.toLowerCase());
         }
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (label.equalsIgnoreCase("nradd")) {
-            Player player = (Player) sender;
-            ItemStack itemOnCursor = player.getItemInHand();
-            ItemMeta meta = itemOnCursor.getItemMeta();
-            List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
-            lore.add(args[0].replace("\\_", " "));
-            meta.setLore(lore);
-            itemOnCursor.setItemMeta(meta);
-            player.setItemInHand(itemOnCursor);
-        }
-        return true;
     }
 
     public static NumericalRequirements getInstance() {

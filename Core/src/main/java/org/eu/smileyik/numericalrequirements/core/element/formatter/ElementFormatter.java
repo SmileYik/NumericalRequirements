@@ -32,8 +32,9 @@ public interface ElementFormatter <K extends Element, V extends ElementData> {
         }
     };
 
-
-
+    static void register(ElementFormatter<?, ?> formatter) {
+        ELEMENT_FORMATTERS.put(formatter.getId(), formatter);
+    }
 
     /**
      * 格式化元素至

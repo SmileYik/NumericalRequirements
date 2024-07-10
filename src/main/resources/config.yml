@@ -39,5 +39,9 @@ effect:
       EffectBundle:
         a:
           bundle-id: test1
-
+formatter:
+  process-bar:
+    fill: '&2o'
+    empty: "&4x"
+    length: 16
 

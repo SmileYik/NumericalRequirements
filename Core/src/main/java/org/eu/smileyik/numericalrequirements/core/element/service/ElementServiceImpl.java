@@ -1,10 +1,13 @@
 package org.eu.smileyik.numericalrequirements.core.element.service;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.element.Element;
 import org.eu.smileyik.numericalrequirements.core.element.ElementPlayer;
+import org.eu.smileyik.numericalrequirements.core.element.formatter.ElementFormatter;
 import org.eu.smileyik.numericalrequirements.core.player.event.NumericalPlayerLoadEvent;
 
 import java.util.ArrayList;
@@ -16,6 +19,16 @@ public class ElementServiceImpl implements ElementService, Listener {
 
     public ElementServiceImpl(NumericalRequirements plugin) {
         this.plugin = plugin;
+        FileConfiguration config = plugin.getConfig();
+        if (config.isConfigurationSection("formatter")) {
+            ConfigurationSection section = config.getConfigurationSection("formatter");
+            section.getKeys(false).forEach(key -> {
+                ElementFormatter<?, ?> elementFormatter = ElementFormatter.ELEMENT_FORMATTERS.get(key);
+                if (elementFormatter != null) {
+                    elementFormatter.configure(section.getConfigurationSection(key));
+                }
+            });
+        }
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
