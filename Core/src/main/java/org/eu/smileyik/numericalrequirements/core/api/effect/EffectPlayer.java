@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundle;
-import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundleData;
+import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundle.EffectBundleData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
