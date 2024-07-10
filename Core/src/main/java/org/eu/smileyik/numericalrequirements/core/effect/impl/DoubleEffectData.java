@@ -1,7 +1,7 @@
 package org.eu.smileyik.numericalrequirements.core.effect.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.eu.smileyik.numericalrequirements.core.effect.AbstractEffectData;
+import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffectData;
 
 public class DoubleEffectData extends AbstractEffectData {
     private double data;

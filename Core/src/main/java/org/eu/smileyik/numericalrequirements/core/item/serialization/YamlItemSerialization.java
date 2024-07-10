@@ -7,8 +7,9 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerialization;
+import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.yaml.*;
-import org.eu.smileyik.numericalrequirements.core.util.YamlUtil;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 import java.util.*;

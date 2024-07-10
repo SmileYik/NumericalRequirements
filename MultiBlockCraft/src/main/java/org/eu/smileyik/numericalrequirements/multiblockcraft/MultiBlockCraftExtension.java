@@ -3,15 +3,14 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionTask;
 import org.eu.smileyik.numericalrequirements.core.extension.Extension;
-import org.eu.smileyik.numericalrequirements.core.extension.task.ExtensionTask;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.SimpleCraftInventory;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.listener.SimpleCraftInventoryListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.RecipeService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.YamlRecipeService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MultiBlockCraftExtension extends Extension {
     private static MultiBlockCraftExtension extension;

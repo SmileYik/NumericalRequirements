@@ -1,6 +1,5 @@
 package org.eu.smileyik.numericalrequirements.core.command;
 
-import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Particle;
 import org.bukkit.command.CommandSender;
@@ -8,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
-import org.eu.smileyik.numericalrequirements.core.extension.ExtensionService;
 
 @CommandI18N("command")
 @Command(

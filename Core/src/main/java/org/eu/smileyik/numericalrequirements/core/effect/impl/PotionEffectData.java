@@ -3,9 +3,8 @@ package org.eu.smileyik.numericalrequirements.core.effect.impl;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.eu.smileyik.numericalrequirements.core.AbstractUpdatable;
-import org.eu.smileyik.numericalrequirements.core.effect.AbstractEffectData;
-import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
+import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffectData;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
 
 import java.util.Objects;
 

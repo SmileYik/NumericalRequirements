@@ -1,6 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.tag;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreTag;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 
 public class NotConsumeTag extends LoreTag {
 

@@ -2,8 +2,9 @@ package org.eu.smileyik.numericalrequirements.core.element.formatter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.eu.smileyik.numericalrequirements.core.element.Element;
-import org.eu.smileyik.numericalrequirements.core.element.data.singlenumber.DoubleElementBar;
+import org.eu.smileyik.numericalrequirements.core.api.element.Element;
+import org.eu.smileyik.numericalrequirements.core.api.element.ElementFormatter;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.singlenumber.DoubleElementBar;
 
 public class ProcessBarFormatter implements ElementFormatter<Element, DoubleElementBar> {
     private String fill = "§3-";

@@ -4,7 +4,7 @@ import org.bukkit.Color;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 import org.keplerproject.luajava.LuaException;
 import org.keplerproject.luajava.LuaObject;
 import tk.smileyik.luainminecraftbukkit.api.luaconfig.LuaConfig;

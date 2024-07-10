@@ -2,20 +2,20 @@ package org.eu.smileyik.numericalrequirements.core;
 
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
+import org.eu.smileyik.numericalrequirements.core.api.element.ElementService;
+import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionService;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.command.*;
 import org.eu.smileyik.numericalrequirements.core.command.tabsuggests.*;
-import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
 import org.eu.smileyik.numericalrequirements.core.effect.service.SimpleEffectService;
+import org.eu.smileyik.numericalrequirements.core.element.ElementServiceImpl;
 import org.eu.smileyik.numericalrequirements.core.element.formatter.ElementFormatterPlaceholderCallback;
-import org.eu.smileyik.numericalrequirements.core.element.service.ElementService;
-import org.eu.smileyik.numericalrequirements.core.element.service.ElementServiceImpl;
-import org.eu.smileyik.numericalrequirements.core.extension.ExtensionService;
 import org.eu.smileyik.numericalrequirements.core.extension.ExtensionServiceImpl;
 import org.eu.smileyik.numericalrequirements.core.extension.placeholderapi.PlaceholderApiExtension;
-import org.eu.smileyik.numericalrequirements.core.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.item.ItemServiceImpl;
-import org.eu.smileyik.numericalrequirements.core.player.service.PlayerService;
-import org.eu.smileyik.numericalrequirements.core.player.service.impl.YamlPlayerService;
+import org.eu.smileyik.numericalrequirements.core.player.YamlPlayerService;
 import org.eu.smileyik.numericalrequirements.core.util.Metrics;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 

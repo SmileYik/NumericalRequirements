@@ -2,8 +2,8 @@ package org.eu.smileyik.numericalrequirements.luaeffect.effect;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.effect.AbstractEffectData;
-import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
+import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffectData;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
 import org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectEntity;
 import org.keplerproject.luajava.LuaException;
 import tk.smileyik.luainminecraftbukkit.api.luaconfig.LuaConfig;

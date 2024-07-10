@@ -5,14 +5,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.effect.Effect;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
-import org.eu.smileyik.numericalrequirements.core.effect.Effect;
-import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
-import org.eu.smileyik.numericalrequirements.core.effect.EffectPlayer;
-import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.player.service.PlayerService;
 
 import java.util.Arrays;
 

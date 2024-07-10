@@ -3,7 +3,7 @@ package org.eu.smileyik.numericalrequirements.core.api;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.element.formatter.ElementFormatter;
+import org.eu.smileyik.numericalrequirements.core.api.element.ElementFormatter;
 import org.eu.smileyik.numericalrequirements.nms.NMSMessage;
 import org.eu.smileyik.numericalrequirements.nms.network.chat.EnumTitleAction;
 

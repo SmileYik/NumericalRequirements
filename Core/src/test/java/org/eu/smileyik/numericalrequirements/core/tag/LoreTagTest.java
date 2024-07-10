@@ -1,9 +1,9 @@
 package org.eu.smileyik.numericalrequirements.core.tag;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LorePattern;
-import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreValue;
-import org.eu.smileyik.numericalrequirements.core.item.tag.lore.ValueTranslator;
-import org.eu.smileyik.numericalrequirements.core.util.Pair;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LorePattern;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.ValueTranslator;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.junit.Test;
 
 import java.util.ArrayList;

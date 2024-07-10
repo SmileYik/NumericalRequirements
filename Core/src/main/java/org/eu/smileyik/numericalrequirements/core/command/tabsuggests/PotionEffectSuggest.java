@@ -2,11 +2,8 @@ package org.eu.smileyik.numericalrequirements.core.command.tabsuggests;
 
 import org.bukkit.potion.PotionEffectType;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.command.DefaultTabSuggest;
-import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

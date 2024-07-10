@@ -1,13 +1,11 @@
 package org.eu.smileyik.numericalrequirements.core.effect.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.eu.smileyik.numericalrequirements.core.Updatable;
-import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.effect.AbstractEffectData;
-import org.eu.smileyik.numericalrequirements.core.effect.Effect;
-import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
-import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffectData;
+import org.eu.smileyik.numericalrequirements.core.api.effect.Effect;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 
 import java.util.*;
 

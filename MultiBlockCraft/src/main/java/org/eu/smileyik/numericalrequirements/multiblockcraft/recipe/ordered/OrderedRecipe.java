@@ -2,7 +2,7 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.ordered;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.core.util.Pair;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.AbstractRecipe;
 
 import java.util.*;

@@ -5,9 +5,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.effect.EffectPlayer;
-import org.eu.smileyik.numericalrequirements.core.element.ElementPlayer;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.element.ElementPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.thirst.ThirstData;
 import org.eu.smileyik.numericalrequirements.thirst.ThirstElement;
 

@@ -1,7 +1,7 @@
 package org.eu.smileyik.numericalrequirements.thirst;
 
-import org.eu.smileyik.numericalrequirements.core.element.data.singlenumber.DoubleElementBar;
-import org.eu.smileyik.numericalrequirements.core.util.Pair;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.singlenumber.DoubleElementBar;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 
 public class ThirstData extends DoubleElementBar {
     public ThirstData() {

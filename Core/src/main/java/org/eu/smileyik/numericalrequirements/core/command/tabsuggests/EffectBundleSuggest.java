@@ -2,8 +2,8 @@ package org.eu.smileyik.numericalrequirements.core.command.tabsuggests;
 
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
 import org.eu.smileyik.numericalrequirements.core.command.DefaultTabSuggest;
-import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,6 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.extension;
 
-import org.eu.smileyik.numericalrequirements.core.AbstractRegisterInfo;
+import org.eu.smileyik.numericalrequirements.core.api.AbstractRegisterInfo;
 
 public class ExtensionDescription extends AbstractRegisterInfo {
     public ExtensionDescription(String id, String name, String author, String version, String description) {

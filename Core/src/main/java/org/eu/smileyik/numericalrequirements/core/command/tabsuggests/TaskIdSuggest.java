@@ -1,8 +1,8 @@
 package org.eu.smileyik.numericalrequirements.core.command.tabsuggests;
 
+import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionService;
+import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionTask;
 import org.eu.smileyik.numericalrequirements.core.command.TabSuggest;
-import org.eu.smileyik.numericalrequirements.core.extension.ExtensionService;
-import org.eu.smileyik.numericalrequirements.core.extension.task.ExtensionTask;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,8 +1,9 @@
 package org.eu.smileyik.numericalrequirements.core.extension.placeholderapi;
 
 import org.bukkit.entity.Player;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.player.service.PlayerService;
+import org.eu.smileyik.numericalrequirements.core.api.extension.placeholder.PlaceholderRequestCallback;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -7,13 +7,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.MergeableLore;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
-import org.eu.smileyik.numericalrequirements.core.item.ItemService;
-import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreTag;
-import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LoreValue;
-import org.eu.smileyik.numericalrequirements.core.item.tag.lore.MergeableLore;
-import org.eu.smileyik.numericalrequirements.core.util.Pair;
 
 import java.util.*;
 

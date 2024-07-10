@@ -2,7 +2,7 @@ package org.eu.smileyik.numericalrequirements.core.extension;
 
 import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.RegisterInfo;
+import org.eu.smileyik.numericalrequirements.core.api.RegisterInfo;
 
 import java.io.File;
 

@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.extension.placeholderapi;
 
+import org.eu.smileyik.numericalrequirements.core.api.extension.placeholder.PlaceholderRequestCallback;
 import org.eu.smileyik.numericalrequirements.core.extension.Extension;
 import org.eu.smileyik.numericalrequirements.core.extension.ExtensionDescription;
 

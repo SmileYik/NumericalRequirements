@@ -1,6 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.item.tag.lore.translator;
 
-import org.eu.smileyik.numericalrequirements.core.item.tag.lore.ValueTranslator;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.ValueTranslator;
 
 public class NumberTranslator implements ValueTranslator<Number> {
 

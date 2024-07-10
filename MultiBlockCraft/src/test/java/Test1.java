@@ -1,5 +1,5 @@
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.eu.smileyik.numericalrequirements.core.util.YamlUtil;
+import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.junit.jupiter.api.Test;
 

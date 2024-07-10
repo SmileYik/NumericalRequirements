@@ -1,7 +1,7 @@
 package org.eu.smileyik.numericalrequirements.luaeffect.task;
 
+import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionTask;
 import org.eu.smileyik.numericalrequirements.core.extension.Extension;
-import org.eu.smileyik.numericalrequirements.core.extension.task.ExtensionTask;
 import org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectExtension;
 
 public abstract class AbstractTask implements ExtensionTask {

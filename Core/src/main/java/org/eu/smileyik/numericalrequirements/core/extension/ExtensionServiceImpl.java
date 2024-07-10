@@ -4,7 +4,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.extension.task.ExtensionTask;
+import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionService;
+import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionTask;
 
 import java.io.File;
 import java.io.InputStreamReader;

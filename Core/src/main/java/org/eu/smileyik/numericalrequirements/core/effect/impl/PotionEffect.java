@@ -2,13 +2,13 @@ package org.eu.smileyik.numericalrequirements.core.effect.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffectType;
-import org.eu.smileyik.numericalrequirements.core.AbstractRegisterInfo;
 import org.eu.smileyik.numericalrequirements.core.I18N;
+import org.eu.smileyik.numericalrequirements.core.api.AbstractRegisterInfo;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.effect.Effect;
-import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.effect.Effect;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
 
 public class PotionEffect extends AbstractRegisterInfo implements Effect {
 

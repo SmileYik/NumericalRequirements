@@ -1,11 +1,11 @@
 package org.eu.smileyik.numericalrequirements.core.effect.impl;
 
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.effect.AbstractEffect;
-import org.eu.smileyik.numericalrequirements.core.effect.EffectData;
-import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffect;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
 
 public class EffectBundle extends AbstractEffect {
     private final EffectService effectService;

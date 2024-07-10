@@ -2,12 +2,12 @@ package org.eu.smileyik.numericalrequirements.thirst;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.element.AbstractElement;
-import org.eu.smileyik.numericalrequirements.core.element.data.ElementData;
-import org.eu.smileyik.numericalrequirements.core.element.handler.ElementHandler;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.player.PlayerDataValue;
-import org.eu.smileyik.numericalrequirements.core.util.Pair;
+import org.eu.smileyik.numericalrequirements.core.api.element.AbstractElement;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.api.element.handler.ElementHandler;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 
 public class ThirstElement extends AbstractElement {
     private final ConfigurationSection config;

@@ -3,14 +3,15 @@ package org.eu.smileyik.numericalrequirements.core.command;
 import org.bukkit.command.CommandSender;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionService;
+import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionTask;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
-import org.eu.smileyik.numericalrequirements.core.extension.Extension;
-import org.eu.smileyik.numericalrequirements.core.extension.ExtensionService;
-import org.eu.smileyik.numericalrequirements.core.extension.task.ExtensionTask;
-import org.eu.smileyik.numericalrequirements.core.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 @CommandI18N("command")
 @Command(

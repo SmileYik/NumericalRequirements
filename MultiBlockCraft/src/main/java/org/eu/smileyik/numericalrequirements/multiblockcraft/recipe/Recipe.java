@@ -2,7 +2,7 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.core.item.tag.lore.LorePattern;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LorePattern;
 
 import java.util.Collection;
 

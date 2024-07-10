@@ -1,9 +1,8 @@
 package org.eu.smileyik.numericalrequirements.test.item;
 
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.item.ItemService;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.test.NeedTest;
 
 import java.util.Collection;

@@ -2,9 +2,13 @@ package org.eu.smileyik.numericalrequirements.core.player;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.eu.smileyik.numericalrequirements.core.AbstractUpdatable;
-import org.eu.smileyik.numericalrequirements.core.util.Pair;
-import org.eu.smileyik.numericalrequirements.core.util.SingleOperator;
+import org.eu.smileyik.numericalrequirements.core.api.AbstractUpdatable;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataKey;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValueUpdatable;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
+import org.eu.smileyik.numericalrequirements.core.api.util.SingleOperator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

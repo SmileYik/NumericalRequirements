@@ -4,12 +4,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.effect.Effect;
+import org.eu.smileyik.numericalrequirements.core.api.effect.Effect;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
+import org.eu.smileyik.numericalrequirements.core.api.event.player.NumericalPlayerLoadEvent;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.ChatMessageEffect;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundle;
-import org.eu.smileyik.numericalrequirements.core.effect.EffectPlayer;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.PotionEffect;
-import org.eu.smileyik.numericalrequirements.core.player.event.NumericalPlayerLoadEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;

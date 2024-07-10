@@ -1,11 +1,12 @@
 package org.eu.smileyik.numericalrequirements.core.element.formatter;
 
-import org.eu.smileyik.numericalrequirements.core.element.Element;
-import org.eu.smileyik.numericalrequirements.core.element.ElementPlayer;
-import org.eu.smileyik.numericalrequirements.core.element.data.ElementData;
-import org.eu.smileyik.numericalrequirements.core.extension.placeholderapi.PlaceholderRequestCallback;
-import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.util.Pair;
+import org.eu.smileyik.numericalrequirements.core.api.element.Element;
+import org.eu.smileyik.numericalrequirements.core.api.element.ElementFormatter;
+import org.eu.smileyik.numericalrequirements.core.api.element.ElementPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.api.extension.placeholder.PlaceholderRequestCallback;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 
 public class ElementFormatterPlaceholderCallback implements PlaceholderRequestCallback {
     @Override
