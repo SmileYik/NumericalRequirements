@@ -2,6 +2,7 @@ package org.eu.smileyik.numericalrequirements.core.effect.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.I18N;
+import org.eu.smileyik.numericalrequirements.core.api.Msg;
 import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffect;
 import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffectData;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
@@ -53,7 +54,7 @@ public class ChatMessageEffect extends AbstractEffect {
 
     @Override
     public void onRegisterToPlayerData(NumericalPlayer player, PlayerDataValue value) {
-        player.getPlayer().sendMessage(((Data) value).message);
+        Msg.msg(player, ((Data) value).message);
     }
 
     public static final class Data extends AbstractEffectData {
