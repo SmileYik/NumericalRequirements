@@ -21,26 +21,43 @@ public interface MySimpleReflect {
         String fullPath = path;
         path = path.replaceAll("//.*?(?=[;}])", "").replace(" ", "");
         DebugLogger.debug("开始处理单个反射路径. path = %s, forceAccess = %s", path, forceAccess);
-        path = path.replace("\\$", "+");
-        String[] $s = path.split("\\\\$");
-        String classAndOther;
-        Class<?> targetClass = null;
-        if ($s.length != 1) {
-            targetClass = Class.forName($s[0].replace("+", "$"));
-            for (int i = 1; i < $s.length - 1; i++) {
-                targetClass = getClassInClass(targetClass, $s[i].replace("+", "$"));
-            }
-            classAndOther = $s[$s.length - 1];
-        } else {
-            classAndOther = $s[0];
-        }
 
-        if (classAndOther.contains("@")) {
-            return (T) new ReflectField(fullPath, targetClass, classAndOther, forceAccess);
-        } else if (classAndOther.contains("#")) {
-            return (T) new ReflectMethod<>(fullPath, targetClass, classAndOther, forceAccess);
-        } else {
-            return (T) new ReflectConstructor(fullPath, targetClass, classAndOther, forceAccess);
+        boolean ignoreExceptions = false;
+        if (path.endsWith("+")) {
+            ignoreExceptions = true;
+            path = path.substring(0, path.length() - 1);
+        }
+        try {
+            path = path.replace("\\$", "+");
+            String[] $s = path.split("\\\\$");
+            String classAndOther;
+            Class<?> targetClass = null;
+            if ($s.length != 1) {
+                targetClass = Class.forName($s[0].replace("+", "$"));
+                for (int i = 1; i < $s.length - 1; i++) {
+                    targetClass = getClassInClass(targetClass, $s[i].replace("+", "$"));
+                }
+                classAndOther = $s[$s.length - 1];
+            } else {
+                classAndOther = $s[0];
+            }
+
+            if (classAndOther.contains("@")) {
+                return (T) new ReflectField(fullPath, targetClass, classAndOther, forceAccess);
+            } else if (classAndOther.contains("#")) {
+                return (T) new ReflectMethod<>(fullPath, targetClass, classAndOther, forceAccess);
+            } else {
+                return (T) new ReflectConstructor(fullPath, targetClass, classAndOther, forceAccess);
+            }
+        } catch (Exception e) {
+            if (ignoreExceptions) {
+                DebugLogger.debug("未找到相应对象，跳过路径： %s", fullPath);
+                return null;
+            } else {
+                DebugLogger.debug("处理单个反射路径失败： %s", e.getMessage());
+                DebugLogger.debug(e);
+                throw e;
+            }
         }
     }
 
@@ -65,7 +82,9 @@ public interface MySimpleReflect {
         DebugLogger.debug("开始处理多个反射路径. path = %s, forceAccess = %s", path, forceAccess);
         if (!path.endsWith("}")) {
             DebugLogger.debug("该反射路径不为集合： %s", path);
-            return List.of(get(path, forceAccess));
+            T mySimpleReflect = get(path, forceAccess);
+
+            return mySimpleReflect == null ? new ArrayList<>() : List.of(mySimpleReflect);
         }
 
         String prefix = path.substring(0, path.indexOf("{"));
