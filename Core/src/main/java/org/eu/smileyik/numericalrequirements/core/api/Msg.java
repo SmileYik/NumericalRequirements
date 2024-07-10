@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementFormatter;
+import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.nms.NMSMessage;
 import org.eu.smileyik.numericalrequirements.nms.network.chat.EnumTitleAction;
 
@@ -12,8 +13,16 @@ public interface Msg {
         sender.sendMessage(I18N.tr(key, objs));
     }
 
+    static void msg(NumericalPlayer sender, String key, Object ... objs) {
+        sender.getPlayer().sendMessage(ElementFormatter.replacePlaceholder(sender, I18N.tr(key, objs)));
+    }
+
     static void msg(Player sender, String key, Object ... objs) {
         sender.sendMessage(ElementFormatter.replacePlaceholder(sender, I18N.tr(key, objs)));
+    }
+
+    static void actionBar(NumericalPlayer sender, String key, Object ... objs) {
+        NMSMessage.sendActionBar(sender.getPlayer(), ElementFormatter.replacePlaceholder(sender, I18N.tr(key, objs)));
     }
 
     static void actionBar(Player sender, String key, Object ... objs) {
@@ -24,12 +33,26 @@ public interface Msg {
         NMSMessage.sendTitle(sender, ElementFormatter.replacePlaceholder(sender, I18N.tr(key, objs)), null, fadeIn, stay, fadeOut);
     }
 
+    static void mainTitle(NumericalPlayer sender, int fadeIn, int stay, int fadeOut, String key, Object ... objs) {
+        NMSMessage.sendTitle(sender.getPlayer(), ElementFormatter.replacePlaceholder(sender, I18N.tr(key, objs)), null, fadeIn, stay, fadeOut);
+    }
+
     static void subTitle(Player sender, int fadeIn, int stay, int fadeOut, String key, Object ... objs) {
         NMSMessage.sendTitle(sender, (String) null, ElementFormatter.replacePlaceholder(sender, I18N.tr(key, objs)), fadeIn, stay, fadeOut);
     }
 
+    static void subTitle(NumericalPlayer sender, int fadeIn, int stay, int fadeOut, String key, Object ... objs) {
+        NMSMessage.sendTitle(sender.getPlayer(), (String) null, ElementFormatter.replacePlaceholder(sender, I18N.tr(key, objs)), fadeIn, stay, fadeOut);
+    }
+
     static void title(Player sender, int fadeIn, int stay, int fadeOut, String key1, Object[] args1, String key2, Object[] args2) {
         NMSMessage.sendTitle(sender,
+                ElementFormatter.replacePlaceholder(sender, I18N.tr(key1, args1)),
+                ElementFormatter.replacePlaceholder(sender, I18N.tr(key2, args2)), fadeIn, stay, fadeOut);
+    }
+
+    static void title(NumericalPlayer sender, int fadeIn, int stay, int fadeOut, String key1, Object[] args1, String key2, Object[] args2) {
+        NMSMessage.sendTitle(sender.getPlayer(),
                 ElementFormatter.replacePlaceholder(sender, I18N.tr(key1, args1)),
                 ElementFormatter.replacePlaceholder(sender, I18N.tr(key2, args2)), fadeIn, stay, fadeOut);
     }
