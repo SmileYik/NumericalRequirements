@@ -1,2 +1,1 @@
-$1 >= 20; /reflect-class/ServerCommonPacketListenerImpl.txt
-true; null
+true; /reflect-class/ServerCommonPacketListenerImpl.txt

@@ -1,0 +1,13 @@
+net.minecraft.server.${version}.EnumTitleAction{
+    @{
+        TITLE<TITLE> // public static final net.minecraft.server.${version}.EnumTitleAction net.minecraft.server.${version}.EnumTitleAction.TITLE;
+        SUBTITLE<SUBTITLE> // public static final net.minecraft.server.${version}.EnumTitleAction net.minecraft.server.${version}.EnumTitleAction.SUBTITLE;
+        TIMES<TIMES> // public static final net.minecraft.server.${version}.EnumTitleAction net.minecraft.server.${version}.EnumTitleAction.TIMES;
+        CLEAR<CLEAR> // public static final net.minecraft.server.${version}.EnumTitleAction net.minecraft.server.${version}.EnumTitleAction.CLEAR;
+        RESET<RESET> // public static final net.minecraft.server.${version}.EnumTitleAction net.minecraft.server.${version}.EnumTitleAction.RESET;
+    }
+    #{
+        values<values>() // public static net.minecraft.server.${version}.EnumTitleAction[] net.minecraft.server.${version}.EnumTitleAction.values();
+        valueOf<valueOf>(java.lang.String) // public static net.minecraft.server.${version}.EnumTitleAction net.minecraft.server.${version}.EnumTitleAction.valueOf(java.lang.String);
+    }
+}

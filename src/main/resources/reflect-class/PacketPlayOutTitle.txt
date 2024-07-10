@@ -1,0 +1,6 @@
+net.minecraft.server.${version}.PacketPlayOutTitle{
+    {
+        <new>(net.minecraft.server.${version}.EnumTitleAction, net.minecraft.server.${version}.IChatBaseComponent, int, int, int)+; // public net.minecraft.server.${version}.PacketPlayOutTitle(net.minecraft.server.${version}.EnumTitleAction,net.minecraft.server.${version}.IChatBaseComponent,int,int,int);
+        <new>(net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction, net.minecraft.server.${version}.IChatBaseComponent, int, int, int) // public net.minecraft.server.${version}.PacketPlayOutTitle(net.minecraft.server.${version}.EnumTitleAction,net.minecraft.server.${version}.IChatBaseComponent,int,int,int);
+    }
+}

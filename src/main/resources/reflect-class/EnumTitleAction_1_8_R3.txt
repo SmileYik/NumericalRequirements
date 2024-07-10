@@ -1,0 +1,17 @@
+net.minecraft.server.${version}.PacketPlayOutTitle{
+    ${
+        EnumTitleAction{
+            @{
+                TITLE<TITLE> // public static final net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction.TITLE;
+                SUBTITLE<SUBTITLE> // public static final net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction.SUBTITLE;
+                TIMES<TIMES> // public static final net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction.TIMES;
+                CLEAR<CLEAR> // public static final net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction.CLEAR;
+                RESET<RESET> // public static final net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction.RESET;
+            }
+            #{
+                values<values>() // public static net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction[] net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction.values();
+                valueOf<valueOf>(java.lang.String) // public static net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction net.minecraft.server.${version}.PacketPlayOutTitle$EnumTitleAction.valueOf(java.lang.String);
+            }
+        }
+    }
+}

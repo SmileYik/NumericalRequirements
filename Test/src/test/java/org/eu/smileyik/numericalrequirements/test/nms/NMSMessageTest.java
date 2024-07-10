@@ -5,11 +5,11 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.nms.ActionBar;
+import org.eu.smileyik.numericalrequirements.nms.NMSMessage;
 import org.eu.smileyik.numericalrequirements.test.NeedTest;
 
 @NeedTest
-public class ActionBarTest implements Listener {
+public class NMSMessageTest implements Listener {
     @NeedTest
     public void testActionBar() {
         NumericalRequirements.getPlugin().getServer().getPluginManager().registerEvents(
@@ -22,6 +22,7 @@ public class ActionBarTest implements Listener {
         if (event.hasItem()) {
             HandlerList.unregisterAll(this);
         }
-        ActionBar.send(event.getPlayer(), "&b你&1好&5啊！");
+        NMSMessage.sendActionBar(event.getPlayer(), "&b你&1好&5啊！");
+        NMSMessage.sendTitle(event.getPlayer(), "Main Title", "SubTitle", 10, 40, 10);
     }
 }
