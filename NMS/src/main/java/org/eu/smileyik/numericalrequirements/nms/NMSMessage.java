@@ -77,9 +77,8 @@ public interface NMSMessage {
             p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             return;
         }
-
-        sendTitle(p, EnumTitleAction.TITLE, title, fadeIn, stay, fadeOut);
-        sendTitle(p, EnumTitleAction.SUBTITLE, subtitle, fadeIn, stay, fadeOut);
+        if (title != null) sendTitle(p, EnumTitleAction.TITLE, title, fadeIn, stay, fadeOut);
+        if (subtitle != null) sendTitle(p, EnumTitleAction.SUBTITLE, subtitle, fadeIn, stay, fadeOut);
     }
 
     static void sendTitle(Player p, EnumTitleAction action, String text, int fadeIn, int stay, int fadeOut) {

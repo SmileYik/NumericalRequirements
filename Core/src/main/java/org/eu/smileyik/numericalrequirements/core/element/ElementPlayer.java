@@ -1,8 +1,10 @@
 package org.eu.smileyik.numericalrequirements.core.element;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.element.data.ElementData;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -10,6 +12,18 @@ import java.util.List;
 import java.util.Map;
 
 public interface ElementPlayer {
+
+    static Pair<Element, ElementData> getElementData(@NotNull NumericalPlayer player, String elementID) {
+        Element element = NumericalRequirements.getInstance().getElementService().findElementById(elementID);
+        if (element == null) {
+            return null;
+        }
+        return Pair.newUnchangablePair(
+                element,
+                getElementData(player, element)
+        );
+    }
+
     static ElementData getElementData(@NotNull NumericalPlayer player, Element element) {
         List<ElementData> registeredValues = player.getRegisteredValues(element, ElementData.class);
         if (registeredValues != null && !registeredValues.isEmpty()) {

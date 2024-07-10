@@ -51,6 +51,8 @@ public class TestCommandServer {
                         }
                     } catch (SocketTimeoutException ignore) {
 
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

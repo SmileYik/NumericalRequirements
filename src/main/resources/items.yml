@@ -1,9 +1,9 @@
 id:
-  name: aaa
-  material: APPLE
-  durability: 0
-  hide-tooltip: false
-  unbreakable: false
+  name: aaa              # 名称
+  material: APPLE        # 材质
+  durability: 0          # 耐久
+  hide-tooltip: false    # 隐藏
+  unbreakable: false     # 不可损坏
   fire-resistant: false
   rarity: EPIC
   custom-model-data: 1

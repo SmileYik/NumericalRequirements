@@ -9,6 +9,7 @@ item:
       ignore-keys:
         - "CustomModelData"
         - "display"
+        - "HideFlags"
 effect:
   bundle:               # 设定效果捆绑包
     "速度升级":           # 效果捆绑包ID，同时作为效果名字的存在

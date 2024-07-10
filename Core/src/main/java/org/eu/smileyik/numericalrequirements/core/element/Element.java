@@ -1,16 +1,17 @@
 package org.eu.smileyik.numericalrequirements.core.element;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.RegisterInfo;
-import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.element.data.BoundedData;
 import org.eu.smileyik.numericalrequirements.core.element.data.ElementData;
 import org.eu.smileyik.numericalrequirements.core.element.data.singlenumber.DoubleElementBar;
 import org.eu.smileyik.numericalrequirements.core.element.data.singlenumber.DoubleElementValue;
+import org.eu.smileyik.numericalrequirements.core.element.formatter.ElementFormatter;
 import org.eu.smileyik.numericalrequirements.core.extension.placeholderapi.PlaceholderRequestCallback;
 import org.eu.smileyik.numericalrequirements.core.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.player.PlayerDataKey;
 import org.eu.smileyik.numericalrequirements.core.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 public interface Element extends RegisterInfo, PlayerDataKey, PlaceholderRequestCallback {
     ElementData newElementData();
@@ -81,5 +82,20 @@ public interface Element extends RegisterInfo, PlayerDataKey, PlaceholderRequest
             }
         }
         return null;
+    }
+
+    default <K extends Element, V extends ElementData> String toString(ElementFormatter<K, V> formatter, ElementData data) {
+        try {
+            K k = (K) this;
+            V v = (V) data;
+            return formatter.format((K) this, (V) data);
+        } catch (ClassCastException e) {
+            DebugLogger.debug(e);
+            return I18N.tr("element.format.formatter-error", formatter.getId());
+        }
+    }
+
+    default String toString(ElementData data) {
+        return toString(ElementFormatter.ELEMENT_FORMATTERS.get("simple"), data);
     }
 }
