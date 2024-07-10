@@ -1,7 +1,5 @@
 package org.eu.smileyik.numericalrequirements.core.api.extension;
 
-import org.eu.smileyik.numericalrequirements.core.extension.Extension;
-
 import java.util.Collection;
 
 public interface ExtensionService {

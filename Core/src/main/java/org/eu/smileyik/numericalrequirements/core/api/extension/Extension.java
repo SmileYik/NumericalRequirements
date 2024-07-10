@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.core.extension;
+package org.eu.smileyik.numericalrequirements.core.api.extension;
 
 import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
@@ -8,7 +8,7 @@ import java.io.File;
 
 public abstract class Extension {
     private RegisterInfo info;
-    private NumericalRequirements plugin;
+    private final NumericalRequirements plugin = (NumericalRequirements) org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements.getPlugin();
     private File dataFolder;
 
     public Extension() {
@@ -21,12 +21,6 @@ public abstract class Extension {
 
     public final RegisterInfo getInfo() {
         return info;
-    }
-    protected final void setPlugin(Plugin plugin) {
-        if (this.plugin == null) {
-            this.plugin = (NumericalRequirements) plugin;
-            this.dataFolder = new File(this.plugin.getDataFolder(), info.getId());
-        }
     }
 
     public Plugin getPlugin() {
@@ -53,8 +47,8 @@ public abstract class Extension {
         plugin.saveResource(String.format("%s/%s", info.getId(), path), replace);
     }
 
-    protected abstract void onEnable();
-    protected void onDisable() {
+    public abstract void onEnable();
+    public void onDisable() {
 
     }
 }

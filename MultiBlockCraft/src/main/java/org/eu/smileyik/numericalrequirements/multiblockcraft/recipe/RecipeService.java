@@ -1,6 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe;
 
-import org.eu.smileyik.numericalrequirements.core.extension.Extension;
+import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 
 import java.util.HashMap;
 import java.util.Map;

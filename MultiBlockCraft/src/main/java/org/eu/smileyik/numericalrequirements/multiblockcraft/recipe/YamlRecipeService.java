@@ -2,7 +2,7 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.eu.smileyik.numericalrequirements.core.extension.Extension;
+import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 
 import java.io.File;
 import java.io.IOException;

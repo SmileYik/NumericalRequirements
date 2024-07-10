@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionService;
 import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionTask;
 
@@ -92,7 +93,6 @@ public class ExtensionServiceImpl implements ExtensionService {
                 return false;
             }
         }
-        extension.setPlugin(plugin);
         extensionList.add(extension);
         extension.onEnable();
         return true;
@@ -129,7 +129,6 @@ public class ExtensionServiceImpl implements ExtensionService {
         for (Extension extension : extensionList) {
             try {
                 extension.onDisable();
-                extension.setPlugin(null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -142,7 +141,6 @@ public class ExtensionServiceImpl implements ExtensionService {
         boolean remove = extensionList.remove(extension);
         if (remove) {
             extension.onDisable();
-            extension.setPlugin(null);
         }
     }
 

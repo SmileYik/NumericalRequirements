@@ -1,7 +1,7 @@
 package org.eu.smileyik.numericalrequirements.core.extension.placeholderapi;
 
+import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 import org.eu.smileyik.numericalrequirements.core.api.extension.placeholder.PlaceholderRequestCallback;
-import org.eu.smileyik.numericalrequirements.core.extension.Extension;
 import org.eu.smileyik.numericalrequirements.core.extension.ExtensionDescription;
 
 public class PlaceholderApiExtension extends Extension {
@@ -40,12 +40,12 @@ public class PlaceholderApiExtension extends Extension {
     }
 
     @Override
-    protected void onEnable() {
+    public void onEnable() {
 
     }
 
     @Override
-    protected void onDisable() {
+    public void onDisable() {
         if (placeholder != null) {
             placeholder.clear();
         }

@@ -6,10 +6,10 @@ import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
 import org.eu.smileyik.numericalrequirements.core.api.element.handler.ElementHandler;
 import org.eu.smileyik.numericalrequirements.core.api.element.handler.RangeHandler;
+import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementBoundedEffect;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementNaturalDepletionEffect;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementRateEffect;
-import org.eu.smileyik.numericalrequirements.core.extension.Extension;
 import org.eu.smileyik.numericalrequirements.thirst.listener.DeathPunishment;
 import org.eu.smileyik.numericalrequirements.thirst.listener.GetLiquid;
 
@@ -29,7 +29,7 @@ public class ThirstExtension extends Extension {
     private DeathPunishment deathPunishment;
 
     @Override
-    protected void onEnable() {
+    public void onEnable() {
         saveResource("config.yml", false);
         config = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
 
@@ -76,7 +76,7 @@ public class ThirstExtension extends Extension {
     }
 
     @Override
-    protected void onDisable() {
+    public void onDisable() {
         NumericalRequirements api = NumericalRequirements.getInstance();
         api.getItemService().unregisterItemTag(thirstTag);
         api.getElementService().unregisterElement(thirstElement);

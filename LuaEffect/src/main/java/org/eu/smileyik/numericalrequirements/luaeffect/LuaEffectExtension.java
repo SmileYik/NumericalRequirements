@@ -1,7 +1,7 @@
 package org.eu.smileyik.numericalrequirements.luaeffect;
 
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.extension.Extension;
+import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 import org.eu.smileyik.numericalrequirements.luaeffect.effect.LuaEffect;
 import org.eu.smileyik.numericalrequirements.luaeffect.task.ReloadByIdTask;
 import org.eu.smileyik.numericalrequirements.luaeffect.task.ReloadTasks;
@@ -21,7 +21,7 @@ public class LuaEffectExtension extends Extension {
     private final List<LuaEffect> luaEffectList = new ArrayList<>();
 
     @Override
-    protected void onEnable() {
+    public void onEnable() {
         if (!getPlugin().getServer().getPluginManager().isPluginEnabled("LuaInMinecraftBukkit")) {
             I18N.info("extension.lua-effect.lua-in-minecraft-bukkit-not-enabled");
             return;
@@ -39,7 +39,7 @@ public class LuaEffectExtension extends Extension {
     }
 
     @Override
-    protected void onDisable() {
+    public void onDisable() {
         unregisterScripts();
     }
 
