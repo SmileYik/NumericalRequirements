@@ -15,11 +15,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ExtensionServiceImpl implements ExtensionService {
-    private final static Field infoField;
+    private final static Field infoField, dataFolderField;
     static {
         Class<Extension> extensionClass = Extension.class;
         try {
             infoField = extensionClass.getDeclaredField("info");
+            dataFolderField = extensionClass.getDeclaredField("dataFolder");
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -83,6 +84,9 @@ public class ExtensionServiceImpl implements ExtensionService {
         infoField.setAccessible(true);
         infoField.set(extension, info);
         infoField.setAccessible(false);
+        dataFolderField.setAccessible(true);
+        dataFolderField.set(extension, new File(plugin.getDataFolder(), info.getId()));
+        dataFolderField.setAccessible(false);
         return register(extension);
     }
 

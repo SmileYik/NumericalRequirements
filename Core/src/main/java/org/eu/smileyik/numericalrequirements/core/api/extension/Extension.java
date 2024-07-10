@@ -17,6 +17,7 @@ public abstract class Extension {
 
     public Extension(RegisterInfo info) {
         this.info = info;
+        dataFolder = new File(this.plugin.getDataFolder(), info.getId());
     }
 
     public final RegisterInfo getInfo() {
