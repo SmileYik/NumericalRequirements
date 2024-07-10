@@ -6,6 +6,7 @@ import org.eu.smileyik.numericalrequirements.core.command.*;
 import org.eu.smileyik.numericalrequirements.core.command.tabsuggests.*;
 import org.eu.smileyik.numericalrequirements.core.effect.service.EffectService;
 import org.eu.smileyik.numericalrequirements.core.effect.service.SimpleEffectService;
+import org.eu.smileyik.numericalrequirements.core.element.formatter.ElementFormatterPlaceholderCallback;
 import org.eu.smileyik.numericalrequirements.core.element.service.ElementService;
 import org.eu.smileyik.numericalrequirements.core.element.service.ElementServiceImpl;
 import org.eu.smileyik.numericalrequirements.core.extension.ExtensionService;
@@ -59,6 +60,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                 extensionService = new ExtensionServiceImpl(this);
                 placeholderApiExtension = new PlaceholderApiExtension();
                 extensionService.register(placeholderApiExtension);
+                placeholderApiExtension.addPlaceholder(new ElementFormatterPlaceholderCallback());
 
                 SimpleCommandMessageFormat simpleCommandMessageFormat = new SimpleCommandMessageFormat();
                 try {

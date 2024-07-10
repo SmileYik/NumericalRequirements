@@ -353,7 +353,7 @@ public class ItemServiceImpl implements Listener, ItemService {
         return true;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void updateOnInteractItem(PlayerInteractEvent event) {
         if (!event.hasItem()) return;
         ItemStack item = event.getItem();
@@ -377,7 +377,7 @@ public class ItemServiceImpl implements Listener, ItemService {
 //        }
 //    }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteractItem(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         NumericalPlayer numericalPlayer = plugin.getPlayerService().getNumericalPlayer(player);

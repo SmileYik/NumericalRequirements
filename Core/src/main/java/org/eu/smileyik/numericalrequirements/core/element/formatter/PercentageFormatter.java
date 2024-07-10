@@ -8,7 +8,7 @@ public class PercentageFormatter implements ElementFormatter <Element, DoubleEle
     @Override
     public String format(Element element, DoubleElementBar data) {
         double rate = data.getValue() / data.getUpperBound();
-        return String.format("%.2f", rate);
+        return String.format("%.2f", rate * 100);
     }
 
     @Override

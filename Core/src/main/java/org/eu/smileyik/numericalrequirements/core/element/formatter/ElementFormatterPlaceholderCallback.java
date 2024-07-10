@@ -11,11 +11,11 @@ public class ElementFormatterPlaceholderCallback implements PlaceholderRequestCa
     @Override
     public String onRequest(NumericalPlayer player, String identifier) {
         String[] split = identifier.split("_");
-        if (split.length != 2) return "";
+        if (split.length != 2) return null;
         ElementFormatter<?, ?> elementFormatter = ElementFormatter.ELEMENT_FORMATTERS.get(split[0]);
-        if (elementFormatter == null) return "";
+        if (elementFormatter == null) return null;
         Pair<Element, ElementData> elementData = ElementPlayer.getElementData(player, split[1]);
-        if (elementData == null) return "";
+        if (elementData == null) return null;
         return elementData.getFirst().toString(elementFormatter, elementData.getSecond());
     }
 }
