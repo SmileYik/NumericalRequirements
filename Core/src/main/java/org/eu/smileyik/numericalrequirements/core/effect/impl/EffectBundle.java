@@ -192,7 +192,7 @@ public class EffectBundle extends AbstractEffect {
         protected boolean doUpdate(double second) {
             super.doUpdate(second);
             if (map != null) {
-                map.values().forEach(list -> list.forEach(EffectDataWrapper::update));
+                map.values().forEach(list -> list.forEach(it -> it.update(second)));
             }
             return true;
         }
@@ -211,8 +211,8 @@ public class EffectBundle extends AbstractEffect {
                 this.data = data;
             }
 
-            public void update() {
-                updateResult = data.update();
+            public void update(double seconds) {
+                updateResult = data.update(seconds);
             }
         }
     }

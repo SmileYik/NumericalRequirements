@@ -7,6 +7,7 @@ public abstract class AbstractUpdatable implements Updatable {
     protected long lastNanoTimestamp;
     private boolean firstRun = true;
     private final Lock lock = new ReentrantLock();
+    private double seconds = 0;
 
     @Override
     public final boolean update() {
@@ -27,6 +28,27 @@ public abstract class AbstractUpdatable implements Updatable {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean update(double seconds) {
+        lock.lock();
+        try {
+            double p = period() / 1000D;
+            this.seconds += seconds;
+            if (this.seconds >= p) {
+                boolean flag = doUpdate(this.seconds);
+                this.seconds = Math.min(0, seconds - p);
+                return flag;
+            }
+        } finally {
+            lock.unlock();
+        }
+        return false;
+    }
+
+    protected void resetTimestamp() {
+        this.lastNanoTimestamp = System.nanoTime();
     }
 
     protected abstract boolean doUpdate(double second);

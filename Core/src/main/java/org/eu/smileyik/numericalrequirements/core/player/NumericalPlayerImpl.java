@@ -30,7 +30,10 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
 
     @Override
     protected boolean doUpdate(double second) {
-        if (player.isDead()) return true;
+        if (player.isDead()) {
+            resetTimestamp();
+            return false;
+        }
         List<Pair<PlayerKey, PlayerValueUpdatable>> timeoutList = new ArrayList<>();
 
         updatableMap.forEach(updatableMap.mappingCount(), (key, value) -> {
@@ -42,7 +45,7 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
                     playerUpdater.submit(() -> {
                         playerUpdaterLock.lock();
                         try {
-                            if (it.update()) key.handlePlayer(this, it);
+                            if (it.update(second)) key.handlePlayer(this, it);
                         } finally {
                             playerUpdaterLock.unlock();
                         }

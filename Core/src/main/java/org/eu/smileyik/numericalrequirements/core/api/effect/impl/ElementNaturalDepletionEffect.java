@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.core.effect.impl;
+package org.eu.smileyik.numericalrequirements.core.api.effect.impl;
 
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffect;

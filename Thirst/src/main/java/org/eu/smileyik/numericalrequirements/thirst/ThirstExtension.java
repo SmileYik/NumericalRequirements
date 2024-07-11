@@ -5,11 +5,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
+import org.eu.smileyik.numericalrequirements.core.api.effect.impl.ElementBoundedEffect;
+import org.eu.smileyik.numericalrequirements.core.api.effect.impl.ElementNaturalDepletionEffect;
+import org.eu.smileyik.numericalrequirements.core.api.effect.impl.ElementRateEffect;
 import org.eu.smileyik.numericalrequirements.core.api.element.handler.ElementHandler;
 import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
-import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementBoundedEffect;
-import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementNaturalDepletionEffect;
-import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementRateEffect;
 import org.eu.smileyik.numericalrequirements.thirst.listener.DeathPunishment;
 import org.eu.smileyik.numericalrequirements.thirst.listener.GetLiquid;
 
