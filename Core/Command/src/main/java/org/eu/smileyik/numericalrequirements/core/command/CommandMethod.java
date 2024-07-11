@@ -165,6 +165,11 @@ public class CommandMethod {
                 it.spawnHelp(translator);
             });
         }
+        CommandMethod n = next;
+        while (n != null) {
+            n.spawnHelp(translator);
+            n = n.next;
+        }
     }
 
     public String getHelp(CommandSender sender, String alias) {
@@ -210,6 +215,9 @@ public class CommandMethod {
                             break;
                         }
                     }
+                }
+                if (tabSuggest == null && next != null) {
+                    return next.getTabSuggest(defaultSuggests, tabSuggestMap, sender, args, idx, step);
                 }
                 return tabSuggest == null ? Collections.emptyList() : tabSuggest.suggest(args, step - 1);
             }
