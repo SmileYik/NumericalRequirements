@@ -3,9 +3,11 @@ available-worlds:
   - "World"
 bStats: true
 status:
-  - "{0}:"
-  - "    &b&l口渴值&f：${format:process-bar;ThirstElement} &b${format:percent;ThirstElement}%"
-  - "    效果：{1}"
+  msg:
+    - "{0}:"
+    - "    &b&l口渴值&f：${format:process-bar;ThirstElement} &b${format:percent;ThirstElement}%"
+    - "    效果：{1}"
+  cache: 10000
 item:
   sync: enable      # 物品同步，依赖于NBT
   serialization:

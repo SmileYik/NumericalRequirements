@@ -11,11 +11,14 @@ import org.eu.smileyik.numericalrequirements.core.api.Msg;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectPlayer;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementFormatter;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundle;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @CommandI18N("command")
@@ -25,6 +28,14 @@ import java.util.stream.Collectors;
         aliases = {"nr", "nreq"}
 )
 public class RootCommand {
+
+    /**
+     * PlayerName: Status; Timestamp
+     */
+    private final Map<String, Pair<String, Long>> playerStatusCache = new HashMap<>();
+    private String statusTemplate = null;
+    private long cacheTime = 10000;
+
     @CommandI18N("command.NumericalRequirements")
     @Command(
             value = "reload",
@@ -63,7 +74,7 @@ public class RootCommand {
             sender.sendMessage(I18N.trp("command", "command.NumericalRequirements.error.cant-find-status"));
             return;
         }
-        Msg.msg(sender, getStatus(p));
+        Msg.msg(sender, getStatus(p, true));
     }
 
     @CommandI18N("command.NumericalRequirements")
@@ -78,10 +89,19 @@ public class RootCommand {
             sender.sendMessage(I18N.trp("command", "command.NumericalRequirements.error.cant-find-status"));
             return;
         }
-        Msg.msg(p, getStatus(p));
+        Msg.msg(p, getStatus(p, false));
     }
 
-    private String getStatus(NumericalPlayer p) {
+
+
+    private String getStatus(NumericalPlayer p, boolean ignoreCache) {
+        ignoreCache = ignoreCache || p.getPlayer().isOp();
+        if (!ignoreCache) {
+            Pair<String, Long> stringLongPair = playerStatusCache.get(p.getPlayer().getName());
+            if (stringLongPair != null && stringLongPair.getSecond() > System.currentTimeMillis()) {
+                return String.format("%s\n%s", stringLongPair.getFirst(), I18N.tr("status.this-is-cache"));
+            }
+        }
         String collect = EffectPlayer.getEffectBundleData(p)
                 .stream()
                 .map(it -> ((EffectBundle.EffectBundleData) it).getBundleId())
@@ -89,9 +109,18 @@ public class RootCommand {
         if (collect.isEmpty()) {
             collect = I18N.tr("status.no-effect");
         }
-        String status = String.join("\n",
-                NumericalRequirements.getInstance().getConfig().getStringList("status"));
-        status = ChatColor.translateAlternateColorCodes('&', status);
-        return MessageFormat.format(ElementFormatter.replacePlaceholder(p, status), p.getPlayer().getName(), collect);
+        if (statusTemplate == null) {
+            String status = String.join("\n",
+                    NumericalRequirements.getInstance().getConfig().getStringList("status.msg"));
+            statusTemplate = ChatColor.translateAlternateColorCodes('&', status);
+            cacheTime = NumericalRequirements.getInstance().getConfig().getLong("status.cache", 10000);
+        }
+
+        String status = MessageFormat.format(ElementFormatter.replacePlaceholder(p, statusTemplate), p.getPlayer().getName(), collect);
+        if (!ignoreCache) {
+            playerStatusCache.put(p.getPlayer().getName(),
+                    Pair.newPair(status, System.currentTimeMillis() + cacheTime));
+        }
+        return status;
     }
 }

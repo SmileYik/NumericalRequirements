@@ -3,6 +3,7 @@ prefix:
 status:
   no-effect: "这里什么都没有哦"
   delimiter: "、"
+  this-is-cache: "以上所显示的状态可能不是最新的"
 command:
   NumericalRequirements:
     color: "&e"
