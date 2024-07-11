@@ -61,12 +61,15 @@ public class RangeHandler implements ElementHandler {
         }
 
         EffectPlayer.registerEffectBundle(player, entry.bundle, entry.duration, EffectPlayer.MERGE_IGNORE);
-        if (entry.percentage && (values.getFirst() > entry.range.getSecond() * value.getUpperBound() ||
-                values.getFirst() < entry.range.getFirst() * value.getUpperBound()) ||
-                !entry.percentage && (values.getFirst() > entry.range.getSecond() ||
-                        values.getFirst() < entry.range.getFirst())
+        double old = values.getFirst();
+        double cur = values.getSecond();
+        double upper = value.getUpperBound();
+
+        if (
+                cur >= entry.getLowerBound(upper) && cur <= entry.getUpperBound(upper) &&
+                (old < entry.getLowerBound(upper) || old > entry.getUpperBound(upper))
         ) {
-            EffectPlayer.registerEffect(player, entry.messageSender, new String[] {entry.message}, EffectPlayer.MERGE_NONE);
+            EffectPlayer.registerEffect(player, entry.messageSender, entry.message, EffectPlayer.MERGE_NONE);
         }
     }
 
@@ -112,7 +115,7 @@ public class RangeHandler implements ElementHandler {
         protected final boolean percentage;
         protected final String bundle;
         protected final double duration;
-        protected final String message;
+        protected final String[] message;
         protected final String messageSender;
 
         protected Entry(ConfigurationSection section) {
@@ -120,11 +123,27 @@ public class RangeHandler implements ElementHandler {
             percentage = section.getBoolean("percentage");
             bundle = section.getString("bundle");
             duration = section.getDouble("duration");
-            message = section.getString("message");
+            message = section.getStringList("message").toArray(new String[0]);
             messageSender = section.getString("message-sender");
 
             double value = percentage ? 100D : 1D;
             range = Pair.newUnchangablePair(range1.get(0) / value, range1.get(1) / value);
+        }
+
+        public double getLowerBound() {
+            return range.getFirst();
+        }
+
+        public double getUpperBound() {
+            return range.getSecond();
+        }
+
+        public double getLowerBound(double maxValue) {
+            return range.getFirst() * (percentage ? maxValue : 1);
+        }
+
+        public double getUpperBound(double maxValue) {
+            return range.getSecond() * (percentage ? maxValue : 1);
         }
     }
 }

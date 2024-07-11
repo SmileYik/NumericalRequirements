@@ -2,10 +2,10 @@ package org.eu.smileyik.numericalrequirements.thirst;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
 import org.eu.smileyik.numericalrequirements.core.api.element.handler.ElementHandler;
-import org.eu.smileyik.numericalrequirements.core.api.element.handler.RangeHandler;
 import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementBoundedEffect;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.ElementNaturalDepletionEffect;
@@ -39,7 +39,15 @@ public class ThirstExtension extends Extension {
             return;
         }
 
-        elementHandler = new RangeHandler(config.getConfigurationSection("thirst.effects"));
+        try {
+            elementHandler = ElementHandler.getInstance(
+                    config.getString("thirst.effect-handler"),
+                    config.getConfigurationSection("thirst.effects")
+            );
+        } catch (Exception e) {
+            I18N.warning("extension.thirst.load-effect-handler-failed", e);
+            elementHandler = new ElementHandler() {};
+        }
         thirstElement = new ThirstElement(this, config, elementHandler);
         thirstTag = new ThirstTag(thirstElement, config, elementHandler);
 

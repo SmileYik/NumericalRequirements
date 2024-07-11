@@ -16,6 +16,21 @@ public abstract class DoubleElementBar extends DoubleElementValue implements Bou
     }
 
     @Override
+    public Pair<Double, Double> getValues() {
+        return Pair.newUnchangablePair(getPreviousValue(), getValue());
+    }
+
+    @Override
+    public Double getValue() {
+        return Math.max(Math.min(getUpperBound(), super.getValue()), getLowerBound());
+    }
+
+    @Override
+    public Double getPreviousValue() {
+        return Math.max(Math.min(getUpperBound(), super.getPreviousValue()), getLowerBound());
+    }
+
+    @Override
     public Double getLowerBound() {
         return bounds.getFirst();
     }

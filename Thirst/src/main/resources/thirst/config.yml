@@ -19,6 +19,7 @@ thirst:
       ChatMessage:
         effect-1:
           message: "你现在有一点缺水了"
+  effect-handler: org.eu.smileyik.numericalrequirements.core.api.element.handler.RangeHandler
   effects:
     "level-1":
       range: [0, 10]
@@ -26,14 +27,16 @@ thirst:
       bundle: "缺水"
       duration: 20
       message-sender: "ChatMessage"
-      message: "河水河水河水河水"
+      message:
+        - "河水河水河水河水"
     "level-2":
       range: [90, 100]
       percentage: true
       bundle: "速度升级"
       duration: 20
       message-sender: "ChatMessage"
-      message: "你好滋润啊！！！"
+      message:
+        - "你好滋润啊！！！"
 tag:
   thirst: "§b增加 §2<%:numf1> §b滋润度."
 get-liquid:
