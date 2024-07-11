@@ -9,7 +9,7 @@ import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffectData;
 import org.eu.smileyik.numericalrequirements.core.api.effect.Effect;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 
 import java.util.Objects;
 
@@ -69,7 +69,7 @@ public class PotionEffect extends AbstractRegisterInfo implements Effect {
     }
 
     @Override
-    public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    public void handlePlayer(NumericalPlayer player, PlayerValue value) {
         org.bukkit.potion.PotionEffect potionEffect = ((PotionEffectData) value).getPotionEffect();
         if (potionEffect != null) {
             // if (!player.getPlayer().hasPotionEffect(potionEffect.getType())) {

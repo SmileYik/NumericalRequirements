@@ -11,28 +11,28 @@ import java.util.Map;
 public interface NumericalPlayer extends Updatable {
     Player getPlayer();
 
-    void registerData(Class<? extends PlayerDataKey> basedClass,
-                      PlayerDataKey key, PlayerDataValue value);
+    void registerData(Class<? extends PlayerKey> basedClass,
+                      PlayerKey key, PlayerValue value);
 
-    void unregisterData(PlayerDataKey key);
+    void unregisterData(PlayerKey key);
 
-    void unregisterData(PlayerDataKey key, SingleOperator<Boolean, PlayerDataValue> operator);
+    void unregisterData(PlayerKey key, SingleOperator<Boolean, PlayerValue> operator);
 
-    List<PlayerDataValue> getRegisteredValues(PlayerDataKey key);
+    List<PlayerValue> getRegisteredValues(PlayerKey key);
 
-    <T extends PlayerDataValue> List<T> getRegisteredValues(PlayerDataKey key, Class<T> tClass);
+    <T extends PlayerValue> List<T> getRegisteredValues(PlayerKey key, Class<T> tClass);
 
     void removeDisabledKey();
 
-    Map<PlayerDataKey, List<PlayerDataValue>> getDisabledDataMap();
+    Map<PlayerKey, List<PlayerValue>> getDisabledDataMap();
 
-    <T extends PlayerDataKey> Map<T, List<PlayerDataValue>> getDisabledDataMap(Class<T> tClass);
+    <T extends PlayerKey> Map<T, List<PlayerValue>> getDisabledDataMap(Class<T> tClass);
 
-    <K extends PlayerDataKey, V extends PlayerDataValue> Map<K, List<V>> getDisabledDataMap(Class<K> kClass, Class<V> vClass);
+    <K extends PlayerKey, V extends PlayerValue> Map<K, List<V>> getDisabledDataMap(Class<K> kClass, Class<V> vClass);
 
     void store(ConfigurationSection section);
 
-    void load(ConfigurationSection section, Class<? extends PlayerDataKey> basedClass, PlayerDataKey key);
+    void load(ConfigurationSection section, Class<? extends PlayerKey> basedClass, PlayerKey key);
 
     /**
      * 从配置片段中读取指定数据并注册至玩家数据中。
@@ -41,5 +41,5 @@ public interface NumericalPlayer extends Updatable {
      * @param key 键实例
      * @param defaultValue 默认值.
      */
-    void load(ConfigurationSection section, Class<? extends PlayerDataKey> basedClass, PlayerDataKey key, PlayerDataValue defaultValue);
+    void load(ConfigurationSection section, Class<? extends PlayerKey> basedClass, PlayerKey key, PlayerValue defaultValue);
 }

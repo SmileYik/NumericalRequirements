@@ -4,7 +4,7 @@ import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffect;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 import org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectEntity;
 import org.keplerproject.luajava.LuaException;
 import tk.smileyik.luainminecraftbukkit.api.luaconfig.LuaConfig;
@@ -67,7 +67,7 @@ public class LuaEffect extends AbstractEffect {
     }
 
     @Override
-    public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    public void handlePlayer(NumericalPlayer player, PlayerValue value) {
         if (entity.handlePlayer == null) return;
         LuaEffectData data = (LuaEffectData) value;
         try {
@@ -81,7 +81,7 @@ public class LuaEffect extends AbstractEffect {
     }
 
     @Override
-    public void onRegisterToPlayerData(NumericalPlayer player, PlayerDataValue value) {
+    public void onRegisterToPlayerData(NumericalPlayer player, PlayerValue value) {
         if (entity.onRegisterToPlayerData == null) return;
         Object luaData = ((LuaEffectData) value).getLuaData();
         try {
@@ -93,7 +93,7 @@ public class LuaEffect extends AbstractEffect {
     }
 
     @Override
-    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerDataValue value) {
+    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerValue value) {
         if (entity.onUnregisterFromPlayerData == null) return;
         Object luaData = ((LuaEffectData) value).getLuaData();
         try {

@@ -1,17 +1,16 @@
 package org.eu.smileyik.numericalrequirements.core.element.formatter;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.eu.smileyik.numericalrequirements.core.api.element.Element;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementFormatter;
 import org.eu.smileyik.numericalrequirements.core.api.element.data.BoundedData;
-import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.Element;
 import org.eu.smileyik.numericalrequirements.core.api.element.data.SingleElementData;
 
 import java.util.Objects;
 
-public class SimpleElementFormatter implements ElementFormatter<Element, ElementData> {
+public class SimpleElementFormatter implements ElementFormatter<org.eu.smileyik.numericalrequirements.core.api.element.Element, Element> {
     @Override
-    public String format(Element element, ElementData elementData) {
+    public String format(org.eu.smileyik.numericalrequirements.core.api.element.Element element, Element elementData) {
         if (elementData == null) {
             return "";
         }

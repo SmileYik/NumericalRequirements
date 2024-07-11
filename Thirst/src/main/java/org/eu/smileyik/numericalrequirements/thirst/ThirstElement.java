@@ -3,10 +3,10 @@ package org.eu.smileyik.numericalrequirements.thirst;
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.element.AbstractElement;
-import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.Element;
 import org.eu.smileyik.numericalrequirements.core.api.element.handler.ElementHandler;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 
 public class ThirstElement extends AbstractElement {
@@ -40,7 +40,7 @@ public class ThirstElement extends AbstractElement {
     }
 
     @Override
-    public ElementData newElementData() {
+    public Element newElementData() {
         ThirstData thirstData = new ThirstData();
         thirstData.setRate(1);
         thirstData.setBounds(Pair.newPair(0D, upperBound));
@@ -50,7 +50,7 @@ public class ThirstElement extends AbstractElement {
     }
 
     @Override
-    public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    public void handlePlayer(NumericalPlayer player, PlayerValue value) {
         handler.handlePlayer(player, value);
     }
 

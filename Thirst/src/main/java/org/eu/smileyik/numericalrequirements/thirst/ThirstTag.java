@@ -3,7 +3,7 @@ package org.eu.smileyik.numericalrequirements.thirst;
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.Element;
 import org.eu.smileyik.numericalrequirements.core.api.element.handler.ElementHandler;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.ConsumableTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
@@ -26,7 +26,7 @@ public class ThirstTag extends LoreTag implements ConsumableTag<LoreValue>, Merg
 
     @Override
     public void onConsume(NumericalPlayer player, LoreValue value) {
-        ElementData elementData = ElementPlayer.getElementData(player, element);
+        Element elementData = ElementPlayer.getElementData(player, element);
         assert elementData != null;
         double v = ((Number) value.get(0)).doubleValue();
         ThirstData data = (ThirstData) elementData;

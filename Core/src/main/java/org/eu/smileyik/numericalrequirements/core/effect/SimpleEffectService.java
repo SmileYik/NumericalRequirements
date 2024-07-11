@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.core.effect.service;
+package org.eu.smileyik.numericalrequirements.core.effect;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;

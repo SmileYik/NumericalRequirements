@@ -3,25 +3,24 @@ package org.eu.smileyik.numericalrequirements.core.api.element;
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.RegisterInfo;
-import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
 import org.eu.smileyik.numericalrequirements.core.api.element.data.singlenumber.DoubleElementBar;
 import org.eu.smileyik.numericalrequirements.core.api.element.data.singlenumber.DoubleElementValue;
 import org.eu.smileyik.numericalrequirements.core.api.extension.placeholder.PlaceholderRequestCallback;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataKey;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerKey;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
-public interface Element extends RegisterInfo, PlayerDataKey, PlaceholderRequestCallback {
-    ElementData newElementData();
+public interface Element extends RegisterInfo, PlayerKey, PlaceholderRequestCallback {
+    org.eu.smileyik.numericalrequirements.core.api.element.data.Element newElementData();
 
-    default void storeDataValue(ConfigurationSection section, PlayerDataValue value) {
-        ElementData elementData = (ElementData) value;
+    default void storeDataValue(ConfigurationSection section, PlayerValue value) {
+        org.eu.smileyik.numericalrequirements.core.api.element.data.Element elementData = (org.eu.smileyik.numericalrequirements.core.api.element.data.Element) value;
         elementData.store(section);
     }
 
-    default PlayerDataValue loadDataValue(ConfigurationSection section) {
-        ElementData elementData = newElementData();
+    default PlayerValue loadDataValue(ConfigurationSection section) {
+        org.eu.smileyik.numericalrequirements.core.api.element.data.Element elementData = newElementData();
         elementData.load(section);
         return elementData;
     }
@@ -32,7 +31,7 @@ public interface Element extends RegisterInfo, PlayerDataKey, PlaceholderRequest
         if (!identifier.equalsIgnoreCase(id) && !identifier.startsWith(id + "_")) {
             return null;
         }
-        ElementData elementData = ElementPlayer.getElementData(
+        org.eu.smileyik.numericalrequirements.core.api.element.data.Element elementData = ElementPlayer.getElementData(
                 player, this
         );
         if (elementData == null) {
@@ -48,14 +47,14 @@ public interface Element extends RegisterInfo, PlayerDataKey, PlaceholderRequest
 
     boolean isPlaceholder();
 
-    default String onRequestPlaceholder(ElementData data) {
+    default String onRequestPlaceholder(org.eu.smileyik.numericalrequirements.core.api.element.data.Element data) {
         if (data instanceof DoubleElementValue) {
             return String.format("%.2f", ((DoubleElementValue) data).getValue());
         }
         return null;
     }
 
-    default String onRequestPlaceholder(ElementData data, String args) {
+    default String onRequestPlaceholder(org.eu.smileyik.numericalrequirements.core.api.element.data.Element data, String args) {
         if (data instanceof DoubleElementValue) {
             DoubleElementValue d = (DoubleElementValue) data;
             if (args.startsWith("format_")) {
@@ -83,7 +82,7 @@ public interface Element extends RegisterInfo, PlayerDataKey, PlaceholderRequest
         return null;
     }
 
-    default <K extends Element, V extends ElementData> String toString(ElementFormatter<K, V> formatter, ElementData data) {
+    default <K extends Element, V extends org.eu.smileyik.numericalrequirements.core.api.element.data.Element> String toString(ElementFormatter<K, V> formatter, org.eu.smileyik.numericalrequirements.core.api.element.data.Element data) {
         try {
             K k = (K) this;
             V v = (V) data;
@@ -94,7 +93,7 @@ public interface Element extends RegisterInfo, PlayerDataKey, PlaceholderRequest
         }
     }
 
-    default String toString(ElementData data) {
+    default String toString(org.eu.smileyik.numericalrequirements.core.api.element.data.Element data) {
         return toString(ElementFormatter.ELEMENT_FORMATTERS.get("simple"), data);
     }
 }

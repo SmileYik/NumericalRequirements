@@ -2,7 +2,7 @@ package org.eu.smileyik.numericalrequirements.core.api.player;
 
 import org.eu.smileyik.numericalrequirements.core.api.Updatable;
 
-public interface PlayerDataValueUpdatable extends PlayerDataValue, Updatable {
+public interface PlayerValueUpdatable extends PlayerValue, Updatable {
     default boolean isTimeout() {
         return false;
     }

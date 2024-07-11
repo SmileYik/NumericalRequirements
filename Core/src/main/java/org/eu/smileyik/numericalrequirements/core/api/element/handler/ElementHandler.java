@@ -3,13 +3,13 @@ package org.eu.smileyik.numericalrequirements.core.api.element.handler;
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.api.element.data.singlenumber.DoubleElementBar;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public interface ElementHandler {
-    default void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    default void handlePlayer(NumericalPlayer player, PlayerValue value) {
 
     }
 

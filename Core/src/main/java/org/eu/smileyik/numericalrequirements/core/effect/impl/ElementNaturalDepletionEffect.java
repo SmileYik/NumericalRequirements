@@ -3,17 +3,16 @@ package org.eu.smileyik.numericalrequirements.core.effect.impl;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffect;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
-import org.eu.smileyik.numericalrequirements.core.api.element.Element;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.Element;
 import org.eu.smileyik.numericalrequirements.core.api.element.data.singlenumber.DoubleElementValue;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 
 public class ElementNaturalDepletionEffect extends AbstractEffect {
-    private final Element element;
+    private final org.eu.smileyik.numericalrequirements.core.api.element.Element element;
 
-    public ElementNaturalDepletionEffect(Element element) {
+    public ElementNaturalDepletionEffect(org.eu.smileyik.numericalrequirements.core.api.element.Element element) {
         super(
                 String.format("%s-NaturalDepletionEffect", element.getId()),
                 I18N.tr("effect.natural-depletion.normal-name", element.getName()),
@@ -53,13 +52,13 @@ public class ElementNaturalDepletionEffect extends AbstractEffect {
     }
 
     @Override
-    public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    public void handlePlayer(NumericalPlayer player, PlayerValue value) {
 
     }
 
     @Override
-    public void onRegisterToPlayerData(NumericalPlayer player, PlayerDataValue value) {
-        ElementData elementData = ElementPlayer.getElementData(player, element);
+    public void onRegisterToPlayerData(NumericalPlayer player, PlayerValue value) {
+        Element elementData = ElementPlayer.getElementData(player, element);
         DoubleEffectData data = (DoubleEffectData) value;
         if (elementData != null) {
             DoubleElementValue elementValue = (DoubleElementValue) elementData;
@@ -70,8 +69,8 @@ public class ElementNaturalDepletionEffect extends AbstractEffect {
     }
 
     @Override
-    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerDataValue value) {
-        ElementData elementData = ElementPlayer.getElementData(player, element);
+    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerValue value) {
+        Element elementData = ElementPlayer.getElementData(player, element);
         DoubleEffectData data = (DoubleEffectData) value;
         if (elementData != null) {
             DoubleElementValue elementValue = (DoubleElementValue) elementData;

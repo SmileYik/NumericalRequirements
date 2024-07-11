@@ -3,12 +3,11 @@ package org.eu.smileyik.numericalrequirements.core.effect.impl;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffect;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
-import org.eu.smileyik.numericalrequirements.core.api.element.Element;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementPlayer;
 import org.eu.smileyik.numericalrequirements.core.api.element.data.BoundedData;
-import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.Element;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 
 public class ElementBoundedEffect extends AbstractEffect {
@@ -33,9 +32,9 @@ public class ElementBoundedEffect extends AbstractEffect {
         }
     }
 
-    private final Element element;
+    private final org.eu.smileyik.numericalrequirements.core.api.element.Element element;
 
-    public ElementBoundedEffect(Element element) {
+    public ElementBoundedEffect(org.eu.smileyik.numericalrequirements.core.api.element.Element element) {
         super(
                 String.format("%s-BoundedEffect", element.getId()),
                 I18N.tr("effect.bounded.normal-name", element.getName()),
@@ -44,7 +43,7 @@ public class ElementBoundedEffect extends AbstractEffect {
                 I18N.tr("effect.bounded.normal-description", element.getName())
         );
         this.element = element;
-        ElementData elementData = element.newElementData();
+        Element elementData = element.newElementData();
         if (!(elementData instanceof BoundedData) || !(((BoundedData)elementData).getLowerBound() instanceof Number)) {
             throw new RuntimeException("This element data not implement Number BoundedData!" + element);
         }
@@ -78,13 +77,13 @@ public class ElementBoundedEffect extends AbstractEffect {
     }
 
     @Override
-    public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    public void handlePlayer(NumericalPlayer player, PlayerValue value) {
 
     }
 
     @Override
-    public void onRegisterToPlayerData(NumericalPlayer player, PlayerDataValue value) {
-        ElementData elementData = ElementPlayer.getElementData(player, element);
+    public void onRegisterToPlayerData(NumericalPlayer player, PlayerValue value) {
+        Element elementData = ElementPlayer.getElementData(player, element);
         ElementBoundedEffectData data = (ElementBoundedEffectData) value;
         if (elementData != null) {
             BoundedData<Number> boundedData = (BoundedData<Number>) elementData;
@@ -101,8 +100,8 @@ public class ElementBoundedEffect extends AbstractEffect {
     }
 
     @Override
-    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerDataValue value) {
-        ElementData elementData = ElementPlayer.getElementData(player, element);
+    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerValue value) {
+        Element elementData = ElementPlayer.getElementData(player, element);
         ElementBoundedEffectData data = (ElementBoundedEffectData) value;
         if (elementData != null) {
             BoundedData<Number> boundedData = (BoundedData<Number>) elementData;

@@ -3,17 +3,16 @@ package org.eu.smileyik.numericalrequirements.core.effect.impl;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffect;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
-import org.eu.smileyik.numericalrequirements.core.api.element.Element;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.Element;
 import org.eu.smileyik.numericalrequirements.core.api.element.data.RatableData;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 
 public class ElementRateEffect extends AbstractEffect {
-    private final Element element;
+    private final org.eu.smileyik.numericalrequirements.core.api.element.Element element;
 
-    public ElementRateEffect(Element element) {
+    public ElementRateEffect(org.eu.smileyik.numericalrequirements.core.api.element.Element element) {
         super(
                 String.format("%s-RateEffect", element.getId()),
                 I18N.tr("effect.rate.normal-name", element.getName()),
@@ -54,13 +53,13 @@ public class ElementRateEffect extends AbstractEffect {
     }
 
     @Override
-    public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    public void handlePlayer(NumericalPlayer player, PlayerValue value) {
 
     }
 
     @Override
-    public void onRegisterToPlayerData(NumericalPlayer player, PlayerDataValue value) {
-        ElementData elementData = ElementPlayer.getElementData(player, element);
+    public void onRegisterToPlayerData(NumericalPlayer player, PlayerValue value) {
+        Element elementData = ElementPlayer.getElementData(player, element);
         DoubleEffectData data = (DoubleEffectData) value;
         if (elementData != null) {
             RatableData ratableData = (RatableData) elementData;
@@ -71,8 +70,8 @@ public class ElementRateEffect extends AbstractEffect {
     }
 
     @Override
-    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerDataValue value) {
-        ElementData elementData = ElementPlayer.getElementData(player, element);
+    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerValue value) {
+        Element elementData = ElementPlayer.getElementData(player, element);
         DoubleEffectData data = (DoubleEffectData) value;
         if (elementData != null) {
             RatableData ratableData = (RatableData) elementData;

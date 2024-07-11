@@ -9,7 +9,7 @@ import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.player.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.command.*;
 import org.eu.smileyik.numericalrequirements.core.command.tabsuggests.*;
-import org.eu.smileyik.numericalrequirements.core.effect.service.SimpleEffectService;
+import org.eu.smileyik.numericalrequirements.core.effect.SimpleEffectService;
 import org.eu.smileyik.numericalrequirements.core.element.ElementServiceImpl;
 import org.eu.smileyik.numericalrequirements.core.element.formatter.ElementFormatterPlaceholderCallback;
 import org.eu.smileyik.numericalrequirements.core.extension.ExtensionServiceImpl;

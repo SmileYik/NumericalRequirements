@@ -7,9 +7,10 @@ import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffect;
 import org.eu.smileyik.numericalrequirements.core.api.effect.AbstractEffectData;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValueOneShot;
 
-public class TitleMessageEffect extends AbstractEffect {
+public class TitleMessageEffect extends AbstractEffect implements PlayerValueOneShot {
 
     public TitleMessageEffect() {
         super(
@@ -56,12 +57,12 @@ public class TitleMessageEffect extends AbstractEffect {
      * @param value
      */
     @Override
-    public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    public void handlePlayer(NumericalPlayer player, PlayerValue value) {
 
     }
 
     @Override
-    public void onRegisterToPlayerData(NumericalPlayer player, PlayerDataValue value) {
+    public void onRegisterToPlayerData(NumericalPlayer player, PlayerValue value) {
         Data data = (Data) value;
         Msg.title(player, data.main, data.sub, data.fadeIn, data.stay, data.fadeOut);
     }

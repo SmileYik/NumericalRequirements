@@ -2,9 +2,9 @@ package org.eu.smileyik.numericalrequirements.core.api.effect;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.api.AbstractUpdatable;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValueUpdatable;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValueUpdatable;
 
-public class AbstractEffectData extends AbstractUpdatable implements EffectData, PlayerDataValueUpdatable {
+public class AbstractEffectData extends AbstractUpdatable implements EffectData, PlayerValueUpdatable {
     private double duration;
 
     @Override

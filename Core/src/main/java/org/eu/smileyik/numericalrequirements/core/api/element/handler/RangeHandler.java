@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectPlayer;
 import org.eu.smileyik.numericalrequirements.core.api.element.data.singlenumber.DoubleElementBar;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class RangeHandler implements ElementHandler {
     }
 
     @Override
-    public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    public void handlePlayer(NumericalPlayer player, PlayerValue value) {
         if (value instanceof DoubleElementBar) {
             handlePlayer(player, (DoubleElementBar) value);
         }

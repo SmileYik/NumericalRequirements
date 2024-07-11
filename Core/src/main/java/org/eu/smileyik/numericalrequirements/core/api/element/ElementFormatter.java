@@ -3,7 +3,7 @@ package org.eu.smileyik.numericalrequirements.core.api.element;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.api.element.data.ElementData;
+import org.eu.smileyik.numericalrequirements.core.api.element.data.Element;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.element.formatter.PercentageFormatter;
@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // ${format:<%:str>;<%:str>}
-public interface ElementFormatter <K extends Element, V extends ElementData> {
+public interface ElementFormatter <K extends org.eu.smileyik.numericalrequirements.core.api.element.Element, V extends Element> {
     Pattern PATTERN = Pattern.compile("(\\$\\{format:.+?;).+?}");
 
     Map<String, ElementFormatter<?, ?>> ELEMENT_FORMATTERS = new HashMap<>() {
@@ -86,7 +86,7 @@ public interface ElementFormatter <K extends Element, V extends ElementData> {
                 DebugLogger.debug("Failed find formatter: %s", strs[0]);
                 continue;
             }
-            Pair<Element, ElementData> pair = ElementPlayer.getElementData(p, strs[1]);
+            Pair<org.eu.smileyik.numericalrequirements.core.api.element.Element, Element> pair = ElementPlayer.getElementData(p, strs[1]);
             if (pair == null) {
                 DebugLogger.debug("Failed find element: %s", strs[1]);
                 continue;

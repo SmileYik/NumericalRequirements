@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.effect.*;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
 
 import java.util.*;
 
@@ -49,17 +49,17 @@ public class EffectBundle extends AbstractEffect {
     }
 
     @Override
-    public void handlePlayer(NumericalPlayer player, PlayerDataValue value) {
+    public void handlePlayer(NumericalPlayer player, PlayerValue value) {
         ((EffectBundleData) value).handlePlayer(player);
     }
 
     @Override
-    public void onRegisterToPlayerData(NumericalPlayer player, PlayerDataValue value) {
+    public void onRegisterToPlayerData(NumericalPlayer player, PlayerValue value) {
         ((EffectBundleData) value).onRegisterToPlayerData(player);
     }
 
     @Override
-    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerDataValue value) {
+    public void onUnregisterFromPlayerData(NumericalPlayer player, PlayerValue value) {
         ((EffectBundleData) value).onUnregisterFromPlayerData(player);
     }
 

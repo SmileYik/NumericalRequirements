@@ -1,8 +1,8 @@
 package org.eu.smileyik.numericalrequirements.core.api.effect;
 
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerDataValueUpdatable;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValueUpdatable;
 
-public interface EffectData extends PlayerDataValueUpdatable {
+public interface EffectData extends PlayerValueUpdatable {
     double getDuration();
 
     void setDuration(double duration);
