@@ -34,7 +34,6 @@ public class YamlItemSerialization implements ItemSerialization {
         entries.add(new LoreEntry());
         entries.add(new ItemFlagEntry());
         entries.add(new NBTEntry());
-        entries.add(new NBTSyncEntry());
         entries.add(new PotionEntry.Potion1Entry());
         entries.add(new PotionEntry.Potion2Entry());
 

@@ -12,7 +12,6 @@ import java.util.Map;
 
 public interface ItemService {
     String NBT_KEY_ID = "nreq-item";
-    String NBT_KEY_SYNC = "nreq-sync";
 
     /**
      * Tag种类：不可消耗、无功能性

@@ -85,7 +85,6 @@ public class NBTEntry implements YamlItemEntry {
     public void configure(ConfigurationSection section) {
         ignoreKeys = new HashSet<>(section.getStringList("ignore-keys"));
         ignoreKeys.add(ItemService.NBT_KEY_ID);
-        ignoreKeys.add(ItemService.NBT_KEY_SYNC);
     }
 
     @Override

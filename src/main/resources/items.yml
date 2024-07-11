@@ -7,7 +7,7 @@ id:
   fire-resistant: false
   rarity: EPIC
   custom-model-data: 1
-  nbt-sync: false
+  sync: false
   lore:
   - aaaa
   - aaaaaaaaaaaaaaaaaaaa

@@ -280,13 +280,13 @@ public class ItemServiceImpl implements Listener, ItemService {
         if (itemStack == null || isStore && !idTagMap.containsKey(id)) {
             return null;
         }
-
-        NBTItem cast = NBTItemHelper.cast(itemStack.clone());
-        if (cast != null) {
-            cast.getTag().setString(NBT_KEY_ID, id);
-            itemStack = cast.getItemStack();
+        if (itemConfig.getBoolean(String.format("%s.sync", id), true)) {
+            NBTItem cast = NBTItemHelper.cast(itemStack.clone());
+            if (cast != null) {
+                cast.getTag().setString(NBT_KEY_ID, id);
+                itemStack = cast.getItemStack();
+            }
         }
-
         itemStackCache.put(id, itemStack);
         return itemStack;
     }
@@ -341,8 +341,7 @@ public class ItemServiceImpl implements Listener, ItemService {
         if (nbtItem == null) return false;
         NBTTagCompound tag = nbtItem.getTag();
         if (tag == null) return false;
-        if (!tag.hasKey(NBT_KEY_ID) ||
-                tag.hasKey(NBT_KEY_SYNC) && !tag.getBoolean(NBT_KEY_SYNC)) {
+        if (!tag.hasKey(NBT_KEY_ID)) {
             return false;
         }
         String id = tag.getString(NBT_KEY_ID);
