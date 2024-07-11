@@ -1,9 +1,8 @@
 package org.eu.smileyik.numericalrequirements.core.api.player;
 
 import org.bukkit.entity.Player;
-import org.eu.smileyik.numericalrequirements.core.api.Updatable;
 
-public interface PlayerService extends Updatable {
+public interface PlayerService {
     void loadOnlinePlayers();
 
     NumericalPlayer getNumericalPlayer(Player player);

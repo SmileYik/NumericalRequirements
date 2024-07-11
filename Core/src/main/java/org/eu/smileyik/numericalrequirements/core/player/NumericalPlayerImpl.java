@@ -12,18 +12,22 @@ import org.eu.smileyik.numericalrequirements.core.api.util.SingleOperator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalPlayer {
+    private final PlayerUpdater playerUpdater;
     private final Player player;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
     private final ReentrantReadWriteLock updateLock = new ReentrantReadWriteLock(true);
+    private final ReentrantLock playerUpdaterLock = new ReentrantLock(true);
     private final ConcurrentHashMap<PlayerDataKey, List<PlayerDataValue>> registeredMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<PlayerDataKey, List<PlayerDataValueUpdatable>> updatableMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Class<? extends PlayerDataKey>, List<PlayerDataKey>> basedClassInstanceListMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<PlayerDataKey, Class<? extends PlayerDataKey>> instanceBaseClassMap = new ConcurrentHashMap<>();
 
-    public NumericalPlayerImpl(Player player) {
+    public NumericalPlayerImpl(PlayerUpdater playerUpdater, Player player) {
+        this.playerUpdater = playerUpdater;
         this.player = player;
     }
 
@@ -38,7 +42,14 @@ public class NumericalPlayerImpl extends AbstractUpdatable implements NumericalP
             try {
                 if (key.isDisable()) return;
                 value.forEach(it -> {
-                    if (it.update()) key.handlePlayer(this, it);
+                    playerUpdater.submit(() -> {
+                        playerUpdaterLock.lock();
+                        try {
+                            if (it.update()) key.handlePlayer(this, it);
+                        } finally {
+                            playerUpdaterLock.unlock();
+                        }
+                    });
                     if (it.isTimeout()) timeoutList.add(Pair.newUnchangablePair(key, it));
                 });
             } finally {

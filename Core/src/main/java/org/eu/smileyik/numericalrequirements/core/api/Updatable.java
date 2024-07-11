@@ -1,6 +1,7 @@
 package org.eu.smileyik.numericalrequirements.core.api;
 
-public interface Updatable {
+public interface Updatable extends Runnable {
+
     boolean update();
 
     /**
@@ -8,4 +9,9 @@ public interface Updatable {
      * @return
      */
     long period();
+
+    @Override
+    default void run() {
+        update();
+    }
 }
