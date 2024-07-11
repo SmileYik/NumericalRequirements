@@ -8,9 +8,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.ItemTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.MergeableLore;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.nbt.NBTTag;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
@@ -46,12 +48,23 @@ public class ItemCommand {
             player.sendMessage(I18N.trp("command", "command.item.error.no-tag-id"));
             return;
         }
-        LoreTag tag = (LoreTag) itemService.getItemTagById(args[0]);
-        if (tag == null) {
+        ItemTag<?> itemTag = itemService.getItemTagById(args[0]);
+        if (itemTag == null) {
             player.sendMessage(I18N.trp("command", "command.item.error.not-valid-tag", args[0]));
             return;
         }
+
         List<String> list = args.length == 1 ? Collections.emptyList() : Arrays.asList(Arrays.copyOfRange(args, 1, args.length));
+        if (itemTag instanceof NBTTag) {
+            NBTTag<?> nbtTag = (NBTTag<?>) itemTag;
+            if (nbtTag.isValidValue(list)) {
+                nbtTag.setValue(item, list);
+            } else {
+                player.sendMessage(I18N.trp("command", "command.item.error.wrong-tag-value"));
+            }
+            return;
+        }
+        LoreTag tag = (LoreTag) itemTag;
         if (!tag.isValidValues(list)) {
             player.sendMessage(I18N.trp("command", "command.item.error.wrong-tag-value"));
             return;

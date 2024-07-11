@@ -149,7 +149,8 @@ public class ItemServiceImpl implements Listener, ItemService {
             ItemTag<?> itemTag = idTagMap.get(id);
             if (itemTag instanceof NBTTag<?>) {
                 NBTTag<?> nbtTag = (NBTTag<?>) itemTag;
-                map.put(itemTag, List.of(nbtTag.getValue(tagCompound)));
+                Object value = nbtTag.getValue(tagCompound);
+                if (value != null) map.put(itemTag, List.of(value));
             }
         }
         return map;

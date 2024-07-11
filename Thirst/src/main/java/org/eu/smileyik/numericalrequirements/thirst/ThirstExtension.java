@@ -19,7 +19,8 @@ public class ThirstExtension extends Extension {
     private YamlConfiguration config;
 
     private ThirstElement thirstElement;
-    private ThirstTag thirstTag;
+    private ThirstLoreTag thirstLoreTag;
+    private ThirstNBTTag thirstNBTTag;
     private ElementNaturalDepletionEffect elementNaturalDepletionEffect;
     private ElementRateEffect elementRateEffect;
     private ElementBoundedEffect elementBoundedEffect;
@@ -49,10 +50,12 @@ public class ThirstExtension extends Extension {
             elementHandler = new ElementHandler() {};
         }
         thirstElement = new ThirstElement(this, config, elementHandler);
-        thirstTag = new ThirstTag(thirstElement, config, elementHandler);
+        thirstLoreTag = new ThirstLoreTag(thirstElement, config, elementHandler);
+        thirstNBTTag = new ThirstNBTTag(thirstElement, elementHandler);
 
         api.getElementService().registerElement(thirstElement);
-        api.getItemService().registerItemTag(thirstTag);
+        api.getItemService().registerItemTag(thirstLoreTag);
+        api.getItemService().registerItemTag(thirstNBTTag);
         EffectService effectService = api.getEffectService();
         effectService.addBundleConfigSection(config.getConfigurationSection("thirst.effect-bundles"));
 
@@ -86,14 +89,14 @@ public class ThirstExtension extends Extension {
     @Override
     public void onDisable() {
         NumericalRequirements api = NumericalRequirements.getInstance();
-        api.getItemService().unregisterItemTag(thirstTag);
+        api.getItemService().unregisterItemTag(thirstLoreTag);
         api.getElementService().unregisterElement(thirstElement);
         api.getEffectService().unregisterEffect(elementBoundedEffect);
         api.getEffectService().unregisterEffect(elementRateEffect);
         api.getEffectService().unregisterEffect(elementNaturalDepletionEffect);
 
         config = null;
-        thirstTag = null;
+        thirstLoreTag = null;
         thirstElement = null;
         elementHandler = null;
         deathPunishment = null;

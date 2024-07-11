@@ -11,13 +11,13 @@ import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.MergeableLore;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 
-public class ThirstTag extends LoreTag implements ConsumableTag<LoreValue>, MergeableLore {
+public class ThirstLoreTag extends LoreTag implements ConsumableTag<LoreValue>, MergeableLore {
 
     private final ConfigurationSection config;
     private final ThirstElement element;
     private final ElementHandler elementHandler;
 
-    protected ThirstTag(ThirstElement element, ConfigurationSection config, ElementHandler elementHandler) {
+    protected ThirstLoreTag(ThirstElement element, ConfigurationSection config, ElementHandler elementHandler) {
         super(config.getString("tag.thirst", "§b增加 §2<%:numf1> §b滋润度."));
         this.element = element;
         this.elementHandler = elementHandler;

@@ -15,5 +15,6 @@ dependencies {
     implementation project(':Core')
     implementation project(':Commons:DebugTool')
     implementation project(":Commons:ReflectTool")
+    implementation project(":NMS")
     implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
 }
