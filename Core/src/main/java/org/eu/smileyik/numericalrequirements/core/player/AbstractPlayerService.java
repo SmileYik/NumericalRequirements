@@ -139,7 +139,6 @@ public abstract class AbstractPlayerService implements PlayerService, Updatable 
         {
             players.clear();
             stop();
-            // executorService.shutdownNow();
             scheduledExecutorService.shutdown();
         }
     }

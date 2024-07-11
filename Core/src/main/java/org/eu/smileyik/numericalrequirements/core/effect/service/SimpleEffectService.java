@@ -8,9 +8,11 @@ import org.eu.smileyik.numericalrequirements.core.api.effect.Effect;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectPlayer;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
 import org.eu.smileyik.numericalrequirements.core.api.event.player.NumericalPlayerLoadEvent;
-import org.eu.smileyik.numericalrequirements.core.effect.impl.ChatMessageEffect;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundle;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.PotionEffect;
+import org.eu.smileyik.numericalrequirements.core.effect.impl.message.ActionBarEffect;
+import org.eu.smileyik.numericalrequirements.core.effect.impl.message.ChatMessageEffect;
+import org.eu.smileyik.numericalrequirements.core.effect.impl.message.TitleMessageEffect;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +28,8 @@ public class SimpleEffectService implements Listener, EffectService {
         registerEffect(new PotionEffect());
         registerEffect(new EffectBundle(this));
         registerEffect(new ChatMessageEffect());
+        registerEffect(new ActionBarEffect());
+        registerEffect(new TitleMessageEffect());
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
