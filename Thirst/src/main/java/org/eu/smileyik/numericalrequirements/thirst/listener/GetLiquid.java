@@ -115,7 +115,7 @@ public class GetLiquid implements Listener {
         }
         ItemStack itemStack = itemService.loadItem(waterId, 1);
         if (itemStack == null) {
-            I18N.warning("thirst.get-liquid.item-not-found", waterId);
+            I18N.warning("extensions.thirst.get-liquid.item-not-found", waterId);
             return;
         }
         ItemStack item = e.getItem();

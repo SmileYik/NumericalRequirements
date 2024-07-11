@@ -110,10 +110,44 @@ log:
     on-enable: "NumericalRequirements 启动！"
     lua-effect:
       enabled: "Lua 脚本效果拓展加载完毕！"
+      lua-in-minecraft-bukkit-not-enabled: "未找到前置插件: LuaInMinecraftBukkit. 本拓展将被禁用."
   warning:
     language-not-fount: "没有找到有关 [{0}] 地域的语言文件！"
     failed-create-directors: "创建文件夹失败！"
+    thread:
+      error:
+        create-thread-pool-failed: "创建线程池失败，将使用默认方式重新创建"
+    item:
+      serialization:
+        enchantment:
+          unknown: "加载物品时发现未知附魔 {0}"
+          not-equal: "加载附魔 {0} 时，却返回附魔 {1}"
+        item-flag:
+          flag-not-found: "没有找到物品标志: {0}"
+        lore:
+          not-find-tag: "无法从 {1} 中找到Lore标记 {0}"
+          invalid-tag-value: "加载LoreTag时发现所给与的值与 {2}({1}) 所需要求不匹配: {0}"
+    extensions:
+      thirst:
+        load-effect-handler-failed: "加载效果处理器失败: {0}"
+        get-liquid:
+          item-not-found: "未找到物品 {0}"
+  severe:
+    extensions:
+      lua-effect:
+        run-closure-failed: "运行Lua闭包失败, {1}({0})"
+        run-new-effect-failed: "{1}({0}) 在运行 newEffect 方法时失败"
+        run-new-effect-by-string-array-failed: "{1}({0}) 在运行 newEffectByStringArray 方法时失败"
+        run-method-handle-player-failed: "{1}({0}) 在运行 handlePlayer 方法时失败"
+        register-player-data-failed: "{1}({0}) 在运行 registerPlayerData 方法时失败"
+        unregister-player-data-failed: "{1}({0}) 在运行 unregisterPlayerData 方法时失败"
+        run-method-update-failed: "{1}({0}) 在运行 update 方法时失败"
+        run-method-can-delete-failed: "{1}({0}) 在运行 canDelete 方法时失败"
+        run-method-store-failed: "{1}({0}) 在运行 store 方法时失败"
+        run-method-load-failed: "{1}({0}) 在运行 load 方法时失败"
 extension:
+  on-load: "拓展 {0} 被加载"
+  cannot-load: "无法加载拓展: {0}"
   lua-effect:
     lua-in-minecraft-bukkit-not-enabled: "未检测到 LuaInMinecraftBukkit 前置， LuaEffect 拓展将被自动禁用！"
     lua-effect-reload:
@@ -135,3 +169,32 @@ extension:
     tag:
       name: "口渴值"
       description: "带有此标签的物品将会能够被消耗，并且能够影响口渴值"
+effect:
+  bounded:
+    normal-name: "{0}边界"
+    normal-description: "影响 {0} 的数值上限以及数值下限"
+  natural-depletion:
+    normal-name: "{0}消减数值"
+    normal-description: "影响 {0} 的自然消减数值"
+  rate:
+    normal-name: "{0}消减速率"
+    normal-description: "影响 {0} 的自然消减速率"
+  effect-bundle:
+    name: "效果包"
+    desciption: "包含多个效果的整合包"
+  potion-effect:
+    name: "药水效果"
+    description: "原版药水效果"
+  action-bar:
+    name: "ActionBar 消息"
+    description: "给玩家发送 ActionBar 消息"
+  chat-message:
+    name: "聊天消息"
+    description: "给玩家发送消息"
+  title-message:
+    name: "Title 消息"
+    description: "给玩家发送 Title"
+element:
+  format:
+    formatter-error: "格式化器 {0} 无法作用于 {1}({2}) 要素"
+

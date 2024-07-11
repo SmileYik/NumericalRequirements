@@ -64,9 +64,9 @@ public class ExtensionServiceImpl implements ExtensionService {
             );
             try {
                 if (register(main, info)) {
-                    I18N.tr(info.getId() + " be loaded!");
+                    I18N.tr("extension.on-load", info.getId());
                 } else {
-                    I18N.tr(info.getId() + " not load!");
+                    I18N.tr("extension.cannot-load", info.getId());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

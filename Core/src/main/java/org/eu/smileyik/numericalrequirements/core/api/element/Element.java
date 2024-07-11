@@ -89,7 +89,7 @@ public interface Element extends RegisterInfo, PlayerKey, PlaceholderRequestCall
             return formatter.format((K) this, (V) data);
         } catch (ClassCastException e) {
             DebugLogger.debug(e);
-            return I18N.tr("element.format.formatter-error", formatter.getId());
+            return I18N.tr("element.format.formatter-error", formatter.getId(), getName(), getId());
         }
     }
 

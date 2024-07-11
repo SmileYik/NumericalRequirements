@@ -45,7 +45,7 @@ public class ThirstExtension extends Extension {
                     config.getConfigurationSection("thirst.effects")
             );
         } catch (Exception e) {
-            I18N.warning("extension.thirst.load-effect-handler-failed", e);
+            I18N.warning("extensions.thirst.load-effect-handler-failed", e);
             elementHandler = new ElementHandler() {};
         }
         thirstElement = new ThirstElement(this, config, elementHandler);

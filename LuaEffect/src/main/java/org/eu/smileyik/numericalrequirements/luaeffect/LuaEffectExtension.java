@@ -23,7 +23,7 @@ public class LuaEffectExtension extends Extension {
     @Override
     public void onEnable() {
         if (!getPlugin().getServer().getPluginManager().isPluginEnabled("LuaInMinecraftBukkit")) {
-            I18N.info("extension.lua-effect.lua-in-minecraft-bukkit-not-enabled");
+            I18N.info("lua-effect.lua-in-minecraft-bukkit-not-enabled");
             return;
         }
 
