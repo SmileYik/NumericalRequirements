@@ -1,5 +1,8 @@
 prefix:
   command: "&2[数字化需求] &r"
+status:
+  no-effect: "这里什么都没有哦"
+  delimiter: "、"
 command:
   NumericalRequirements:
     color: "&e"
@@ -7,6 +10,12 @@ command:
     reload:
       color: "&a"
       description: "重新加载插件"
+    status:
+      color: "&b"
+      description: "查看状态"
+      player: "&5玩家名"
+    error:
+      cant-find-status: "没有找到你的状态哦"
   item:
     color: "&9"
     description: "与物品有关的指令"

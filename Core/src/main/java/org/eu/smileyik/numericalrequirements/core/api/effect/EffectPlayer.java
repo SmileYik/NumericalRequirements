@@ -27,6 +27,13 @@ public interface EffectPlayer {
      */
     byte MERGE_IGNORE = 2;
 
+    static List<EffectData> getEffectBundleData(@NotNull NumericalPlayer player) {
+        return  getEffectData(
+                player,
+                NumericalRequirements.getInstance().getEffectService().findEffectById("EffectBundle")
+        );
+    }
+
     static List<EffectData> getEffectData(@NotNull NumericalPlayer player, Effect effect) {
         List<EffectData> registeredValues = player.getRegisteredValues(effect, EffectData.class);
         return registeredValues == null ? Collections.EMPTY_LIST : registeredValues;
