@@ -5,6 +5,7 @@ import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.effect.*;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValue;
+import org.eu.smileyik.numericalrequirements.core.api.player.PlayerValueOneShot;
 
 import java.util.*;
 
@@ -115,9 +116,16 @@ public class EffectBundle extends AbstractEffect {
         public void onRegisterToPlayerData(NumericalPlayer player) {
             if (map != null) {
                 map.forEach((effect, data) -> {
+                    List<EffectDataWrapper> oneShots = new ArrayList<>();
                     data.forEach(it -> {
+                        if (it.data instanceof PlayerValueOneShot) {
+                            oneShots.add(it);
+                            effect.handlePlayer(player, it.data);
+                            return;
+                        }
                         effect.onRegisterToPlayerData(player, it.data);
                     });
+                    data.removeAll(oneShots);
                 });
             }
         }
