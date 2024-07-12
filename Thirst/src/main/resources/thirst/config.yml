@@ -1,57 +1,115 @@
+##################################
+#         口渴值拓展设置
+#################################
+#
+# 所加入元素有：
+#   口渴值： ID为 'ThirstElement'
+#
+##################################
+
+# 是否启用
 enable: true
 thirst:
-  max-value: 100 # 最大值
-  natural-depletion: 1 # 自然流失1属性值每秒
+  # 元素数值上界
+  max-value: 100
+  # 自然流失速度，多少值每秒
+  natural-depletion: 0.25
   death-punishment: # 死亡惩罚
     enable: true    # 开关
     value: 60       # 复活时口渴值为上限的百分之几。取之范围为0～100
     effect:         # 复活时赋予的效果
       first:        # 可列多个
-        bundle: "abc" # 效果包的ID
+        bundle: "口渴值死亡惩罚" # 效果包的ID
         duration: 60  # 持续时间 秒
+  # 效果包设置
   effect-bundles:
+    "口渴值死亡惩罚":
+      type: "元素负面效果"
+      PotionEffect:
+        effect-1:
+          potion-type: "SLOW"
+          amplifier: 0
     "缺水":
       type: "元素负面效果"
       PotionEffect:
         effect-1:
           potion-type: "SLOW"
           amplifier: 0
-      ChatMessage:
+    "滋润":
+      type: "元素增益效果"
+      PotionEffect:
         effect-1:
-          message: "你现在有一点缺水了"
+          potion-type: "SPEED"
+          amplifier: 0
+  ##########################
+  #    口渴要素数值管理器
+  ##########################
+
+  # 目前只有这一个，具体行为为，在元素值进入所设置的范围时赋予玩家效果包效果
   effect-handler: org.eu.smileyik.numericalrequirements.core.api.element.handler.RangeHandler
+  # 数值管理器参数
   effects:
+    # 占位符，这个不重要，你想处理多少范围就加多少个
     "level-1":
+      # 范围：数值到该范围内触发
       range: [0, 10]
+      # 范围是否为百分数，
+      # 若为百分数则实际范围为所设定范围的: range * 数值上界 / 100
+      # 否则则为字面值
       percentage: true
+      # 所需要附加的效果包ID
       bundle: "缺水"
+      # 效果包持续时间, 单位为秒
       duration: 20
+      # 第一次值进入该范围时所使用的消息效果ID
+      # 支持的效果ID有：ChatMessage; ActionBar; TitleMessage
       message-sender: "ChatMessage"
+      # 传递给消息效果的参数，为列表，不同效果所要求的参数不同
+      # ChatMessage, ActionBar: 直接设置一行即可，该行就为发送给玩家的消息
+      # TitleMessage: 参数需要5行，第一行为主标题、第二行为副标题、第三行为淡入时间（游戏刻）、第四行为持续时间（游戏刻）、第五行为淡出时间（游戏刻）
+      # 所有消息效果中的消息文本都支持元素格式化显示占位符
+      # 元素格式化占位符格式为：${format:<格式化程序ID>;<要素ID>}
       message:
-        - "河水河水河水河水"
+        - "你嗓子都要冒烟了"
     "level-2":
       range: [90, 100]
       percentage: true
-      bundle: "速度升级"
+      bundle: "滋润"
       duration: 20
-      message-sender: "ChatMessage"
+      message-sender: "ActionBar"
       message:
-        - "你好滋润啊！！！"
+        - "你听，肚子里开始晃荡晃荡响了也"
+# 标签设置
 tag:
+  # 口渴值的Lore标签设置 <%:numf1> 为保留一位小数位的浮点数占位符
   thirst: "§b增加 §2<%:numf1> §b滋润度."
+
+# 获取流体设置
 get-liquid:
+  # 获取水
   water:
+    # 是否启用
     enable: true
+    # 默认获取的流体物品ID
     default-liquid: default-water
+    # 当右键哪些方块时则忽略取水
     ignore:
       - "WATER_CAULDRON"
+    # 当右键哪些流体类型则算获取成功
     liquid-type:
       - "STATIONARY_WATER"
       - "WATER"
       - "TALL_SEAGRASS"
       - "SEAGRASS"
-    max-distance: 2  # 水源检测最大距离
-    scan-mode: false # 是否扫描模式检测水源
-    check-air: false # 是否检测右键空气
+    # 获取流体时检测流体的最大距离
+    max-distance: 2
+    # 是否使用扫描模式检测所瞄准的流体
+    scan-mode: false
+    # 当玩家使用玻璃瓶右键空气时是否进行获取流体过程。
+    check-air: true
+    # 是否开启不同生物群系获取到不同类型的水
+    # 当生物群系的水未设置或者设置的物品ID对应的物品不存在则使用‘default-liquid’设置的物品
     biome-liquid: true
+    # 生物群系设置，格式为
+    # 生物群系ID: 物品ID
     biome: {}

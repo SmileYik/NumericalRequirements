@@ -1,54 +1,131 @@
+# 语言设置
 language: zh_CN
+
+# 玩家数据在哪些世界里才允许流逝
 available-worlds:
   - "World"
+
+# 插件使用统计
 bStats: true
+
+# 状态指令
 status:
+  # 使用状态指令所返回的消息，允许使用元素格式化占位符
+  # {0}: 玩家名
+  # {1}: 玩家身上所有的效果包列表
   msg:
     - "{0}:"
     - "    &b&l口渴值&f：${format:process-bar;ThirstElement} &b${format:percent;ThirstElement}%"
     - "    效果：{1}"
+  # 没有权限的玩家在使用查询状态指令时，查询信息缓存多久，单位毫秒
   cache: 10000
+
+# 物品相关设置
 item:
-  sync: enable      # 物品同步，依赖于NBT
+  # 是否启用物品同步，依赖于NBT
+  sync: enable
+  # 物品序列化设置
   serialization:
+    # 物品 NBT 信息序列化设置
     nbt:
+      # 不序列化哪些 NBT 的键值
       ignore-keys:
         - "CustomModelData"
         - "display"
         - "HideFlags"
+
+# 效果设置
 effect:
-  bundle:               # 设定效果捆绑包
-    "速度升级":           # 效果捆绑包ID，同时作为效果名字的存在
+  # 设定效果捆绑包
+  bundle:
+    # 效果捆绑包ID，同时作为效果名字的存在
+    "example-1":
       type: "增益"
-      EffectBundle:             # 效果类型ID/ EffectBundle(效果捆绑包),PotionEffect(药水效果), ThirstElement-NaturalDepletionEffect(操纵口渴元素自然消减值效果)
-        a:                      # 任意字符作为键值，键值下面为【效果类型ID】对应的效果所需要的参数
-          bundle-id: test2      # 效果类型参数
-    "速度升级2":
-      type: "增益"
-      EffectBundle:
-        a:
-          bundle-id: test2
-    test1:
-      type: "增益"
+      # 效果类型ID，目前所支持的ID如下所示
+      # EffectBundle(效果捆绑包), PotionEffect(原版药水效果),
+      # ThirstElement-NaturalDepletionEffect(操纵口渴元素自然消减值效果)
+
+      # 增加药水效果
       PotionEffect:
+        # 这里的 a 是任意字符，PotionEffect 键下有多少个就代表增加多少个药水效果
         a:
+          # 效果类型：参照BUKKIT API中PotionEffectType枚举类的值，需要注意大小写
           potion-type: "SPEED"
+          # 效果强度，0为游戏中的1级强度
           amplifier: 0
+        # 和上面的 ‘a’ 一样， ‘b’ 是随便添上去的
         b:
           potion-type: "JUMP"
           amplifier: 1
+
+      # 聊天消息效果，仅仅只会在该效果包注册给玩家后瞬间激活并且立即销毁，
+      # 也就是说仅仅只在效果包的持续时间内作用一次
+      ChatMessage:
+        # ‘a’是随便打的，和上面一样有多少加多少
+        a:
+          # 消息文本，支持要素格式化占位符
+          message: "I send message to you"
+        b:
+          message: "口渴值： ${format:process-bar;ThirstElement}"
+
+      # ActionBar 消息效果，向玩家发送 ActionBar 消息， 与 ChatMessage 类似，作用后立即销毁
+      ActionBar:
+        # 一样的任意字符
+        a:
+          # 消息文本，支持要素格式化占位符
+          message: "Look at me!"
+
+      # Title 消息效果， 向玩家发送Title, 与 ChatMessage 类似，作用后立即销毁
+      TitleMessage:
+        # 一样的
+        a:
+          # 主标题文本，支持要素格式化占位符，若不需要主标题则可删除这行
+          main: "Main Title"
+          # 副标题文本，若不需要副标题则可删除这行，主标题和副标题至少得有一个
+          sub: "Sub Title"
+          # 淡入时间，单位游戏刻
+          fade-in: 10
+          # 停留时间，单位游戏刻
+          stay: 30
+          # 淡出时间，单位游戏刻
+          fade-out: 10
+
+      # 与要素有关的效果： 该效果为影响口渴值的自然流失值
       ThirstElement-NaturalDepletionEffect:
+        # 一样的
         a:
-          data: -0.9
-    test2:
-      type: "增益"
+          # 减少0.5点/秒的元素流失速度
+          # 若元素的原始流失速度为1点/秒，则作用该效果后，流失速度变为 (1 + (-0.5)) 点/秒
+          data: -0.5
+
+    # 该示例效果与 example-1 的效果一模一样
+    "example-2":
+      type: "捆绑捆绑包"
+      # 捆绑包效果
       EffectBundle:
+        # 任意字符作为键值，键值下面为【效果类型ID】对应的效果所需要的参数
         a:
-          bundle-id: test1
+          # 捆绑包ID
+          bundle-id: example-1
+
+######################
+# 元素格式化器配置
+######################
+
+# 目前所有的元素格式化器有：
+#   process-bar: 显示进度条
+#   simple: 显示数值，类似于: 当前值/元素上界
+#   percent: 显示当前值与上界之间的百分比
+# 格式化占位符： ${format:<格式化程序ID>;<要素ID>}
+# 例如显示口渴值进度条则为: ${format:process-bar;ThirstElement}
 formatter:
+  # process-bar: 进度条设置
   process-bar:
+    # 填满进度条时的字符
     fill: '&2o'
+    # 进度条为空时的字符
     empty: "&4x"
+    # 进度条长度
     length: 16
 
 ######################################
