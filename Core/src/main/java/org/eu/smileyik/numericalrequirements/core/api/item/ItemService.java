@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.api.item;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.ItemTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
@@ -89,6 +90,8 @@ public interface ItemService {
      * @return 指定的物品，不存在返回null.
      */
     ItemStack loadItem(String id, int amount);
+
+    ItemStack loadItem(ConfigurationSection section, int amount);
 
     /**
      * 存储物品到配置文件
