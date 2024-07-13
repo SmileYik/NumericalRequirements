@@ -100,6 +100,8 @@ public interface ItemService {
      */
     void storeItem(String id, ItemStack stack);
 
+    ConfigurationSection storeItem(ItemStack stack);
+
     /**
      * 获取物品ID
      * @return

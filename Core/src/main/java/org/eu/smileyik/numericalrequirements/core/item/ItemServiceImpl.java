@@ -270,11 +270,20 @@ public class ItemServiceImpl implements Listener, ItemService {
     public void storeItem(String id, ItemStack stack) {
         try {
             String serialize = itemSerialization.serialize(stack);
-            System.out.println(serialize);
             ConfigurationSection section = YamlUtil.loadFromString(serialize);
             itemConfig.set(id, section);
             saveItemFile();
             updateCachedItem(id, stack, true);
+        } catch (InvalidConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public ConfigurationSection storeItem(ItemStack stack) {
+        try {
+            String serialize = itemSerialization.serialize(stack);
+            return YamlUtil.loadFromString(serialize);
         } catch (InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
