@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.inventory;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory;
 
 import java.util.HashMap;
 import java.util.Map;

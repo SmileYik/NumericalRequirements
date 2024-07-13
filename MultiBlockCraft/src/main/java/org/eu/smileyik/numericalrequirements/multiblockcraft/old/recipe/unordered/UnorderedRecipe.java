@@ -1,8 +1,8 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.unordered;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.unordered;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.AbstractRecipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.AbstractRecipe;
 
 import java.util.*;
 

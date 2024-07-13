@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.tag;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.tag;
 
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 

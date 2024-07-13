@@ -1,10 +1,10 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.holder;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.holder;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.CraftInventory;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.CraftInventory;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.Recipe;
 
 public interface CraftInventoryHolder extends InventoryHolder {
     CraftInventory getCraftInventory();

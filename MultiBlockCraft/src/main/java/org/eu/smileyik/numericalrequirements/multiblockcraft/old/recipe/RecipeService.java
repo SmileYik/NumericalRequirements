@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe;
 
 import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 

@@ -1,10 +1,7 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.ordered;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.ordered;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.TimeRecipe;
-
-import java.util.Map;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.TimeRecipe;
 
 public class OrderedTimeRecipe extends OrderedRecipe implements TimeRecipe {
     private double craftTime;

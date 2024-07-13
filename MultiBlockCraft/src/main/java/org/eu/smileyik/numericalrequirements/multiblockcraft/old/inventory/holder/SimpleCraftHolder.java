@@ -1,11 +1,11 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.holder;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.holder;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.CraftInventory;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.CraftInventory;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.Recipe;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.inventory;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,13 +10,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.holder.CraftInventoryHolder;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.holder.CreateRecipeHolder;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.holder.SimpleCraftHolder;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.ordered.OrderedRecipe;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.unordered.UnorderedRecipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.MultiBlockCraftExtension;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.holder.CraftInventoryHolder;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.holder.CreateRecipeHolder;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.holder.SimpleCraftHolder;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.Recipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.ordered.OrderedRecipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.unordered.UnorderedRecipe;
 
 import java.util.Arrays;
 import java.util.List;

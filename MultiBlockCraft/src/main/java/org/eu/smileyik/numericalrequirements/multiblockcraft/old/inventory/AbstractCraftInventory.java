@@ -1,9 +1,9 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.inventory;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.holder.CraftInventoryHolder;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.finder.RecipeFinder;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.finder.SimpleRecipeFinder;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.holder.CraftInventoryHolder;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.finder.RecipeFinder;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.finder.SimpleRecipeFinder;
 
 import java.util.List;
 

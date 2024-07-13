@@ -1,8 +1,7 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.unordered;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.unordered;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.TimeRecipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.TimeRecipe;
 
 public class UnorderedTimeRecipe extends UnorderedRecipe implements TimeRecipe {
     private double craftTime;

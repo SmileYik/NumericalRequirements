@@ -1,14 +1,14 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionTask;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.SimpleCraftInventory;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.inventory.listener.SimpleCraftInventoryListener;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.RecipeService;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.YamlRecipeService;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.SimpleCraftInventory;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.inventory.listener.SimpleCraftInventoryListener;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.RecipeService;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.YamlRecipeService;
 
 import java.util.ArrayList;
 

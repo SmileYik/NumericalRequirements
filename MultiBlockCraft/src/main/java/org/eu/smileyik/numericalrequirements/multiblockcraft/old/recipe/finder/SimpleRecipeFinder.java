@@ -1,9 +1,9 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.finder;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.finder;
 
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.RecipeService;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.MultiBlockCraftExtension;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.Recipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.old.recipe.RecipeService;
 
 import java.util.ArrayList;
 import java.util.List;

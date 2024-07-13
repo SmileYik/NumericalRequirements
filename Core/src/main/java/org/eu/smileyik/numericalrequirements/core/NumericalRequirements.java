@@ -117,7 +117,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
             metrics = null;
             try {
                 DebugLogger.getInstance().close();
-            } catch (IOException ignore) {
+            } catch (Exception ignore) {
 
             }
         }
