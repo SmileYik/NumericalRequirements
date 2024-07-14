@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.machine;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
@@ -7,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.util.ArrayList;

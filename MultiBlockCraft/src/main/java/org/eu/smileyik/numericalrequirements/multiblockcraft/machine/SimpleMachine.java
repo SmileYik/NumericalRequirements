@@ -3,6 +3,7 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.machine;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.impl.YamlMachine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.OrderedRecipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.util.HexUtil;
