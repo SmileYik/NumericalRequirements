@@ -15,8 +15,6 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl.SimpleAbstractRecipe;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 public class SimpleCraftTable extends SimpleMachine {
@@ -231,26 +229,6 @@ public class SimpleCraftTable extends SimpleMachine {
         }
 
         @Override
-        public void onDrag(InventoryDragEvent event) {
-
-        }
-
-        @Override
-        public void open(Player player, String identifier) {
-
-        }
-
-        @Override
-        public void createRecipe(Player player) {
-
-        }
-
-        @Override
-        public void onClick(InventoryClickEvent event) {
-
-        }
-
-        @Override
         public void onClose(InventoryCloseEvent event) {
             HumanEntity player = event.getPlayer();
             Inventory inv = event.getInventory();
@@ -281,21 +259,6 @@ public class SimpleCraftTable extends SimpleMachine {
                     this.rawOutputs = outputs;
                     this.id = UUID.randomUUID().toString();
                     this.name = this.id;
-                }
-
-                @Override
-                public Collection<ItemStack> getInputs() {
-                    return List.of();
-                }
-
-                @Override
-                public Collection<ItemStack> getOutputs() {
-                    return List.of();
-                }
-
-                @Override
-                public boolean isMatch(ItemStack[] inputs) {
-                    return false;
                 }
             };
             File file = MultiBlockCraftExtension.getInstance().getMachineService().createRecipe(instance.getId(), recipe);

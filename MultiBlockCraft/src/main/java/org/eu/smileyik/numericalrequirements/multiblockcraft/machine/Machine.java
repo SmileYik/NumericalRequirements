@@ -16,8 +16,13 @@ public interface Machine {
     String getName();
     String getTitle();
 
-    void open(Player player, String identifier);
-    void createRecipe(Player player);
+    default void open(Player player, String identifier) {
+
+    }
+
+    default void createRecipe(Player player) {
+
+    }
 
     List<Integer> getInputSlots();
     List<Integer> getOutputSlots();
@@ -29,9 +34,17 @@ public interface Machine {
     Recipe findRecipe(String id);
     Recipe findRecipe(ItemStack[] inputs);
 
-    void onClick(InventoryClickEvent event);
-    void onDrag(InventoryDragEvent event);
-    void onClose(InventoryCloseEvent event);
+    default void onClick(InventoryClickEvent event) {
+
+    }
+
+    default void onDrag(InventoryDragEvent event) {
+
+    }
+
+    default void onClose(InventoryCloseEvent event) {
+
+    }
 
     static String getIdentifier(Location location) {
         return String.format(

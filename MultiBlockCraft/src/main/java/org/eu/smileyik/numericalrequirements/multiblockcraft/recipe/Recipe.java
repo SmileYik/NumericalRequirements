@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public interface Recipe {
     /**
@@ -22,13 +23,17 @@ public interface Recipe {
      * 获取输入物品
      * @return
      */
-    Collection<ItemStack> getInputs();
+    default Collection<ItemStack> getInputs() {
+        return Collections.EMPTY_LIST;
+    }
 
     /**
      * 获取输出物品
      * @return
      */
-    Collection<ItemStack> getOutputs();
+    default Collection<ItemStack> getOutputs() {
+        return Collections.EMPTY_LIST;
+    }
 
     void takeInputs(ItemStack[] inputs);
 
@@ -37,14 +42,18 @@ public interface Recipe {
      * @param inputs
      * @return
      */
-    boolean isMatch(Collection<ItemStack> inputs);
+    default boolean isMatch(Collection<ItemStack> inputs) {
+        return false;
+    }
 
     /**
      * 检测是否符合输入
      * @param inputs
      * @return
      */
-    boolean isMatch(ItemStack[] inputs);
+    default boolean isMatch(ItemStack[] inputs) {
+        return false;
+    }
 
     /**
      * 配方存储
