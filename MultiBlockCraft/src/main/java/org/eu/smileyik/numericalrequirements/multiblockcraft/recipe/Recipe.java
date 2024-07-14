@@ -57,4 +57,6 @@ public interface Recipe {
      * @param section
      */
     void load(ConfigurationSection section);
+
+    ItemStack[] getDisplayedOutput();
 }

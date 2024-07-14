@@ -2,6 +2,8 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
@@ -13,6 +15,8 @@ public abstract class SimpleAbstractRecipe implements Recipe {
 
     protected SimpleItem[] rawInputs;
     protected SimpleItem[] rawOutputs;
+
+    protected ItemStack[] displayedOutput;
 
     protected Map<ItemStack, Integer> inputAmountMap;
 
@@ -67,17 +71,44 @@ public abstract class SimpleAbstractRecipe implements Recipe {
             outputs.add(SimpleItem.load(o.getConfigurationSection(key)));
         });
         this.rawOutputs = outputs.toArray(new SimpleItem[0]);
+
+        displayedOutput = Arrays.stream(rawOutputs).map(it -> {
+            ItemStack itemStack = it.getItemStack();
+            if (itemStack == null) return null;
+            itemStack = itemStack.clone();
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
+            lore.add(I18N.tr("extension.multi-block-craft.recipe.displayed-lore"));
+            itemMeta.setLore(lore);
+            itemStack.setItemMeta(itemMeta);
+            return itemStack;
+        }).toArray(ItemStack[]::new);
     }
 
     @Override
     public void takeInputs(ItemStack[] inputs) {
+        Map<ItemStack, Integer> inputAmountMap = new HashMap<>(this.inputAmountMap);
         for (ItemStack item : inputs) {
+            if (inputAmountMap.isEmpty()) break;
             if (item == null) continue;
             ItemStack clone = item.clone();
             clone.setAmount(1);
-            Integer amount = this.inputAmountMap.getOrDefault(clone, 0);
-            item.setAmount(item.getAmount() - amount);
+            Integer needAmount = inputAmountMap.getOrDefault(clone, 0);
+            if (needAmount == 0) continue;
+            int itemAmount = item.getAmount();
+            if (itemAmount < needAmount) {
+                inputAmountMap.put(clone, needAmount - itemAmount);
+                item.setAmount(0);
+            } else {
+                item.setAmount(itemAmount - needAmount);
+                inputAmountMap.remove(clone);
+            }
         }
+    }
+
+    @Override
+    public ItemStack[] getDisplayedOutput() {
+        return displayedOutput;
     }
 
     protected Map<ItemStack, Integer> mapItemAmount(ItemStack[] inputs) {

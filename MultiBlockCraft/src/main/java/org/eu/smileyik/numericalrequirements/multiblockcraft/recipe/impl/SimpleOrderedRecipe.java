@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements OrderedRecipe {
+    protected ItemStack[] rawInputs;
     protected Pair<Byte[], ItemStack[]> inputs;
     protected ItemStack[] outputs;
     private String shapeString;
@@ -30,7 +31,6 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
     @Override
     public boolean isMatch(ItemStack[] inputs) {
         // 调用此方法前必须判断是否满足形状
-        lazyLoad();
         if (inputs == null) return false;
         ItemStack[] a = OrderedRecipe.spawnShape(inputs).getSecond();
         return doIsMatch(a);
@@ -42,6 +42,7 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
     }
 
     private boolean doIsMatch(ItemStack[] a) {
+        lazyLoad();
         ItemStack[] b = this.inputs.getSecond();
         if (a.length != b.length) return false;
 
@@ -61,13 +62,20 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
         return shapeString;
     }
 
+    @Override
+    public void takeInputs(ItemStack[] inputs) {
+        for (int i = this.rawInputs.length - 1; i >= 0; i--) {
+            if (inputs[i] == null) continue;
+            inputs[i].setAmount(inputs[i].getAmount() - this.rawInputs[i].getAmount());
+        }
+    }
+
     private void lazyLoad() {
         if (inputs == null) {
-            inputs = OrderedRecipe.spawnShape(
-                    Arrays.stream(rawInputs).map(SimpleItem::getItemStack).toArray(ItemStack[]::new)
-            );
+            rawInputs = Arrays.stream(super.rawInputs).map(SimpleItem::getItemStack).toArray(ItemStack[]::new);
+            inputs = OrderedRecipe.spawnShape(rawInputs);
             shapeString = HexUtil.bytesToHex(inputs.getFirst());
-            inputAmountMap = mapItemAmount(Arrays.stream(rawInputs).map(SimpleItem::getItemStack).toArray(ItemStack[]::new));
+            inputAmountMap = mapItemAmount(rawInputs);
         }
 
         if (outputs == null) {

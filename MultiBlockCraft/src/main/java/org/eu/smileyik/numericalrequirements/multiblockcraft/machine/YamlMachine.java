@@ -5,7 +5,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,5 +87,33 @@ public abstract class YamlMachine implements Machine {
     @Override
     public ItemStack getMachineItem() {
         return machineItem.getItemStack().clone();
+    }
+
+    protected ItemStack[] copyArray(Inventory inventory, List<Integer> slots) {
+        ItemStack[] items = new ItemStack[slots.size()];
+        for (int i = slots.size() - 1; i >= 0; i--) {
+            items[i] = inventory.getItem(slots.get(i));
+        }
+        return items;
+    }
+
+    protected void runTask(Runnable runnable) {
+        MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
+                MultiBlockCraftExtension.getInstance().getPlugin(), runnable
+        );
+    }
+
+    protected void displayOutput(Inventory inventory, Recipe recipe) {
+        int idx = 0, size = outputSlots.size();
+        for (ItemStack itemStack : recipe.getDisplayedOutput()) {
+            if (idx == size) break;
+            inventory.setItem(outputSlots.get(idx++), itemStack);
+        }
+    }
+
+    protected void clearOutput(Inventory inventory) {
+        for (int i : outputSlots) {
+            inventory.setItem(i, null);
+        }
     }
 }

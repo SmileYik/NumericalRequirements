@@ -12,19 +12,17 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.CraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
 
-import java.util.List;
-
 public class MachineListener implements Listener {
     private final MachineLoreTag machineLoreTag;
+    private final MachineService machineService = MultiBlockCraftExtension.getInstance().getMachineService();
 
     public MachineListener(MachineLoreTag machineLoreTag) {
         this.machineLoreTag = machineLoreTag;
@@ -43,10 +41,7 @@ public class MachineListener implements Listener {
             LoreValue value = machineLoreTag.getValue(s);
             String machineId = value.get(0);
             Block blockPlaced = event.getBlockPlaced();
-            blockPlaced.setMetadata("nerq-machine", new FixedMetadataValue(
-                    NumericalRequirements.getPlugin(),
-                    machineId
-            ));
+            machineService.setMachineMetadata(blockPlaced, "machine", machineId);
             break;
         }
     }
@@ -54,10 +49,7 @@ public class MachineListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
-        List<MetadataValue> metadata = block.getMetadata("nerq-machine");
-        if (metadata == null || metadata.isEmpty()) return;
-        String machineId = metadata.get(0).asString();
-        block.removeMetadata("nerq-machine", NumericalRequirements.getPlugin());
+        String machineId = machineService.delMachineMetadata(block, "machine");
 
         if (machineId == null) return;
         Machine machine = MultiBlockCraftExtension.getInstance().getMachineService().getMachine(machineId);
@@ -73,9 +65,7 @@ public class MachineListener implements Listener {
         if (event.hasItem() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
-        List<MetadataValue> metadata = clickedBlock.getMetadata("nerq-machine");
-        if (metadata == null || metadata.isEmpty()) return;
-        String machineId = metadata.get(0).asString();
+        String machineId = machineService.getMachineMetadata(clickedBlock, "machine");
         Machine machine = MultiBlockCraftExtension.getInstance().getMachineService().getMachine(machineId);
         if (machine == null) return;
         event.setCancelled(true);

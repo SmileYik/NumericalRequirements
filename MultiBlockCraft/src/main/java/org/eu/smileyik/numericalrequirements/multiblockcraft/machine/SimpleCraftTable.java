@@ -1,12 +1,10 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
@@ -35,7 +33,7 @@ public class SimpleCraftTable extends SimpleMachine {
 
     @Override
     public void open(Player player, String identifier) {
-        SimpleCraftHolder holder = new SimpleCraftHolder();
+        SimpleCraftHolder holder = new Holder();
         Inventory inv = NumericalRequirements.getPlugin().getServer().createInventory(holder, inventory.getSize(), title);
         inv.setContents(inventory.getContents());
         holder.setInventory(inv);
@@ -56,6 +54,7 @@ public class SimpleCraftTable extends SimpleMachine {
 
     @Override
     public void onClick(InventoryClickEvent event) {
+        if (event.getSlotType() == InventoryType.SlotType.OUTSIDE) return;
         if (event.getClick() == ClickType.WINDOW_BORDER_LEFT || event.getClick() == ClickType.WINDOW_BORDER_RIGHT) return;
         int slot = event.getRawSlot();
         if (emptySlots.contains(slot)) return;
@@ -66,41 +65,162 @@ public class SimpleCraftTable extends SimpleMachine {
             return;
         }
 
+        if (slot >= inventory.getSize() &&
+                (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)) {
+            findRecipeAndDisplay(event.getInventory());
+            return;
+        }
+
         if (clickedOutputs) {
-            event.setCancelled(true);
+            Inventory inv = event.getInventory();
+            ItemStack item = inv.getItem(slot);
+            ItemStack itemOnCursor = event.getWhoClicked().getItemOnCursor();
+
+            if (item == null || itemOnCursor != null && itemOnCursor.getType() != Material.AIR) {
+                event.setCancelled(true);
+                return;
+            }
+
+            Holder holder = (Holder) inv.getHolder();
+            if (holder.isCrafted()) {
+                runTask(() -> {
+                    boolean flag = true;
+                    for (int i : outputSlots) {
+                        ItemStack stack = inv.getItem(i);
+                        if (stack != null && stack.getType() != Material.AIR) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    holder.setCrafted(!flag);
+
+                    if (!holder.isCrafted()) {
+                        ItemStack[] inputs = copyArray(inv, inputSlots);
+                        Recipe recipe = findRecipe(inputs);
+                        if (recipe == null) {
+                            clearOutput(inv);
+                            return;
+                        }
+                        displayOutput(inv, recipe);
+                    }
+                });
+                return;
+            }
+
+            ItemStack[] inputs = copyArray(inv, inputSlots);
+            Recipe recipe = findRecipe(inputs);
+            if (recipe == null) {
+                clearOutput(inv);
+                event.setCancelled(true);
+                return;
+            }
+            holder.setCrafted(true);
+
+            int times = 0;
+            if (event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT) {
+                int max = 1;
+                for (ItemStack output : recipe.getOutputs()) {
+                    max = Math.max(max, output.getAmount());
+                }
+
+                do {
+                    recipe.takeInputs(inputs);
+                    times++;
+                } while (max * times < 64 && recipe.isMatch(inputs));
+            } else {
+                recipe.takeInputs(inputs);
+                times = 1;
+            }
+
+            int idx = 0, size = outputSlots.size();
+            for (ItemStack output : recipe.getOutputs()) {
+                if (idx == size) break;
+                if (output != null) {
+                    output = output.clone();
+                    output.setAmount(output.getAmount() * times);
+                }
+                inv.setItem(outputSlots.get(idx++), output);
+            }
+
+            if (event.getClick() == ClickType.RIGHT) {
+                event.setCancelled(true);
+                event.getWhoClicked().setItemOnCursor(inv.getItem(slot));
+                inv.setItem(slot, null);
+            }
+
+            if (size == 1) {
+                holder.setCrafted(false);
+                runTask(() -> {
+                    if (recipe.isMatch(inputs)) displayOutput(inv, recipe);
+                });
+            }
             return;
         }
 
         if (clickedInputs) {
-            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
-                    MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
-                        ItemStack[] inputs = new ItemStack[inputSlots.size()];
-                        for (int i = inputSlots.size() - 1; i >= 0; i--) {
-                            inputs[i] = event.getInventory().getItem(inputSlots.get(i));
-                        }
-                        Recipe recipe = findRecipe(inputs);
-                        System.out.println(recipe);
-                        if (recipe == null) {
-                            event.getInventory().setItem(outputSlots.get(0), null);
-                            return;
-                        }
-                        for (ItemStack output : recipe.getOutputs()) {
-                            event.getInventory().setItem(outputSlots.get(0), output);
-                            break;
-                        }
-                    }
-            );
+            findRecipeAndDisplay(event.getInventory());
+            return;
         }
     }
 
     @Override
     public void onDrag(InventoryDragEvent event) {
-        event.setCancelled(true);
+        for (Integer rawSlot : event.getRawSlots()) {
+            if (emptySlots.contains(rawSlot)) continue;
+            if (inputSlots.contains(rawSlot)) continue;
+            if (rawSlot >= inventory.getSize()) continue;
+            event.setCancelled(true);
+            return;
+        }
+        findRecipeAndDisplay(event.getInventory());
     }
 
     @Override
     public void onClose(InventoryCloseEvent event) {
+        Inventory inv = event.getInventory();
+        HumanEntity player = event.getPlayer();
+        for (Integer slot : inputSlots) {
+            ItemStack item = inv.getItem(slot);
+            if (item == null) continue;
+            player.getInventory().addItem(item).forEach((k, v) -> {
+                player.getWorld().dropItem(player.getLocation(), v);
+            });
+        }
 
+        if (((Holder)inv.getHolder()).isCrafted()) {
+            for (Integer slot : outputSlots) {
+                ItemStack item = inv.getItem(slot);
+                if (item == null) continue;
+                player.getInventory().addItem(item).forEach((k, v) -> {
+                    player.getWorld().dropItem(player.getLocation(), v);
+                });
+            }
+        }
+    }
+
+    private void findRecipeAndDisplay(Inventory inv) {
+        if (((Holder)inv.getHolder()).isCrafted()) return;
+        runTask(() -> {
+            ItemStack[] inputs = copyArray(inv, inputSlots);
+            Recipe recipe = findRecipe(inputs);
+            if (recipe == null) {
+                clearOutput(inv);
+                return;
+            }
+            displayOutput(inv, recipe);
+        });
+    }
+
+    private static class Holder extends SimpleCraftHolder {
+        private boolean crafted = false;
+
+        public boolean isCrafted() {
+            return crafted;
+        }
+
+        public void setCrafted(boolean crafted) {
+            this.crafted = crafted;
+        }
     }
 
     private static class Creative extends SimpleMachine {

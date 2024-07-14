@@ -14,7 +14,7 @@ public class SimpleItem {
     private final ItemStack itemStack;
 
     private String id;
-    private int amount;
+    private int amount = 1;
 
     public SimpleItem(String type, ItemStack itemStack) {
         this.type = type;
@@ -38,6 +38,7 @@ public class SimpleItem {
             section.set("item", itemStack);
         } else if (type.equals(TYPE_NREQ)) {
             section.set("item", NumericalRequirements.getInstance().getItemService().storeItem(itemStack));
+            if (itemStack != null) section.set("amount", itemStack.getAmount());
         } else if (type.equals(TYPE_ID)) {
             section.set("id", id);
             section.set("amount", amount);

@@ -51,6 +51,11 @@ public class MultiBlockCraftExtension extends Extension {
         getPlugin().getServer().getPluginManager().registerEvents(new MachineListener(machineLoreTag), getPlugin());
     }
 
+    @Override
+    public void onDisable() {
+        machineService.save();
+    }
+
     public static MultiBlockCraftExtension getInstance() {
         return instance;
     }
