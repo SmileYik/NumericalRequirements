@@ -6,7 +6,9 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.OrderedRecipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.util.HexUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements OrderedRecipe {
     protected Pair<Byte[], ItemStack[]> inputs;
@@ -30,7 +32,16 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
         // 调用此方法前必须判断是否满足形状
         lazyLoad();
         if (inputs == null) return false;
-        ItemStack[] a = spawnShape(inputs).getSecond();
+        ItemStack[] a = OrderedRecipe.spawnShape(inputs).getSecond();
+        return doIsMatch(a);
+    }
+
+    @Override
+    public boolean isMatch(Pair<Byte[], ItemStack[]> pair) {
+        return doIsMatch(pair.getSecond());
+    }
+
+    private boolean doIsMatch(ItemStack[] a) {
         ItemStack[] b = this.inputs.getSecond();
         if (a.length != b.length) return false;
 
@@ -52,7 +63,7 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
 
     private void lazyLoad() {
         if (inputs == null) {
-            inputs = spawnShape(
+            inputs = OrderedRecipe.spawnShape(
                     Arrays.stream(rawInputs).map(SimpleItem::getItemStack).toArray(ItemStack[]::new)
             );
             shapeString = HexUtil.bytesToHex(inputs.getFirst());
@@ -62,25 +73,5 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
         if (outputs == null) {
             outputs = Arrays.stream(rawOutputs).map(SimpleItem::getItemStack).toArray(ItemStack[]::new);
         }
-    }
-
-    public static Pair<Byte[], ItemStack[]> spawnShape(ItemStack[] inputs) {
-        byte idx = 0;
-        List<Byte> shape = new ArrayList<>();
-        List<ItemStack> idItemList = new ArrayList<>();
-        Map<ItemStack, Byte> itemIdMap = new HashMap<>();
-        for (ItemStack item : inputs) {
-            byte id = itemIdMap.getOrDefault(item, idx);
-            if (idx == id) {
-                itemIdMap.put(item, id);
-                idItemList.add(item);
-                shape.add(id);
-                ++idx;
-            }
-        }
-        return Pair.newUnchangablePair(
-                shape.toArray(new Byte[0]),
-                idItemList.toArray(new ItemStack[0])
-        );
     }
 }

@@ -84,12 +84,13 @@ public abstract class SimpleAbstractRecipe implements Recipe {
         Map<ItemStack, Integer> map = new HashMap<>();
         for (ItemStack item : inputs) {
             if (item == null) continue;
-            if (item.getAmount() != 1) {
+            int amount = item.getAmount();
+            if (amount != 1) {
                 item = item.clone();
                 item.setAmount(1);
             }
 
-            map.put(item, map.getOrDefault(item, 0) + 1);
+            map.put(item, map.getOrDefault(item, 0) + amount);
         }
         return map;
     }

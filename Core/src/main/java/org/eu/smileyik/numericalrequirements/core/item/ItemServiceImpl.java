@@ -262,6 +262,7 @@ public class ItemServiceImpl implements Listener, ItemService {
     @Override
     public ItemStack loadItem(ConfigurationSection section, int amount) {
         ItemStack deserialize = itemSerialization.deserialize(YamlUtil.saveToString(section));
+        if (deserialize == null) return null;
         deserialize.setAmount(amount);
         return deserialize;
     }

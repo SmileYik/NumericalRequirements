@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 
 public class SimpleItem {
+    public static final String TYPE_EMPTY = "empty";
     public static final String TYPE_ID = "id";
     public static final String TYPE_BUKKIT = "bukkit";
     public static final String TYPE_NREQ = "nreq";
@@ -37,9 +38,10 @@ public class SimpleItem {
             section.set("item", itemStack);
         } else if (type.equals(TYPE_NREQ)) {
             section.set("item", NumericalRequirements.getInstance().getItemService().storeItem(itemStack));
-        } else {
+        } else if (type.equals(TYPE_ID)) {
             section.set("id", id);
             section.set("amount", amount);
+        } else {
         }
     }
 
@@ -51,8 +53,9 @@ public class SimpleItem {
             return loadByBukkit(section);
         } else if (type.equalsIgnoreCase(TYPE_NREQ)) {
             return loadByNReq(section);
+        } else {
+            return new SimpleItem(TYPE_EMPTY, null);
         }
-        return null;
     }
 
     private static SimpleItem loadByID(ConfigurationSection section) {
@@ -78,7 +81,7 @@ public class SimpleItem {
         return new SimpleItem(
                 TYPE_NREQ,
                 NumericalRequirements.getInstance().getItemService().loadItem(
-                        section.getString("item"),
+                        section.getConfigurationSection("item"),
                         section.getInt("amount", 1)
                 )
         );
