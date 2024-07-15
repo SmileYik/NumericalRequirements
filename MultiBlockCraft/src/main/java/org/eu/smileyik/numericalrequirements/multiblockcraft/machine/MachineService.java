@@ -1,6 +1,7 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine;
 
 import org.bukkit.block.Block;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.data.SimpleMachineDataService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.io.File;
@@ -17,4 +18,6 @@ public interface MachineService {
     File createRecipe(String machineId, Recipe recipe);
 
     void save();
+
+    SimpleMachineDataService getMachineDataService();
 }

@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.machine;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.data;
 
 import org.bukkit.inventory.ItemStack;
 

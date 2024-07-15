@@ -4,6 +4,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.data.SimpleMachineDataService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.io.File;
@@ -15,18 +16,22 @@ import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SimpleMachineService implements MachineService {
-    private Map<String, Machine> machines = new HashMap<>();
-    private Map<String, File> machinesFiles = new HashMap<>();
+    private final Map<String, Machine> machines = new HashMap<>();
+    private final Map<String, File> machinesFiles = new HashMap<>();
 
     private final ReentrantReadWriteLock machineBlockMetadataMapLock = new ReentrantReadWriteLock();
     private final Map<String, Map<String, String>> machineBlockMetadataMap = new HashMap<>();
     private final String machineBlockMetadataFilePath;
+
+    private final SimpleMachineDataService machineDataService;
 
     public SimpleMachineService(MultiBlockCraftExtension extension) {
         File dataFolder = extension.getDataFolder();
         machineBlockMetadataFilePath = new File(dataFolder, "machine-metadata.yml").toString();
         loadMachineBlockMetadata(machineBlockMetadataFilePath);
         loadMachines(dataFolder);
+
+        machineDataService = new SimpleMachineDataService(extension, this);
     }
 
     @Override
@@ -93,6 +98,12 @@ public class SimpleMachineService implements MachineService {
     @Override
     public void save() {
         saveMachineBlockMetadata();
+        machineDataService.save();
+    }
+
+    @Override
+    public SimpleMachineDataService getMachineDataService() {
+        return machineDataService;
     }
 
     private void loadMachineBlockMetadata(String path) {

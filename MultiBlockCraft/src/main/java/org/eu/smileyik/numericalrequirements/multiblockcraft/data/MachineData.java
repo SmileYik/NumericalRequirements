@@ -1,6 +1,7 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.machine;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.data;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 
 public interface MachineData {
 
