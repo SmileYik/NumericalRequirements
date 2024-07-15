@@ -13,6 +13,8 @@ public interface MachineDataUpdatable extends MachineData, Updatable, MachineDat
         return false;
     }
 
+    void setEnable(boolean enable);
+
     /**
      * 是否正在运行
      * @return

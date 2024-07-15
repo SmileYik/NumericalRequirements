@@ -7,9 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitTask;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleUpdatableMachineData;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.SimpleCraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl.SimpleAbstractRecipe;
@@ -17,32 +20,43 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl.SimpleA
 import java.io.File;
 import java.util.UUID;
 
-public class SimpleCraftTable extends SimpleMachine {
+public class SimpleTimeCraftTable extends SimpleMachine {
     private final Creative creative;
 
-    public SimpleCraftTable() {
+    public SimpleTimeCraftTable() {
         creative = new Creative(this);
     }
 
-    public SimpleCraftTable(ConfigurationSection section) {
+    public SimpleTimeCraftTable(ConfigurationSection section) {
         super(section);
         creative = new Creative(this);
     }
 
     @Override
     public void open(Player player, String identifier) {
-        SimpleCraftHolder holder = new Holder();
+        Holder holder = new Holder();
         Inventory inv = NumericalRequirements.getPlugin().getServer().createInventory(holder, inventory.getSize(), title);
         inv.setContents(inventory.getContents());
         holder.setInventory(inv);
         holder.setMachine(this);
         holder.setIdentifier(identifier);
+
+        SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) MultiBlockCraftExtension.getInstance().getMachineService().getMachineDataService().loadMachineData(identifier);
+        if (data == null) {
+            data = new SimpleUpdatableMachineData(this);
+            data.setIdentifier(identifier);
+            MultiBlockCraftExtension.getInstance().getMachineService().getMachineDataService().storeMachineData(data);
+        } else {
+            data.forEach(inv::setItem);
+        }
+        holder.setMachineData(data);
         player.openInventory(inv);
+        holder.start();
     }
 
     @Override
     public void createRecipe(Player player) {
-        SimpleCraftHolder holder = new SimpleCraftHolder();
+        Holder holder = new Holder();
         Inventory inv = NumericalRequirements.getPlugin().getServer().createInventory(holder, inventory.getSize(), title);
         inv.setContents(inventory.getContents());
         holder.setInventory(inv);
@@ -65,7 +79,10 @@ public class SimpleCraftTable extends SimpleMachine {
 
         if (slot >= inventory.getSize() &&
                 (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)) {
-            findRecipeAndDisplay(event.getInventory());
+            Inventory inv = event.getInventory();
+            SimpleCraftHolder holder = (SimpleCraftHolder) inv.getHolder();
+            SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
+            syncItem(data, inv);
             return;
         }
 
@@ -73,90 +90,22 @@ public class SimpleCraftTable extends SimpleMachine {
             Inventory inv = event.getInventory();
             ItemStack item = inv.getItem(slot);
             ItemStack itemOnCursor = event.getWhoClicked().getItemOnCursor();
-
             if (item == null || itemOnCursor != null && itemOnCursor.getType() != Material.AIR) {
                 event.setCancelled(true);
                 return;
             }
 
-            Holder holder = (Holder) inv.getHolder();
-            if (holder.isCrafted()) {
-                runTask(() -> {
-                    boolean flag = true;
-                    for (int i : outputSlots) {
-                        ItemStack stack = inv.getItem(i);
-                        if (stack != null && stack.getType() != Material.AIR) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                    holder.setCrafted(!flag);
-
-                    if (!holder.isCrafted()) {
-                        ItemStack[] inputs = copyArray(inv, inputSlots);
-                        Recipe recipe = findRecipe(inputs);
-                        if (recipe == null) {
-                            clearOutput(inv);
-                            return;
-                        }
-                        displayOutput(inv, recipe);
-                    }
-                });
-                return;
-            }
-
-            ItemStack[] inputs = copyArray(inv, inputSlots);
-            Recipe recipe = findRecipe(inputs);
-            if (recipe == null) {
-                clearOutput(inv);
-                event.setCancelled(true);
-                return;
-            }
-            holder.setCrafted(true);
-
-            int times = 0;
-            if (event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT) {
-                int max = 1;
-                for (ItemStack output : recipe.getOutputs()) {
-                    max = Math.max(max, output.getAmount());
-                }
-
-                do {
-                    recipe.takeInputs(inputs);
-                    times++;
-                } while (max * times < 64 && recipe.isMatch(inputs));
-            } else {
-                recipe.takeInputs(inputs);
-                times = 1;
-            }
-
-            int idx = 0, size = outputSlots.size();
-            for (ItemStack output : recipe.getOutputs()) {
-                if (idx == size) break;
-                if (output != null) {
-                    output = output.clone();
-                    output.setAmount(output.getAmount() * times);
-                }
-                inv.setItem(outputSlots.get(idx++), output);
-            }
-
-            if (event.getClick() == ClickType.RIGHT) {
-                event.setCancelled(true);
-                event.getWhoClicked().setItemOnCursor(inv.getItem(slot));
-                inv.setItem(slot, null);
-            }
-
-            if (size == 1) {
-                holder.setCrafted(false);
-                runTask(() -> {
-                    if (recipe.isMatch(inputs)) displayOutput(inv, recipe);
-                });
-            }
+            SimpleCraftHolder holder = (SimpleCraftHolder) inv.getHolder();
+            SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
+            syncItem(data, inv);
             return;
         }
 
         if (clickedInputs) {
-            findRecipeAndDisplay(event.getInventory());
+            Inventory inv = event.getInventory();
+            SimpleCraftHolder holder = (SimpleCraftHolder) inv.getHolder();
+            SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
+            syncItem(data, inv);
             return;
         }
     }
@@ -170,61 +119,88 @@ public class SimpleCraftTable extends SimpleMachine {
             event.setCancelled(true);
             return;
         }
-        findRecipeAndDisplay(event.getInventory());
+        Inventory inv = event.getInventory();
+        SimpleCraftHolder holder = (SimpleCraftHolder) inv.getHolder();
+        SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
+        syncItem(data, inv);
     }
 
     @Override
     public void onClose(InventoryCloseEvent event) {
         Inventory inv = event.getInventory();
-        HumanEntity player = event.getPlayer();
-        for (Integer slot : inputSlots) {
-            ItemStack item = inv.getItem(slot);
-            if (item == null) continue;
-            player.getInventory().addItem(item).forEach((k, v) -> {
-                player.getWorld().dropItem(player.getLocation(), v);
-            });
-        }
+        Holder holder = (Holder) inv.getHolder();
+        SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
 
-        if (((Holder)inv.getHolder()).isCrafted()) {
-            for (Integer slot : outputSlots) {
-                ItemStack item = inv.getItem(slot);
-                if (item == null) continue;
-                player.getInventory().addItem(item).forEach((k, v) -> {
-                    player.getWorld().dropItem(player.getLocation(), v);
-                });
+        holder.close();
+
+        data.getWriteLock().lock();
+        try {
+            for (Integer slot : inputSlots) {
+                data.setItem(slot, inv.getItem(slot));
             }
+
+            for (Integer slot : emptySlots) {
+                data.setItem(slot, inv.getItem(slot));
+            }
+        } finally {
+            data.getWriteLock().unlock();
         }
     }
 
-    private void findRecipeAndDisplay(Inventory inv) {
-        if (((Holder)inv.getHolder()).isCrafted()) return;
+    private void syncItem(SimpleUpdatableMachineData data, Inventory inv) {
+        data.getWriteLock().lock();
+        inputSlots.forEach(i -> inv.setItem(i, data.getItem(i)));
+        outputSlots.forEach(i -> inv.setItem(i, data.getItem(i)));
         runTask(() -> {
-            ItemStack[] inputs = copyArray(inv, inputSlots);
-            Recipe recipe = findRecipe(inputs);
-            if (recipe == null) {
-                clearOutput(inv);
-                return;
+            try {
+                inputSlots.forEach(i -> data.setItem(i, inv.getItem(i)));
+                outputSlots.forEach(i -> data.setItem(i, inv.getItem(i)));
+            } finally {
+                data.getWriteLock().unlock();
             }
-            displayOutput(inv, recipe);
         });
     }
 
-    public static class Holder extends SimpleCraftHolder {
-        private boolean crafted = false;
-
-        public boolean isCrafted() {
-            return crafted;
+    private static class Holder extends SimpleCraftHolder {
+        BukkitTask bukkitTask;
+        void start() {
+            bukkitTask = MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTaskTimerAsynchronously(
+                    MultiBlockCraftExtension.getInstance().getPlugin(), new Runnable() {
+                        @Override
+                        public void run() {
+                            SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) getMachineData();
+                            data.getLock().lock();
+                            try {
+                                getMachine().getInputSlots().forEach(it -> {
+                                    getInventory().setItem(it, data.getItem(it));
+                                });
+                                getMachine().getOutputSlots().forEach(it -> {
+                                    getInventory().setItem(it, data.getItem(it));
+                                });
+                                double remainingTime = data.getRemainingTime();
+                                ItemStack item = getInventory().getItem(4);
+                                ItemMeta itemMeta = item.getItemMeta();
+                                itemMeta.setDisplayName("剩余： " + remainingTime + "秒");
+                                item.setItemMeta(itemMeta);
+                            } finally {
+                                data.getLock().unlock();
+                            }
+                        }
+                    }, 4L, 8L
+            );
         }
 
-        public void setCrafted(boolean crafted) {
-            this.crafted = crafted;
+        void close() {
+            if (bukkitTask != null) {
+                bukkitTask.cancel();
+            }
         }
     }
 
     private static class Creative extends SimpleMachine {
-        private final SimpleCraftTable instance;
+        private final SimpleMachine instance;
 
-        private Creative(SimpleCraftTable instance) {
+        private Creative(SimpleMachine instance) {
             this.instance = instance;
         }
 

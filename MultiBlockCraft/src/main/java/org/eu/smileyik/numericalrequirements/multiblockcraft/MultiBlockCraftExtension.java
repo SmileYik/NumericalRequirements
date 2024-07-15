@@ -53,7 +53,7 @@ public class MultiBlockCraftExtension extends Extension {
 
     @Override
     public void onDisable() {
-        machineService.save();
+        machineService.stop();
     }
 
     public static MultiBlockCraftExtension getInstance() {

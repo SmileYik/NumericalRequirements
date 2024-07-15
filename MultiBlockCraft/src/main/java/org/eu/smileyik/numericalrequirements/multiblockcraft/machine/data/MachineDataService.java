@@ -7,5 +7,7 @@ public interface MachineDataService {
 
     void removeMachineData(String identifier);
 
+    void stop();
+
     void save();
 }

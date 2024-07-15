@@ -1,9 +1,8 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.machine;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.impl.YamlMachine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.OrderedRecipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.util.HexUtil;
@@ -65,7 +64,6 @@ public abstract class SimpleMachine extends YamlMachine {
                 return recipe;
             }
         }
-
         return null;
     }
 }

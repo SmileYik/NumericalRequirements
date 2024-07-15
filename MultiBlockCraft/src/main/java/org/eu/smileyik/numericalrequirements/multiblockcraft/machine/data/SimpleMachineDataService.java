@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class SimpleMachineDataService implements MachineDataService {
     private final MachineService  machineService;
@@ -17,6 +20,7 @@ public class SimpleMachineDataService implements MachineDataService {
     private final Map<String, MachineDataUpdatable> machineDataUpdatableMap = new HashMap<>();
     private final File folder;
     private final File metadataFile;
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     public SimpleMachineDataService(MultiBlockCraftExtension extension, MachineService machineService) {
         this.machineService = machineService;
@@ -24,6 +28,9 @@ public class SimpleMachineDataService implements MachineDataService {
         metadataFile = new File(folder, "metadata.yml");
         YamlConfiguration metadata = YamlConfiguration.loadConfiguration(metadataFile);
         metadata.getStringList("running").forEach(this::loadMachineData);
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            machineDataUpdatableMap.forEach((k, v) -> v.update());
+        }, 40, 40, TimeUnit.MILLISECONDS);
     }
 
     private MachineData loadMachineData(ConfigurationSection section) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -60,6 +67,12 @@ public class SimpleMachineDataService implements MachineDataService {
             machineDataUpdatableMap.put(machineData.getIdentifier(), (MachineDataUpdatable) machineData);
         }
         machineDataMap.put(machineData.getIdentifier(), machineData);
+    }
+
+    @Override
+    public void stop() {
+        scheduledExecutorService.shutdown();
+        save();
     }
 
     @Override

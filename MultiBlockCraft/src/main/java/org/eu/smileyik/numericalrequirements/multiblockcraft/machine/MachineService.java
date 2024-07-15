@@ -19,5 +19,7 @@ public interface MachineService {
 
     void save();
 
+    void stop();
+
     SimpleMachineDataService getMachineDataService();
 }

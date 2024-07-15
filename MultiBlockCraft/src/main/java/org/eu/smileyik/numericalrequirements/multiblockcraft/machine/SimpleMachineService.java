@@ -102,6 +102,12 @@ public class SimpleMachineService implements MachineService {
     }
 
     @Override
+    public void stop() {
+        save();
+        machineDataService.stop();
+    }
+
+    @Override
     public SimpleMachineDataService getMachineDataService() {
         return machineDataService;
     }
