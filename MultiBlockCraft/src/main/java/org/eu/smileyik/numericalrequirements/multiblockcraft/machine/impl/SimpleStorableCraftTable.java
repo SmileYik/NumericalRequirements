@@ -7,8 +7,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.data.impl.SimpleStorableMachineData;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleStorableMachineData;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 public class SimpleStorableCraftTable extends SimpleCraftTable {

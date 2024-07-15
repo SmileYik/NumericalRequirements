@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.data;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data;
 
 import org.eu.smileyik.numericalrequirements.core.api.Updatable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;

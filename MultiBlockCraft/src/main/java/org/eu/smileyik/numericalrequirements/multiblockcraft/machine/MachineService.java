@@ -1,7 +1,7 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine;
 
 import org.bukkit.block.Block;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.data.SimpleMachineDataService;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.SimpleMachineDataService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.io.File;

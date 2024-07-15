@@ -4,7 +4,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.data.SimpleMachineDataService;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.SimpleMachineDataService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.io.File;

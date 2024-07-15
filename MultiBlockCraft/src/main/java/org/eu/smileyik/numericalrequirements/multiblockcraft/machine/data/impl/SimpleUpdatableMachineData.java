@@ -1,8 +1,8 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.data.impl;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.data.MachineDataUpdatable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineDataUpdatable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 public class SimpleUpdatableMachineData extends SimpleStorableMachineData implements MachineDataUpdatable {

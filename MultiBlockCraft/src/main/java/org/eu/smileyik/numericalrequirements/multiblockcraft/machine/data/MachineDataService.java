@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.data;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data;
 
 public interface MachineDataService {
     MachineData loadMachineData(String identifier);

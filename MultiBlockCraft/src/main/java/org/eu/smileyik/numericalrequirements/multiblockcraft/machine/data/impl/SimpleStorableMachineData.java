@@ -1,10 +1,10 @@
-package org.eu.smileyik.numericalrequirements.multiblockcraft.data.impl;
+package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.data.MachineDataStorable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineDataStorable;
 
 import java.util.HashMap;
 import java.util.Map;

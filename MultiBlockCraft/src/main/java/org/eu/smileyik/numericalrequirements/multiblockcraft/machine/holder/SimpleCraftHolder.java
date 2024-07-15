@@ -1,8 +1,8 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder;
 
 import org.bukkit.inventory.Inventory;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.data.MachineData;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineData;
 
 public class SimpleCraftHolder implements CraftHolder {
     private Machine machine;
