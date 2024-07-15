@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.data;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 
@@ -16,6 +17,12 @@ public interface MachineData {
      * @return
      */
     String getIdentifier();
+
+    /**
+     * 获取位置.
+     * @return
+     */
+    Location getLocation();
 
     /**
      * 保存

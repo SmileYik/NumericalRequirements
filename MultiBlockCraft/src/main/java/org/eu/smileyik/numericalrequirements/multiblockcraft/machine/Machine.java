@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.util.Collection;
@@ -53,6 +54,16 @@ public interface Machine {
                 location.getBlockX(),
                 location.getBlockY(),
                 location.getBlockZ()
+        );
+    }
+
+    static Location fromIdentifier(String identifier) {
+        String[] split = identifier.split(";");
+        return new Location(
+                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getWorld(split[0]),
+                Integer.parseInt(split[1]),
+                Integer.parseInt(split[2]),
+                Integer.parseInt(split[3])
         );
     }
 }

@@ -210,7 +210,7 @@ public class SimpleCraftTable extends SimpleMachine {
         });
     }
 
-    private static class Holder extends SimpleCraftHolder {
+    public static class Holder extends SimpleCraftHolder {
         private boolean crafted = false;
 
         public boolean isCrafted() {
