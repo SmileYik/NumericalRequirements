@@ -8,6 +8,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineServ
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.SimpleMachineService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.MachineListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.MultiBlockListener;
 
 public class MultiBlockCraftExtension extends Extension {
     private static MultiBlockCraftExtension instance;
@@ -33,7 +34,7 @@ public class MultiBlockCraftExtension extends Extension {
 
             @Override
             public String getDescription() {
-                return "create-simple-craft-recip";
+                return "create-simple-craft-recipe";
             }
 
             @Override
@@ -49,6 +50,7 @@ public class MultiBlockCraftExtension extends Extension {
 
         machineService = new SimpleMachineService(this);
         getPlugin().getServer().getPluginManager().registerEvents(new MachineListener(machineLoreTag), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new MultiBlockListener(), getPlugin());
     }
 
     @Override

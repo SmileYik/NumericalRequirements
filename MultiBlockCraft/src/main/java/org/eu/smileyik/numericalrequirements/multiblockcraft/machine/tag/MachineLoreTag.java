@@ -10,7 +10,7 @@ public class MachineLoreTag extends LoreTag {
 
     @Override
     public String getId() {
-        return "machine-lore-tag";
+        return "machine-lore";
     }
 
     @Override
