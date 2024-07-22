@@ -41,7 +41,7 @@ public class SimpleUpdatableMachineData extends SimpleStorableMachineData implem
 
     @Override
     public double getRemainingTime() {
-        return recipeId == null ? 0 : ((finishedTimestamp - System.currentTimeMillis()) / 1E9);
+        return recipeId == null ? 0 : ((finishedTimestamp - System.currentTimeMillis()) / 1E3);
     }
 
     @Override
@@ -135,7 +135,6 @@ public class SimpleUpdatableMachineData extends SimpleStorableMachineData implem
             recipe.takeInputs(inputs);
 
             recipeId = recipe.getId();
-            System.out.println(recipeId);
             finishedTimestamp = System.currentTimeMillis() + (recipe instanceof TimeRecipe ? (long) (((TimeRecipe) recipe).getTime() * 1000) : 0L);
             return true;
         } finally {

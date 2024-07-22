@@ -1,17 +1,23 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.impl;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.item.InvItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class YamlMachine implements Machine {
     protected String id;
@@ -24,6 +30,7 @@ public abstract class YamlMachine implements Machine {
     protected List<Integer> emptySlots;
 
     protected Inventory inventory;
+    protected final Map<Integer, InvItem> funcItems = new HashMap<>();
 
     public YamlMachine() {
 
@@ -38,8 +45,9 @@ public abstract class YamlMachine implements Machine {
         inputSlots = section.getIntegerList("input-slots");
         outputSlots = section.getIntegerList("output-slots");
         emptySlots = section.getIntegerList("empty-slots");
-        ConfigurationSection inv = section.getConfigurationSection("inv-items");
         inventory = NumericalRequirements.getPlugin().getServer().createInventory(null, section.getInt("inv-size"));
+
+        ConfigurationSection inv = section.getConfigurationSection("inv-items");
         for (String key : inv.getKeys(false)) {
             int i = Integer.parseInt(key);
             SimpleItem item = SimpleItem.load(inv.getConfigurationSection(key));
@@ -52,6 +60,23 @@ public abstract class YamlMachine implements Machine {
                 itemStack.setItemMeta(itemMeta);
             }
             inventory.setItem(i, itemStack);
+        }
+
+        ConfigurationSection funcInv = section.getConfigurationSection("func-items");
+        if (funcInv == null) funcInv = new YamlConfiguration();
+        for (String key : funcInv.getKeys(false)) {
+            int i = Integer.parseInt(key);
+            ConfigurationSection c = funcInv.getConfigurationSection(key);
+            String type = c.getString("type");
+            try {
+                InvItem item = (InvItem) Class.forName(type).getDeclaredConstructor().newInstance();
+                item.load(c);
+                if (inventory.getItem(i) != null && inventory.getItem(i).getType() != Material.AIR) {
+                    funcItems.put(i, item);
+                }
+            } catch (Exception e) {
+                DebugLogger.debug(e);
+            }
         }
     }
 
@@ -88,6 +113,11 @@ public abstract class YamlMachine implements Machine {
     @Override
     public ItemStack getMachineItem() {
         return machineItem.getItemStack().clone();
+    }
+
+    @Override
+    public Map<Integer, InvItem> getFuncItems() {
+        return funcItems;
     }
 
     protected ItemStack[] copyArray(Inventory inventory, List<Integer> slots) {

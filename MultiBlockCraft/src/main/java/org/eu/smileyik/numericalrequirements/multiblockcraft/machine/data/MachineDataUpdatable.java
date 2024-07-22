@@ -56,6 +56,6 @@ public interface MachineDataUpdatable extends MachineData, Updatable, MachineDat
      * @return
      */
     default double getTotalTime() {
-        return getTimeRecipe().getTime();
+        return getRecipe() == null ? 0 : getTimeRecipe().getTime();
     }
 }

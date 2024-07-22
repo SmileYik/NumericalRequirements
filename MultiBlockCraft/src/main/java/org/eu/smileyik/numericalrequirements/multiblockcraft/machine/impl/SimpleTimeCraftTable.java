@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
@@ -163,7 +162,8 @@ public class SimpleTimeCraftTable extends SimpleMachine {
 
     private static class Holder extends SimpleCraftHolder {
         BukkitTask bukkitTask;
-        void start() {
+
+        synchronized void start() {
             bukkitTask = MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTaskTimerAsynchronously(
                     MultiBlockCraftExtension.getInstance().getPlugin(), new Runnable() {
                         @Override
@@ -177,20 +177,22 @@ public class SimpleTimeCraftTable extends SimpleMachine {
                                 getMachine().getOutputSlots().forEach(it -> {
                                     getInventory().setItem(it, data.getItem(it));
                                 });
-                                double remainingTime = data.getRemainingTime();
-                                ItemStack item = getInventory().getItem(4);
-                                ItemMeta itemMeta = item.getItemMeta();
-                                itemMeta.setDisplayName("剩余： " + remainingTime + "秒");
-                                item.setItemMeta(itemMeta);
+                                getMachine().getFuncItems().forEach((slot, func) -> {
+                                    ItemStack item = getInventory().getItem(slot);
+                                    if (item != null && item.getType() != Material.AIR) {
+                                        item = func.update(item, getMachineData());
+                                        getInventory().setItem(slot, item);
+                                    }
+                                });
                             } finally {
                                 data.getLock().unlock();
                             }
                         }
-                    }, 4L, 8L
+                    }, 4L, 4L
             );
         }
 
-        void close() {
+        synchronized void close() {
             if (bukkitTask != null) {
                 bukkitTask.cancel();
             }

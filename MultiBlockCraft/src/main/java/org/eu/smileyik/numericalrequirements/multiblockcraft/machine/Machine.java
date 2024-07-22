@@ -7,10 +7,12 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.item.InvItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface Machine {
     String getId();
@@ -66,4 +68,6 @@ public interface Machine {
                 Integer.parseInt(split[3])
         );
     }
+
+    Map<Integer, InvItem> getFuncItems();
 }
