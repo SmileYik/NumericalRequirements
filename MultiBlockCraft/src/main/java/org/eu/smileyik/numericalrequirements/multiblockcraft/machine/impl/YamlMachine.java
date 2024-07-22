@@ -47,6 +47,17 @@ public abstract class YamlMachine implements Machine {
         emptySlots = section.getIntegerList("empty-slots");
         inventory = NumericalRequirements.getPlugin().getServer().createInventory(null, section.getInt("inv-size"));
 
+        if (section.isConfigurationSection("other-slots")) {
+            SimpleItem item = SimpleItem.load(section.getConfigurationSection("other-slots"));
+            ItemStack itemStack = item.getItemStack();
+            for (int i = inventory.getSize() - 1; i >= 0; i--) {
+                if (outputSlots.contains(i) || emptySlots.contains(i) || inputSlots.contains(i)) {
+                    continue;
+                }
+                inventory.setItem(i, itemStack);
+            }
+        }
+
         ConfigurationSection inv = section.getConfigurationSection("inv-items");
         for (String key : inv.getKeys(false)) {
             int i = Integer.parseInt(key);
