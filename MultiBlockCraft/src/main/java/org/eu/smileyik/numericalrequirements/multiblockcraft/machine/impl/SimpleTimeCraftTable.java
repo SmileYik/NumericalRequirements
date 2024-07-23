@@ -67,43 +67,39 @@ public class SimpleTimeCraftTable extends SimpleMachine {
     public void onClick(InventoryClickEvent event) {
         if (event.getSlotType() == InventoryType.SlotType.OUTSIDE) return;
         if (event.getClick() == ClickType.WINDOW_BORDER_LEFT || event.getClick() == ClickType.WINDOW_BORDER_RIGHT) return;
+
         int slot = event.getRawSlot();
+        Inventory inv = event.getInventory();
+        SimpleCraftHolder holder = (SimpleCraftHolder) inv.getHolder();
+        SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
+
         if (emptySlots.contains(slot)) return;
         boolean clickedInputs = inputSlots.contains(slot);
         boolean clickedOutputs = outputSlots.contains(slot);
         if (slot < inventory.getSize() && !clickedInputs && !emptySlots.contains(slot) && !clickedOutputs) {
+            isClickedButton(slot, inv, data);
             event.setCancelled(true);
             return;
         }
 
         if (slot >= inventory.getSize() &&
                 (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)) {
-            Inventory inv = event.getInventory();
-            SimpleCraftHolder holder = (SimpleCraftHolder) inv.getHolder();
-            SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
             syncItem(data, inv);
             return;
         }
 
         if (clickedOutputs) {
-            Inventory inv = event.getInventory();
             ItemStack item = inv.getItem(slot);
             ItemStack itemOnCursor = event.getWhoClicked().getItemOnCursor();
             if (item == null || itemOnCursor != null && itemOnCursor.getType() != Material.AIR) {
                 event.setCancelled(true);
                 return;
             }
-
-            SimpleCraftHolder holder = (SimpleCraftHolder) inv.getHolder();
-            SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
             syncItem(data, inv);
             return;
         }
 
         if (clickedInputs) {
-            Inventory inv = event.getInventory();
-            SimpleCraftHolder holder = (SimpleCraftHolder) inv.getHolder();
-            SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
             syncItem(data, inv);
             return;
         }

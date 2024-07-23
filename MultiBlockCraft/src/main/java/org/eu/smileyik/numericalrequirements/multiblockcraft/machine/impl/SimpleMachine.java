@@ -1,8 +1,13 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.impl;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineData;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.item.InvItem;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.item.ItemButton;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.OrderedRecipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.util.HexUtil;
@@ -13,7 +18,6 @@ public abstract class SimpleMachine extends YamlMachine {
     protected Map<String, Recipe> recipes = new HashMap<>();
     protected Map<String, Set<String>> shapeRecipes = new HashMap<>();
     protected List<String> normalRecipes = new ArrayList<>();
-
 
     public SimpleMachine() {
 
@@ -65,5 +69,17 @@ public abstract class SimpleMachine extends YamlMachine {
             }
         }
         return null;
+    }
+
+    public boolean isClickedButton(int slot, Inventory inv, MachineData data) {
+        if (inv.getSize() <= slot) return false;
+        ItemStack clickedItem = inv.getItem(slot);
+        if (data == null || clickedItem == null || clickedItem.getType() == Material.AIR) return false;
+        InvItem invItem = funcItems.get(slot);
+        if (invItem instanceof ItemButton) {
+            inv.setItem(slot, ((ItemButton) invItem).click(clickedItem, data));
+            return true;
+        }
+        return false;
     }
 }

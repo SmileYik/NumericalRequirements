@@ -55,22 +55,25 @@ public class SimpleCraftTable extends SimpleMachine {
         if (event.getSlotType() == InventoryType.SlotType.OUTSIDE) return;
         if (event.getClick() == ClickType.WINDOW_BORDER_LEFT || event.getClick() == ClickType.WINDOW_BORDER_RIGHT) return;
         int slot = event.getRawSlot();
+        Inventory inv = event.getInventory();
+        Holder holder = (Holder) inv.getHolder();
+
         if (emptySlots.contains(slot)) return;
         boolean clickedInputs = inputSlots.contains(slot);
         boolean clickedOutputs = outputSlots.contains(slot);
         if (slot < inventory.getSize() && !clickedInputs && !emptySlots.contains(slot) && !clickedOutputs) {
+            isClickedButton(slot, inv, holder.getMachineData());
             event.setCancelled(true);
             return;
         }
 
         if (slot >= inventory.getSize() &&
                 (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)) {
-            findRecipeAndDisplay(event.getInventory());
+            findRecipeAndDisplay(inv);
             return;
         }
 
         if (clickedOutputs) {
-            Inventory inv = event.getInventory();
             ItemStack item = inv.getItem(slot);
             ItemStack itemOnCursor = event.getWhoClicked().getItemOnCursor();
 
@@ -79,7 +82,6 @@ public class SimpleCraftTable extends SimpleMachine {
                 return;
             }
 
-            Holder holder = (Holder) inv.getHolder();
             if (holder.isCrafted()) {
                 runTask(() -> {
                     boolean flag = true;
@@ -114,6 +116,7 @@ public class SimpleCraftTable extends SimpleMachine {
             }
             holder.setCrafted(true);
 
+            // 计算合成数量，右击合成最大数量，其余合成1次。
             int times = 0;
             if (event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT) {
                 int max = 1;
