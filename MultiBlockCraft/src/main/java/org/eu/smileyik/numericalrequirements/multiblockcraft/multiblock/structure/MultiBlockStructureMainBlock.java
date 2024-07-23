@@ -37,6 +37,7 @@ public class MultiBlockStructureMainBlock extends MultiBlockStructure implements
         return true;
     }
 
+    @Override
     public Block getBlock(Node node, Block block, BlockFace[] ways) {
         while (node != null) {
             block = block.getRelative(ways[node.face.getIndex()]);
@@ -45,10 +46,12 @@ public class MultiBlockStructureMainBlock extends MultiBlockStructure implements
         return block;
     }
 
+    @Override
     public List<Node> getInputPath() {
         return inputPath;
     }
 
+    @Override
     public List<Node> getOutputPath() {
         return outputPath;
     }
@@ -112,7 +115,7 @@ public class MultiBlockStructureMainBlock extends MultiBlockStructure implements
             StringBuilder sb = new StringBuilder();
             boolean first = true;
             Node n = this;
-            while (n != null) {
+            while (n != null && (first || n != this)) {
                 if (!first) {
                     sb.append(" -> ");
                 }

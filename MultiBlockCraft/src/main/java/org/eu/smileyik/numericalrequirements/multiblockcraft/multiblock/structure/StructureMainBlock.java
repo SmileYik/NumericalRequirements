@@ -4,6 +4,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.MultiBlockFace;
 
+import java.util.List;
+
 public interface StructureMainBlock extends Structure {
 
     /**
@@ -34,4 +36,17 @@ public interface StructureMainBlock extends Structure {
         }
         return false;
     }
+
+    /**
+     * 获取节点所对应的方块。
+     * @param node 相对于主方块的节点
+     * @param block 主方块
+     * @param ways 正确的机器朝向，上下左右前后方向所对应的BlockFace数组
+     * @return
+     */
+    Block getBlock(MultiBlockStructureMainBlock.Node node, Block block, BlockFace[] ways);
+
+    List<MultiBlockStructureMainBlock.Node> getInputPath();
+
+    List<MultiBlockStructureMainBlock.Node> getOutputPath();
 }
