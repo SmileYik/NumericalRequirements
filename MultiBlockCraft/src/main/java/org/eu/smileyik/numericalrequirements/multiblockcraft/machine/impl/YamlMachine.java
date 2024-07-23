@@ -5,7 +5,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
@@ -14,7 +13,6 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.item.InvItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,13 +61,13 @@ public abstract class YamlMachine implements Machine {
             int i = Integer.parseInt(key);
             SimpleItem item = SimpleItem.load(inv.getConfigurationSection(key));
             ItemStack itemStack = item.getItemStack();
-            if (itemStack != null) {
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
-                lore.add("§7 ");
-                itemMeta.setLore(lore);
-                itemStack.setItemMeta(itemMeta);
-            }
+//            if (itemStack != null) {
+//                ItemMeta itemMeta = itemStack.getItemMeta();
+//                List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
+//                lore.add("§7 ");
+//                itemMeta.setLore(lore);
+//                itemStack.setItemMeta(itemMeta);
+//            }
             inventory.setItem(i, itemStack);
         }
 
