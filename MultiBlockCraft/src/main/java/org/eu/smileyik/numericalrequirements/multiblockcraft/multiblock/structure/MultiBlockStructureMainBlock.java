@@ -21,7 +21,7 @@ public class MultiBlockStructureMainBlock extends MultiBlockStructure implements
     public boolean isMatch(Block block, BlockFace[] ways) {
         if (!this.isSameBlock(block)) return false;
 
-        LinkedList<Pair<Block, Structure>> queues = new LinkedList<>();
+        final LinkedList<Pair<Block, Structure>> queues = new LinkedList<>();
         queues.add(new Pair<>(block, this));
         while (!queues.isEmpty()) {
             Pair<Block, Structure> pair = queues.removeFirst();
@@ -54,7 +54,7 @@ public class MultiBlockStructureMainBlock extends MultiBlockStructure implements
     }
 
     protected List<Node> findSubclassNode(Class<?> clazz) {
-        LinkedList<Pair<Node, Structure>> queue = new LinkedList<>();
+        final LinkedList<Pair<Node, Structure>> queue = new LinkedList<>();
         final StructureFace[] faces = StructureFace.values();
         for (StructureFace face : faces) {
             Structure near = getNear(face);
@@ -66,12 +66,19 @@ public class MultiBlockStructureMainBlock extends MultiBlockStructure implements
         }
 
         LinkedList<Node> ans = new LinkedList<>();
-        int size = 0;
         while (!queue.isEmpty()) {
             Pair<Node, Structure> pair = queue.removeFirst();
             if (pair.getSecond().getClass() == clazz) {
-                ans.add(pair.getFirst().copy());
-                ++size;
+                // 反转链表
+                Node node = pair.getFirst().copy();
+                Node head = null;
+                while (node != null) {
+                    Node next = node.next;
+                    node.next = head;
+                    head = node;
+                    node = next;
+                }
+                ans.add(head);
             }
 
             for (StructureFace face : faces) {
@@ -83,18 +90,6 @@ public class MultiBlockStructureMainBlock extends MultiBlockStructure implements
                     queue.add(Pair.newPair(node, near));
                 }
             }
-        }
-        while (size > 0) {
-            --size;
-            Node node = ans.removeFirst();
-            Node head = null;
-            while (node != null) {
-                Node next = node.next;
-                node.next = head;
-                head = node;
-                node = next;
-            }
-            ans.add(head);
         }
         return ans;
     }
