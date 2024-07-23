@@ -1,0 +1,35 @@
+material: CRAFTING_TABLE
+type: org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.MultiBlockStructureMainBlock
+up:
+  material: SPRUCE_SLAB
+down:
+  material: BIRCH_LOG
+left:
+  material: OAK_WOOD
+  down:
+    material: SPRUCE_FENCE
+right:
+  material: BIRCH_WOOD
+  down:
+    material: OAK_FENCE
+front:
+  material: CHEST
+  type: org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.MultiBlockStructureInput
+back:
+  material: BIRCH_LOG
+  left:
+    material: SPRUCE_FENCE
+    back:
+      material: CHEST
+      type: org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.MultiBlockStructureOutput
+  right:
+    material: OAK_FENCE
+    back:
+      material: CHEST
+      type: org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.MultiBlockStructureInput
+      back:
+        material: CHEST
+        type: org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.MultiBlockStructureInput
+        back:
+          material: CHEST
+          type: org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.MultiBlockStructureInput

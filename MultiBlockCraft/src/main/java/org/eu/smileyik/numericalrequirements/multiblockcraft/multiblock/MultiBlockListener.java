@@ -9,6 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.MultiBlockStructureMainBlock;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.Structure;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.StructureMainBlock;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -16,7 +19,7 @@ import java.util.Set;
 
 public class MultiBlockListener implements Listener {
     private boolean flag;
-    private MultiBlockStructure structure = null;
+    private StructureMainBlock structure = null;
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -24,41 +27,14 @@ public class MultiBlockListener implements Listener {
             if (structure == null) return;
             Block clickedBlock = event.getClickedBlock();
             if (!structure.isSameBlock(clickedBlock)) return;
-            MultiBlockFace[] faces = MultiBlockFace.getByFace(event.getBlockFace());
-            if (clickedBlock == null) {
+            if (structure.isMatch(clickedBlock, event.getBlockFace())) {
+                System.out.println("Equal structure");
+                return;
+            } else {
+                System.out.println("Not equal structure");
                 return;
             }
 
-            for (MultiBlockFace face : faces) {
-                boolean flag = true;
-                BlockFace[] ways = face.getFaces();
-
-                // create(clickedBlock, ways);
-
-                LinkedList<Pair<MultiBlockStructure, Block>> queue = new LinkedList<>();
-                queue.add(new Pair<>(structure, clickedBlock));
-                while (!queue.isEmpty() && flag) {
-                    Pair<MultiBlockStructure, Block> pair = queue.removeFirst();
-                    for (int i = ways.length - 1; i >= 0; i--) {
-                        MultiBlockStructure near = pair.getFirst().getNear(i);
-                        if (near == null) continue;
-                        Block block = pair.getSecond().getRelative(ways[i]);
-                        if (near.isSameBlock(block)) {
-                            queue.add(new Pair<>(near, block));
-                        } else {
-                            // not equal
-                            flag = false;
-                            break;
-                        }
-                    }
-                }
-                if (flag) {
-                    System.out.println("Equal structure");
-                    return;
-                }
-            }
-            System.out.println("Not equal structure");
-            return;
         }
 
 
@@ -90,15 +66,15 @@ public class MultiBlockListener implements Listener {
         }
     }
 
-    private MultiBlockStructure create(Block clickedBlock, BlockFace[] ways) {
-        LinkedList<Pair<MultiBlockStructure, Block>> queue = new LinkedList<>();
-        MultiBlockStructure structure = new MultiBlockStructure();
+    private StructureMainBlock create(Block clickedBlock, BlockFace[] ways) {
+        LinkedList<Pair<Structure, Block>> queue = new LinkedList<>();
+        StructureMainBlock structure = new MultiBlockStructureMainBlock();
         structure.setBlock(clickedBlock);
         queue.add(Pair.newPair(structure, clickedBlock));
         Set<Location> checked = new HashSet<>();
         checked.add(clickedBlock.getLocation());
         while (!queue.isEmpty()) {
-            Pair<MultiBlockStructure, Block> pair = queue.removeFirst();
+            Pair<Structure, Block> pair = queue.removeFirst();
 
             for (int i = ways.length - 1; i >= 0; i--) {
                 Block block = pair.getSecond().getRelative(ways[i]);
@@ -110,6 +86,7 @@ public class MultiBlockListener implements Listener {
         YamlConfiguration yamlConfiguration = new YamlConfiguration();
         structure.store(yamlConfiguration);
         System.out.println(yamlConfiguration.saveToString());
+        structure.init();
         return structure;
     }
 }
