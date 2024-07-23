@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
@@ -20,7 +22,13 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineServ
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.CraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
 
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class MachineListener implements Listener {
+    public static final ReentrantReadWriteLock CONTAINER_LOCK = new ReentrantReadWriteLock(true);
+    public static final String MULTI_BLOCK_MACHINE_CONTAINER_KEY = "NREQ_MB_CONTAINER";
+
+
     private final MachineLoreTag machineLoreTag;
     private final MachineService machineService = MultiBlockCraftExtension.getInstance().getMachineService();
 
@@ -79,17 +87,56 @@ public class MachineListener implements Listener {
 
     @EventHandler
     public void onClickInventory(InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
+        Inventory inv = event.getInventory();
+        InventoryHolder holder = inv.getHolder();
         if (holder instanceof CraftHolder) {
             ((CraftHolder) holder).getMachine().onClick(event);
+            return;
+        }
+
+        Location location = inv.getLocation();
+        if (event.getRawSlot() > event.getView().getTopInventory().getSize()) {
+            return;
+        }
+        if (location == null) return;
+        Block block = location.getBlock();
+        if (block.hasMetadata(MULTI_BLOCK_MACHINE_CONTAINER_KEY)) {
+            CONTAINER_LOCK.writeLock().lock();
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
+                    MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
+                        try {
+
+                        } finally {
+                            CONTAINER_LOCK.writeLock().unlock();
+                        }
+                    }
+            );
         }
     }
 
     @EventHandler
     public void onDragInventory(InventoryDragEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
+        Inventory inv = event.getInventory();
+        InventoryHolder holder = inv.getHolder();
         if (holder instanceof CraftHolder) {
             ((CraftHolder) holder).getMachine().onDrag(event);
+            return;
+        }
+
+        Location location = inv.getLocation();
+        if (location == null) return;
+        Block block = location.getBlock();
+        if (block.hasMetadata(MULTI_BLOCK_MACHINE_CONTAINER_KEY)) {
+            CONTAINER_LOCK.writeLock().lock();
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
+                    MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
+                        try {
+
+                        } finally {
+                            CONTAINER_LOCK.writeLock().unlock();
+                        }
+                    }
+            );
         }
     }
 

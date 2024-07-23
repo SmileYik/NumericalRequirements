@@ -4,7 +4,7 @@ import org.eu.smileyik.numericalrequirements.core.api.Updatable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.TimeRecipe;
 
-public interface MachineDataUpdatable extends MachineData, Updatable, MachineDataStorable {
+public interface MachineDataUpdatable extends MachineData, Updatable {
     /**
      * 是否启用工作
      * @return

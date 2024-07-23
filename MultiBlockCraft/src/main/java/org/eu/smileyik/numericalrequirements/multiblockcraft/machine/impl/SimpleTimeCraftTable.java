@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleUpdatableMachineData;
@@ -186,11 +187,13 @@ public class SimpleTimeCraftTable extends SimpleMachine {
                         }
                     }, 4L, 4L
             );
+            DebugLogger.debug("物品栏异步任务开启");
         }
 
         synchronized void close() {
             if (bukkitTask != null) {
                 bukkitTask.cancel();
+                DebugLogger.debug("物品栏异步任务关闭");
             }
         }
     }

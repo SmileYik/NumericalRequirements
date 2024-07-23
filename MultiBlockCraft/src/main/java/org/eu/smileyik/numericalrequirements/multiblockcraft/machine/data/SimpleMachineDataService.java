@@ -2,6 +2,7 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineService;
@@ -29,7 +30,13 @@ public class SimpleMachineDataService implements MachineDataService {
         YamlConfiguration metadata = YamlConfiguration.loadConfiguration(metadataFile);
         metadata.getStringList("running").forEach(this::loadMachineData);
         scheduledExecutorService.scheduleAtFixedRate(() -> {
-            machineDataUpdatableMap.forEach((k, v) -> v.update());
+            machineDataUpdatableMap.forEach((k, v) -> {
+                try {
+                    v.update();
+                } catch (Exception e) {
+                    DebugLogger.debug(e);
+                }
+            });
         }, 40, 40, TimeUnit.MILLISECONDS);
     }
 
