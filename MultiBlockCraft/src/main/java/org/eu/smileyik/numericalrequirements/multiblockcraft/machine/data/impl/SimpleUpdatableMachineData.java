@@ -17,7 +17,16 @@ public class SimpleUpdatableMachineData extends SimpleStorableMachineData implem
     private boolean enable;
     private String recipeId;
     private long finishedTimestamp;
+    /**
+     * 用来管理运行状态。
+     * 若在继续合成判定中发现原材料不够，则将其置为false；
+     * 若玩家更改了原材料槽则将其置为true。
+     * 如果该字段值为false,则在本次处理完成后及将来将不会检测配方。
+     */
     private boolean changedItems = true;
+    /**
+     * 物品栏锁，包括物品栏所有槽位。
+     */
     protected final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     public SimpleUpdatableMachineData(Machine machine) {
@@ -68,8 +77,6 @@ public class SimpleUpdatableMachineData extends SimpleStorableMachineData implem
 
     @Override
     public boolean update() {
-        if (!isEnable()) return false;
-
         if (recipeId != null) {
             if (getRemainingTime() <= 0) {
                 List<Integer> outputSlots = getMachine().getOutputSlots();
@@ -93,9 +100,8 @@ public class SimpleUpdatableMachineData extends SimpleStorableMachineData implem
             }
         }
 
-        if (!changedItems) {
-            return false;
-        }
+        if (!isEnable()) return false;
+        if (!changedItems) return false;
 
         lock.writeLock().lock();
         try {
