@@ -5,7 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineData;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleUpdatableMachineData;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineDataUpdatable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.item.util.ItemUtil;
 
 import java.text.MessageFormat;
@@ -17,7 +17,10 @@ public class ProcessBar implements InvItem {
 
     @Override
     public ItemStack update(ItemStack item, MachineData data) {
-        SimpleUpdatableMachineData d = (SimpleUpdatableMachineData) data;
+        if (!(data instanceof MachineDataUpdatable)) {
+            return item;
+        }
+        MachineDataUpdatable d = (MachineDataUpdatable) data;
         double totalTime = d.getTotalTime();
         double rate = totalTime == 0 ? 0 : d.getCraftedTime() / totalTime;
         int i = (int) Math.round(rate * (end - start) + start);
