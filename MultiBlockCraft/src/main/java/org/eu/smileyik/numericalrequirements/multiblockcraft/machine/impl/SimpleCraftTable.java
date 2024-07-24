@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.OpenMachineGuiEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.SimpleCraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl.SimpleAbstractRecipe;
@@ -31,6 +32,12 @@ public class SimpleCraftTable extends SimpleMachine {
 
     @Override
     public void open(Player player, String identifier) {
+        OpenMachineGuiEvent event = new OpenMachineGuiEvent(this, player, identifier);
+        MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         SimpleCraftHolder holder = new Holder();
         Inventory inv = NumericalRequirements.getPlugin().getServer().createInventory(holder, inventory.getSize(), title);
         inv.setContents(inventory.getContents());

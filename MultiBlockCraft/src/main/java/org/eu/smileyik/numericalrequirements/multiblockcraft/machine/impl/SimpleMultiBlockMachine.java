@@ -16,6 +16,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExte
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MultiBlockMachine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleMultiBlockMachineData;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.OpenMachineGuiEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.SimpleCraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.Structure;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.StructureMainBlock;
@@ -52,6 +53,12 @@ public class SimpleMultiBlockMachine extends SimpleMachine implements MultiBlock
 
     @Override
     public void open(Player player, String identifier) {
+        OpenMachineGuiEvent event = new OpenMachineGuiEvent(this, player, identifier);
+        MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         Holder holder = new Holder();
         Inventory inv = NumericalRequirements.getPlugin().getServer().createInventory(holder, inventory.getSize(), title);
         inv.setContents(inventory.getContents());

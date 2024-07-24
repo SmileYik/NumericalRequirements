@@ -13,6 +13,7 @@ import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleUpdatableMachineData;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.OpenMachineGuiEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.SimpleCraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl.SimpleAbstractRecipe;
@@ -34,6 +35,12 @@ public class SimpleTimeCraftTable extends SimpleMachine {
 
     @Override
     public void open(Player player, String identifier) {
+        OpenMachineGuiEvent event = new OpenMachineGuiEvent(this, player, identifier);
+        MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         Holder holder = new Holder();
         Inventory inv = NumericalRequirements.getPlugin().getServer().createInventory(holder, inventory.getSize(), title);
         inv.setContents(inventory.getContents());
