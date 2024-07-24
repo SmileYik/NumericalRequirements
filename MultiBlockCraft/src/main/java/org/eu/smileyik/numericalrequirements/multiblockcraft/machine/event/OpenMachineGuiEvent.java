@@ -5,6 +5,9 @@ import org.bukkit.event.Cancellable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 
+/**
+ * 打开机器GUI界面事件。当玩家打开机器GUI界面时触发。
+ */
 public class OpenMachineGuiEvent extends MachineEvent implements Cancellable {
     private boolean cancelled;
 

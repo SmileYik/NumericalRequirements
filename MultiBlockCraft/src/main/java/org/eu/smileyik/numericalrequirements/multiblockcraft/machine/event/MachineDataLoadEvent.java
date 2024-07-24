@@ -5,6 +5,9 @@ import org.bukkit.event.Cancellable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineData;
 
+/**
+ * 机器数据加载事件，当机器数据被加载时触发。
+ */
 public class MachineDataLoadEvent extends MachineDataEvent implements Cancellable {
     private final ConfigurationSection section;
     private final String chunkId;
@@ -22,6 +25,10 @@ public class MachineDataLoadEvent extends MachineDataEvent implements Cancellabl
         this.chunkId = chunkId;
     }
 
+    /**
+     * 获取机器数据的配置片段。
+     * @return
+     */
     public ConfigurationSection getConfiguration() {
         return section;
     }
@@ -36,6 +43,10 @@ public class MachineDataLoadEvent extends MachineDataEvent implements Cancellabl
         this.cancelled = cancelled;
     }
 
+    /**
+     * 获取机器所在的区块ID
+     * @return
+     */
     public String getChunkId() {
         return chunkId;
     }
