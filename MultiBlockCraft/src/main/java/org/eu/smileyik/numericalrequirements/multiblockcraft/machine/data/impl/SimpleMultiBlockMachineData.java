@@ -138,7 +138,7 @@ public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
     }
 
     @Override
-    public synchronized boolean update() {
+    public boolean update() {
         try {
             return doUpdate();
         } catch (ExecutionException e) {
@@ -225,13 +225,13 @@ public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
         return ways != null;
     }
 
-    public synchronized void nextFace() {
+    public void nextFace() {
         faceIndex = (faceIndex + 1) % 6;
         face = FACES[faceIndex];
         DebugLogger.debug("Face: %s", face);
     }
 
-    public synchronized BlockFace getFace() {
+    public BlockFace getFace() {
         return face;
     }
 

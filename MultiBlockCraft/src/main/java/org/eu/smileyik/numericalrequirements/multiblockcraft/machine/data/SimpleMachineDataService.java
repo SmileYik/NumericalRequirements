@@ -1,7 +1,13 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data;
 
+import org.bukkit.Chunk;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
@@ -11,24 +17,30 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-public class SimpleMachineDataService implements MachineDataService {
+public class SimpleMachineDataService implements MachineDataService, Listener {
     private final MachineService  machineService;
-    private final Map<String, MachineData> machineDataMap = new HashMap<>();
-    private final Map<String, MachineDataUpdatable> machineDataUpdatableMap = new HashMap<>();
+    private final ConcurrentMap<String, MachineData> machineDataMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, MachineDataUpdatable> machineDataUpdatableMap = new ConcurrentHashMap<>();
     private final File folder;
     private final File metadataFile;
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private final Map<String, Set<String>> chunkMachineMap = new HashMap<>();
 
     public SimpleMachineDataService(MultiBlockCraftExtension extension, MachineService machineService) {
         this.machineService = machineService;
         folder = new File(extension.getDataFolder(), "machine-data");
         metadataFile = new File(folder, "metadata.yml");
         YamlConfiguration metadata = YamlConfiguration.loadConfiguration(metadataFile);
-        metadata.getStringList("running").forEach(this::loadMachineData);
+        ConfigurationSection chunk = metadata.getConfigurationSection("chunk");
+        if (chunk != null) {
+            chunk.getKeys(false).forEach(it -> {
+                chunkMachineMap.put(it, new HashSet<>(chunk.getStringList(it)));
+            });
+        }
+        loadLoadedChunks(extension.getPlugin());
+
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             machineDataUpdatableMap.forEach((k, v) -> {
                 try {
@@ -38,6 +50,7 @@ public class SimpleMachineDataService implements MachineDataService {
                 }
             });
         }, 40, 40, TimeUnit.MILLISECONDS);
+        extension.getPlugin().getServer().getPluginManager().registerEvents(this, extension.getPlugin());
     }
 
     private MachineData loadMachineData(ConfigurationSection section) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -51,6 +64,7 @@ public class SimpleMachineDataService implements MachineDataService {
     @Override
     public synchronized MachineData loadMachineData(String identifier) {
         if (!machineDataMap.containsKey(identifier)) {
+            DebugLogger.debug("loading machine data: %s", identifier);
             File file = new File(folder, identifier + ".yml");
             if (!file.exists()) return null;
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -60,6 +74,9 @@ public class SimpleMachineDataService implements MachineDataService {
                     machineDataUpdatableMap.put(identifier, (MachineDataUpdatable) machineData);
                 }
                 machineDataMap.put(identifier, machineData);
+                String id = getChunkId(machineData.getLocation().getChunk());
+                if (!chunkMachineMap.containsKey(id)) chunkMachineMap.put(id, new HashSet<>());
+                chunkMachineMap.get(id).add(machineData.getIdentifier());
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -74,6 +91,9 @@ public class SimpleMachineDataService implements MachineDataService {
             machineDataUpdatableMap.put(machineData.getIdentifier(), (MachineDataUpdatable) machineData);
         }
         machineDataMap.put(machineData.getIdentifier(), machineData);
+        String id = getChunkId(machineData.getLocation().getChunk());
+        if (!chunkMachineMap.containsKey(id)) chunkMachineMap.put(id, new HashSet<>());
+        chunkMachineMap.get(id).add(machineData.getIdentifier());
     }
 
     @Override
@@ -84,33 +104,38 @@ public class SimpleMachineDataService implements MachineDataService {
 
     @Override
     public synchronized void save() {
-        Set<String> needDelete = new HashSet<>();
-        machineDataUpdatableMap.forEach((k, v) -> {
-            if (!v.isRunning()) {
-                needDelete.add(k);
-            }
-        });
-        needDelete.forEach(machineDataUpdatableMap::remove);
-
         YamlConfiguration metadata = new YamlConfiguration();
-        metadata.set("running", new ArrayList<String>(machineDataUpdatableMap.keySet()));
+        ConfigurationSection chunk = metadata.createSection("chunk");
+        chunkMachineMap.forEach((k, v) -> {
+            chunk.set(k, new ArrayList<>(v));
+        });
         try {
             metadata.save(metadataFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            DebugLogger.debug(e);
         }
 
         machineDataMap.forEach((k, v) -> {
-            File file = new File(folder, k + ".yml");
             YamlConfiguration config = new YamlConfiguration();
             v.store(config);
             try {
-                config.save(file);
+                config.save(new File(folder, k + ".yml"));
             } catch (IOException e) {
-                e.printStackTrace();
+                DebugLogger.debug(e);
             }
         });
-        needDelete.forEach(machineDataMap::remove);
+    }
+
+    private void saveMachineData(String identifier) {
+        MachineData machineData = machineDataMap.get(identifier);
+        if (machineData == null) return;
+        YamlConfiguration config = new YamlConfiguration();
+        machineData.store(config);
+        try {
+            config.save(new File(folder, identifier + ".yml"));
+        } catch (IOException e) {
+            DebugLogger.debug(e);
+        }
     }
 
     @Override
@@ -119,5 +144,41 @@ public class SimpleMachineDataService implements MachineDataService {
         if (file.exists()) file.delete();
         machineDataMap.remove(identifier);
         machineDataUpdatableMap.remove(identifier);
+        chunkMachineMap.getOrDefault(identifier, Collections.emptySet()).clear();
+    }
+
+    private synchronized void loadLoadedChunks(Plugin plugin) {
+        plugin.getServer().getWorlds().forEach(world -> {
+            for (Chunk loadedChunk : world.getLoadedChunks()) {
+                onChunkLoad(loadedChunk);
+            }
+        });
+    }
+
+    private synchronized void onChunkLoad(Chunk chunk) {
+        String chunkId = getChunkId(chunk);
+        DebugLogger.debug("load chunk: %s", chunkId);
+        chunkMachineMap.getOrDefault(chunkId, Collections.emptySet()).forEach(this::loadMachineData);
+    }
+
+    @EventHandler
+    public void onChunkLoad(ChunkLoadEvent event) {
+        onChunkLoad(event.getChunk());
+    }
+
+    @EventHandler
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        String chunkId = getChunkId(event.getChunk());
+        DebugLogger.debug("unload chunk: %s", chunkId);
+        chunkMachineMap.getOrDefault(chunkId, Collections.emptySet()).forEach(identifier -> {
+            DebugLogger.debug("unload machine data: %s", identifier);
+            saveMachineData(identifier);
+            machineDataMap.remove(identifier);
+            machineDataUpdatableMap.remove(identifier);
+        });
+    }
+
+    private String getChunkId(Chunk chunk) {
+        return String.format("%s;%d;%d", chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
     }
 }
