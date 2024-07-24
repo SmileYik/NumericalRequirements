@@ -9,6 +9,7 @@ import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleStorableMachineData;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.CreateSimpleStorableCraftTableDataEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.OpenMachineGuiEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
@@ -39,6 +40,12 @@ public class SimpleStorableCraftTable extends SimpleCraftTable {
         if (machineData == null) {
             machineData = new Data(this);
             machineData.setIdentifier(identifier);
+
+            CreateSimpleStorableCraftTableDataEvent dataEvent = new CreateSimpleStorableCraftTableDataEvent(this, identifier, machineData);
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(dataEvent);
+            machineData = dataEvent.getMachineData();
+
+            MultiBlockCraftExtension.getInstance().getMachineService().getMachineDataService().storeMachineData(machineData);
         } else {
             machineData.forEach(inv::setItem);
             holder.setCrafted(machineData.isCrafted());

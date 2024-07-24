@@ -16,6 +16,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExte
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MultiBlockMachine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleMultiBlockMachineData;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.CreateSimpleMultiBlockDataEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.OpenMachineGuiEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.SimpleCraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.Structure;
@@ -70,6 +71,11 @@ public class SimpleMultiBlockMachine extends SimpleMachine implements MultiBlock
         if (data == null) {
             data = new SimpleMultiBlockMachineData(this);
             data.setIdentifier(identifier);
+
+            CreateSimpleMultiBlockDataEvent dataEvent = new CreateSimpleMultiBlockDataEvent(this, identifier, data);
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(dataEvent);
+            data = dataEvent.getMachineData();
+
             MultiBlockCraftExtension.getInstance().getMachineService().getMachineDataService().storeMachineData(data);
         }
         holder.setMachineData(data);

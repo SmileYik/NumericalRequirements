@@ -13,6 +13,7 @@ import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleUpdatableMachineData;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.CreateSimpleUpdatableDataEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.OpenMachineGuiEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.SimpleCraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
@@ -52,6 +53,11 @@ public class SimpleTimeCraftTable extends SimpleMachine {
         if (data == null) {
             data = new SimpleUpdatableMachineData(this);
             data.setIdentifier(identifier);
+
+            CreateSimpleUpdatableDataEvent dataEvent = new CreateSimpleUpdatableDataEvent(this, identifier, data);
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(dataEvent);
+            data = dataEvent.getMachineData();
+
             MultiBlockCraftExtension.getInstance().getMachineService().getMachineDataService().storeMachineData(data);
         } else {
             data.forEach(inv::setItem);
