@@ -12,6 +12,9 @@ import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineService;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.MachineDataLoadEvent;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.MachineDataRemoveEvent;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.MachineDataUnloadEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,11 +73,16 @@ public class SimpleMachineDataService implements MachineDataService, Listener {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 MachineData machineData = loadMachineData(config);
+                String id = getChunkId(machineData.getLocation().getChunk());
+
+                MachineDataLoadEvent event = new MachineDataLoadEvent(machineData.getMachine(), machineData.getIdentifier(), machineData, config, id);
+                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+                if (event.isCancelled()) return null;
+
                 if (machineData instanceof MachineDataUpdatable) {
                     machineDataUpdatableMap.put(identifier, (MachineDataUpdatable) machineData);
                 }
                 machineDataMap.put(identifier, machineData);
-                String id = getChunkId(machineData.getLocation().getChunk());
                 if (!chunkMachineMap.containsKey(id)) chunkMachineMap.put(id, new HashSet<>());
                 chunkMachineMap.get(id).add(machineData.getIdentifier());
             } catch (Exception e) {
@@ -126,25 +134,19 @@ public class SimpleMachineDataService implements MachineDataService, Listener {
         });
     }
 
-    private void saveMachineData(String identifier) {
-        MachineData machineData = machineDataMap.get(identifier);
-        if (machineData == null) return;
-        YamlConfiguration config = new YamlConfiguration();
-        machineData.store(config);
-        try {
-            config.save(new File(folder, identifier + ".yml"));
-        } catch (IOException e) {
-            DebugLogger.debug(e);
-        }
-    }
-
     @Override
     public synchronized void removeMachineData(String identifier) {
+        MachineData machineData = machineDataMap.get(identifier);
+        if (machineData != null) {
+            MachineDataRemoveEvent event = new MachineDataRemoveEvent(machineData.getMachine(), identifier, machineData);
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+        }
+
         File file = new File(folder, identifier + ".yml");
         if (file.exists()) file.delete();
         machineDataMap.remove(identifier);
         machineDataUpdatableMap.remove(identifier);
-        chunkMachineMap.getOrDefault(identifier, Collections.emptySet()).clear();
+        chunkMachineMap.getOrDefault(identifier, Collections.emptySet()).remove(identifier);
     }
 
     private synchronized void loadLoadedChunks(Plugin plugin) {
@@ -172,7 +174,20 @@ public class SimpleMachineDataService implements MachineDataService, Listener {
         DebugLogger.debug("unload chunk: %s", chunkId);
         chunkMachineMap.getOrDefault(chunkId, Collections.emptySet()).forEach(identifier -> {
             DebugLogger.debug("unload machine data: %s", identifier);
-            saveMachineData(identifier);
+            MachineData machineData = machineDataMap.get(identifier);
+            if (machineData == null) return;
+            YamlConfiguration config = new YamlConfiguration();
+
+            MachineDataUnloadEvent unloadEvent = new MachineDataUnloadEvent(machineData.getMachine(), machineData.getIdentifier(), machineData, config, chunkId);
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(unloadEvent);
+            if (unloadEvent.isCancelled()) return;
+
+            machineData.store(config);
+            try {
+                config.save(new File(folder, identifier + ".yml"));
+            } catch (IOException e) {
+                DebugLogger.debug(e);
+            }
             machineDataMap.remove(identifier);
             machineDataUpdatableMap.remove(identifier);
         });
