@@ -9,18 +9,31 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.SimpleMachi
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.MachineListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.MultiBlockListener;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.RecipeListener;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.DurabilityLore;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.NotConsumableInputLore;
 
 public class MultiBlockCraftExtension extends Extension {
     private static MultiBlockCraftExtension instance;
 
     private MachineService machineService;
     private MachineLoreTag machineLoreTag;
+    private DurabilityLore durabilityLore;
+    private NotConsumableInputLore notConsumableInputLore;
 
     @Override
     public void onEnable() {
         instance = this;
         machineLoreTag = new MachineLoreTag();
+        durabilityLore = new DurabilityLore();
+        notConsumableInputLore = new NotConsumableInputLore();
         getApi().getItemService().registerItemTag(machineLoreTag);
+        getApi().getItemService().registerItemTag(durabilityLore);
+        getApi().getItemService().registerItemTag(notConsumableInputLore);
+        getPlugin().getServer().getPluginManager().registerEvents(new RecipeListener(
+                durabilityLore, notConsumableInputLore
+        ), getPlugin());
+
         getApi().getExtensionService().registerTask(new ExtensionTask() {
             @Override
             public String getId() {
