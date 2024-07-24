@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.FinishedCraftEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.OpenMachineGuiEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.SimpleCraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
@@ -141,7 +142,12 @@ public class SimpleCraftTable extends SimpleMachine {
             }
 
             int idx = 0, size = outputSlots.size();
-            for (ItemStack output : recipe.getOutputs()) {
+
+            // call finished craft event
+            FinishedCraftEvent finishedCraftEvent = new FinishedCraftEvent(this, holder.getIdentifier(), holder.getMachineData(), recipe, recipe.getOutputs());
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(finishedCraftEvent);
+
+            for (ItemStack output : finishedCraftEvent.getOutputs()) {
                 if (idx == size) break;
                 if (output != null) {
                     output = output.clone();

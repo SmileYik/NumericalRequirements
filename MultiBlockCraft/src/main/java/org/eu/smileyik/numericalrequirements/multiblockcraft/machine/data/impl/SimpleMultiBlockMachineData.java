@@ -14,6 +14,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExte
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MultiBlockMachine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineDataUpdatable;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.FinishedCraftEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.MachineListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.MultiBlockFace;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.MultiBlockStructureMainBlock;
@@ -167,9 +168,14 @@ public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
             if (getRemainingTime() <= 0) {
                 Recipe recipe = getRecipe();
                 recipeId = null;
+
+                // call finished craft event
+                FinishedCraftEvent event = new FinishedCraftEvent(true, getMachine(), getIdentifier(), this, recipe, recipe.getOutputs());
+                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+
                 MachineListener.CONTAINER_LOCK.writeLock().lock();
                 try {
-                    for (ItemStack output : recipe.getOutputs()) {
+                    for (ItemStack output : event.getOutputs()) {
                         output = output.clone();
                         for (Container container : outputs) {
                             for (Map.Entry<Integer, ItemStack> entry : container.getInventory().addItem(output).entrySet()) {

@@ -2,8 +2,10 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineDataUpdatable;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.FinishedCraftEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.TimeRecipe;
 
@@ -80,10 +82,16 @@ public class SimpleUpdatableMachineData extends SimpleStorableMachineData implem
         if (recipeId != null) {
             if (getRemainingTime() <= 0) {
                 List<Integer> outputSlots = getMachine().getOutputSlots();
+                Recipe recipe = getRecipe();
+
+                // call finished craft event
+                FinishedCraftEvent event = new FinishedCraftEvent(true, getMachine(), getIdentifier(), this, recipe, recipe.getOutputs());
+                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+
                 lock.writeLock().lock();
                 try {
                     Map<ItemStack, Integer> itemStackIntegerMap = buildItemAmountMap(outputSlots);
-                    for (ItemStack output : getRecipe().getOutputs()) {
+                    for (ItemStack output : event.getOutputs()) {
                         if (output == null) continue;
                         int amount = output.getAmount();
                         ItemStack clone = output.clone();
@@ -95,9 +103,8 @@ public class SimpleUpdatableMachineData extends SimpleStorableMachineData implem
                     lock.writeLock().unlock();
                 }
                 recipeId = null;
-            } else {
-                return false;
             }
+            return true;
         }
 
         if (!isEnable()) return false;
