@@ -4,8 +4,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.event.RecipeTakeItemEvent;
 
 import java.util.*;
 
@@ -91,6 +93,15 @@ public abstract class SimpleAbstractRecipe implements Recipe {
         for (ItemStack item : inputs) {
             if (inputAmountMap.isEmpty()) break;
             if (item == null) continue;
+
+            // call recipe take item event
+            RecipeTakeItemEvent event = new RecipeTakeItemEvent(
+                    !MultiBlockCraftExtension.getInstance().getPlugin().getServer().isPrimaryThread(),
+                    this, item
+            );
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) continue;
+
             ItemStack clone = item.clone();
             clone.setAmount(1);
             Integer needAmount = inputAmountMap.getOrDefault(clone, 0);

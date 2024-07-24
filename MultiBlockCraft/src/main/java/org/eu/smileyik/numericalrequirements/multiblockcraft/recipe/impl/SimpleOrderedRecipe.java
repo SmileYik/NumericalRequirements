@@ -2,8 +2,10 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl;
 
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.OrderedRecipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.event.RecipeTakeItemEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.util.HexUtil;
 
 import java.util.Arrays;
@@ -66,6 +68,15 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
     public void takeInputs(ItemStack[] inputs) {
         for (int i = this.rawInputs.length - 1; i >= 0; i--) {
             if (inputs[i] == null) continue;
+
+            // call recipe take item event
+            RecipeTakeItemEvent event = new RecipeTakeItemEvent(
+                    !MultiBlockCraftExtension.getInstance().getPlugin().getServer().isPrimaryThread(),
+                    this, inputs[i]
+            );
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) continue;
+
             inputs[i].setAmount(inputs[i].getAmount() - this.rawInputs[i].getAmount());
         }
     }
