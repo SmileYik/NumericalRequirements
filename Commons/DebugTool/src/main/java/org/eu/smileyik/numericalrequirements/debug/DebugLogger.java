@@ -38,6 +38,7 @@ public class DebugLogger implements Closeable {
     }
 
     public static void debug(Throwable obj) {
+        if (instance == null) return;
         try(StringWriter stringWriter = new StringWriter();) {
             obj.printStackTrace(new PrintWriter(stringWriter));
             stringWriter.flush();
@@ -49,18 +50,17 @@ public class DebugLogger implements Closeable {
     }
 
     public static void debug(Object obj) {
+        if (instance == null) return;
         debug(Thread.currentThread().getStackTrace()[2],"%s", Objects.toString(obj));
     }
 
     public static void debug(String message, Object... args) {
+        if (instance == null) return;
         debug(Thread.currentThread().getStackTrace()[2], message, args);
     }
 
     public static void debug(StackTraceElement element, String message, Object... args) {
-        if (instance == null) {
-            return;
-        }
-
+        if (instance == null) return;
         try {
             String format = String.format(message, args);
             String method = String.format(
