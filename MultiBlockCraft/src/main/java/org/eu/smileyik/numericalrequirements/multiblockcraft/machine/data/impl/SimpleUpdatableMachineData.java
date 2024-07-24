@@ -6,6 +6,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExte
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineDataUpdatable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.FinishedCraftEvent;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.MachineCraftingEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.TimeRecipe;
 
@@ -103,6 +104,11 @@ public class SimpleUpdatableMachineData extends SimpleStorableMachineData implem
                     lock.writeLock().unlock();
                 }
                 recipeId = null;
+            } else {
+                // call machine crafting event
+                MachineCraftingEvent event = new MachineCraftingEvent(true, machine, identifier, this);
+                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+                if (event.isCancelled()) recipeId = null;
             }
             return true;
         }

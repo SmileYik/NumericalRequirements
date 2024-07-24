@@ -15,6 +15,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MultiBlockMachine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineDataUpdatable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.FinishedCraftEvent;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.MachineCraftingEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.MachineListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.MultiBlockFace;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure.MultiBlockStructureMainBlock;
@@ -170,7 +171,7 @@ public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
                 recipeId = null;
 
                 // call finished craft event
-                FinishedCraftEvent event = new FinishedCraftEvent(true, getMachine(), getIdentifier(), this, recipe, recipe.getOutputs());
+                FinishedCraftEvent event = new FinishedCraftEvent(true, machine, identifier, this, recipe, recipe.getOutputs());
                 MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
 
                 MachineListener.CONTAINER_LOCK.writeLock().lock();
@@ -186,6 +187,11 @@ public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
                 } finally {
                     MachineListener.CONTAINER_LOCK.writeLock().unlock();
                 }
+            } else {
+                // call machine crafting event
+                MachineCraftingEvent event = new MachineCraftingEvent(true, machine, identifier, this);
+                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+                if (event.isCancelled()) recipeId = null;
             }
             return true;
         }
