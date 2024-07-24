@@ -121,13 +121,7 @@ public class MachineListener implements Listener {
         if (block.hasMetadata(MULTI_BLOCK_MACHINE_CONTAINER_KEY)) {
             CONTAINER_LOCK.writeLock().lock();
             MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
-                    MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
-                        try {
-
-                        } finally {
-                            CONTAINER_LOCK.writeLock().unlock();
-                        }
-                    }
+                    MultiBlockCraftExtension.getInstance().getPlugin(), () -> CONTAINER_LOCK.writeLock().unlock()
             );
         }
     }
