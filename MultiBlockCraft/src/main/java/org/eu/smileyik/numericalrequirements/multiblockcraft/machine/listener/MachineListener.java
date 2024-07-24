@@ -58,6 +58,7 @@ public class MachineListener implements Listener {
     public void onBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
         String machineId = machineService.delMachineMetadata(block, "machine");
+        machineService.getMachineDataService().removeMachineData(Machine.getIdentifier(block.getLocation()));
 
         if (machineId == null) return;
         Machine machine = MultiBlockCraftExtension.getInstance().getMachineService().getMachine(machineId);
