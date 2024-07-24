@@ -96,16 +96,20 @@ public abstract class SimpleAbstractRecipe implements Recipe {
     @Override
     public void takeInputs(ItemStack[] inputs) {
         Map<ItemStack, Integer> inputAmountMap = new HashMap<>(this.inputAmountMap);
-        for (ItemStack item : inputs) {
+        long id = RecipeTakeItemEvent.nextId();
+        int size = inputs.length - 1;
+        for (int i = 0; i <= size; i++) {
+            ItemStack item = inputs[i];
             if (inputAmountMap.isEmpty()) break;
             if (item == null) continue;
 
             // call recipe take item event
             RecipeTakeItemEvent event = new RecipeTakeItemEvent(
                     !MultiBlockCraftExtension.getInstance().getPlugin().getServer().isPrimaryThread(),
-                    this, item
+                    this, id, i, i, size, item
             );
             MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+            inputs[i] = event.getItem();
             if (event.isCancelled()) continue;
 
             ItemStack clone = item.clone();

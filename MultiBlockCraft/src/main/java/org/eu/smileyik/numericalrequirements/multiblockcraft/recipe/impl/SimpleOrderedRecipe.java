@@ -66,15 +66,18 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
 
     @Override
     public void takeInputs(ItemStack[] inputs) {
-        for (int i = this.rawInputs.length - 1; i >= 0; i--) {
+        long id = RecipeTakeItemEvent.nextId();
+        int size = this.rawInputs.length - 1;
+        for (int i = size; i >= 0; i--) {
             if (inputs[i] == null) continue;
 
             // call recipe take item event
             RecipeTakeItemEvent event = new RecipeTakeItemEvent(
                     !MultiBlockCraftExtension.getInstance().getPlugin().getServer().isPrimaryThread(),
-                    this, inputs[i]
+                    this, id, i, size - i, size, inputs[i]
             );
             MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+            inputs[i] = event.getItem();
             if (event.isCancelled()) continue;
 
             inputs[i].setAmount(inputs[i].getAmount() - this.rawInputs[i].getAmount());
