@@ -95,21 +95,12 @@ public class MachineListener implements Listener {
         }
 
         Location location = inv.getLocation();
-        if (event.getRawSlot() > event.getView().getTopInventory().getSize()) {
-            return;
-        }
         if (location == null) return;
         Block block = location.getBlock();
         if (block.hasMetadata(MULTI_BLOCK_MACHINE_CONTAINER_KEY)) {
             CONTAINER_LOCK.writeLock().lock();
             MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
-                    MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
-                        try {
-
-                        } finally {
-                            CONTAINER_LOCK.writeLock().unlock();
-                        }
-                    }
+                    MultiBlockCraftExtension.getInstance().getPlugin(), () -> CONTAINER_LOCK.writeLock().unlock()
             );
         }
     }

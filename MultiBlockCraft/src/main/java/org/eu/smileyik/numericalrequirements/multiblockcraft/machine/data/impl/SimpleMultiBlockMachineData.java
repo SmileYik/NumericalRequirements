@@ -22,6 +22,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.TimeRecipe;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
     private static final BlockFace[] FACES = new BlockFace[] {
@@ -137,41 +138,48 @@ public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
     }
 
     @Override
-    public boolean update() {
+    public synchronized boolean update() {
+        try {
+            return doUpdate();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public boolean doUpdate() throws ExecutionException, InterruptedException {
         if (!initialized) initialize();
         long currentTimeMillis = System.currentTimeMillis();
 
         if (currentTimeMillis > nextCheckTimestamp) {
             nextCheckTimestamp = currentTimeMillis + machine.getCheckPeriod();
             checkStructure();
-            if (!isValid()) {
-                recipeId = null;
-                return true;
-            }
+        }
+
+        if (!isValid()) {
+            recipeId = null;
+            return true;
         }
 
         if (recipeId != null) {
             if (getRemainingTime() <= 0) {
                 Recipe recipe = getRecipe();
                 recipeId = null;
-                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
-                        MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
-                            MachineListener.CONTAINER_LOCK.writeLock().lock();
-                            try {
-                                for (ItemStack output : recipe.getOutputs()) {
-                                    output = output.clone();
-                                    for (Container container : outputs) {
-                                        for (Map.Entry<Integer, ItemStack> entry : container.getInventory().addItem(output).entrySet()) {
-                                            output = entry.getValue().clone();
-                                            container.update(true, true);
-                                        }
-                                    }
-                                }
-                            } finally {
-                                MachineListener.CONTAINER_LOCK.writeLock().unlock();
+                MachineListener.CONTAINER_LOCK.writeLock().lock();
+                try {
+                    for (ItemStack output : recipe.getOutputs()) {
+                        output = output.clone();
+                        for (Container container : outputs) {
+                            for (Map.Entry<Integer, ItemStack> entry : container.getInventory().addItem(output).entrySet()) {
+                                output = entry.getValue().clone();
                             }
                         }
-                );
+                    }
+                } finally {
+                    MachineListener.CONTAINER_LOCK.writeLock().unlock();
+                }
             }
             return true;
         }
@@ -180,25 +188,21 @@ public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
         if (currentTimeMillis > nextCheckRecipeTimestamp) {
             nextCheckRecipeTimestamp = currentTimeMillis + (machine.getCheckPeriod() >>> 2);
             for (Container container : inputs) {
-                Inventory inv = container.getInventory();
-                ItemStack[] contents = inv.getContents();
-                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
-                        MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
-                            MachineListener.CONTAINER_LOCK.writeLock().lock();
-                            try {
-                                Recipe recipe = machine.findRecipe(contents);
-                                if (recipe != null) {
-                                    DebugLogger.debug("%s find recipe: %s", identifier, recipe.getId());
-                                    recipe.takeInputs(contents);
-                                    container.update(true, true);
-                                    recipeId = recipe.getId();
-                                    finishedTimestamp = System.currentTimeMillis() + (recipe instanceof TimeRecipe ? (long) (((TimeRecipe) recipe).getTime() * 1000) : 0L);
-                                }
-                            } finally {
-                                MachineListener.CONTAINER_LOCK.writeLock().unlock();
-                            }
-                        }
-                );
+                MachineListener.CONTAINER_LOCK.writeLock().lock();
+                try {
+                    Inventory inv = container.getInventory();
+                    ItemStack[] contents = inv.getContents();
+                    Recipe recipe = machine.findRecipe(contents);
+                    if (recipe != null) {
+                        DebugLogger.debug("%s find recipe: %s", identifier, recipe.getId());
+                        recipe.takeInputs(contents);
+                        recipeId = recipe.getId();
+                        finishedTimestamp = System.currentTimeMillis() + (recipe instanceof TimeRecipe ? (long) (((TimeRecipe) recipe).getTime() * 1000) : 0L);
+                        return true;
+                    }
+                } finally {
+                    MachineListener.CONTAINER_LOCK.writeLock().unlock();
+                }
             }
         }
         return true;
@@ -231,7 +235,7 @@ public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
         return face;
     }
 
-    protected void checkStructure() {
+    protected void checkStructure() throws ExecutionException, InterruptedException {
         StructureMainBlock structure = machine.getStructure();
         Block mainBlock = getLocation().getBlock();
         for (MultiBlockFace multiBlockFace : MultiBlockFace.getByFace(face)) {
@@ -245,60 +249,61 @@ public class SimpleMultiBlockMachineData implements MachineDataUpdatable {
                 inputs.clear();
                 outputs.clear();
                 for (MultiBlockStructureMainBlock.Node node : structure.getInputPath()) {
-                    MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
-                            MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
-                                MachineListener.CONTAINER_LOCK.writeLock().lock();
-                                try {
-                                    BlockState blockState = structure.getBlock(node, mainBlock, ways).getState();
-                                    if (blockState instanceof Container) {
-                                        inputs.add((Container) blockState);
-                                        oldInputs.remove(blockState);
-                                        blockState.setMetadata(MachineListener.MULTI_BLOCK_MACHINE_CONTAINER_KEY, new FixedMetadataValue(
-                                                MultiBlockCraftExtension.getInstance().getPlugin(), blockState
-                                        ));
-                                    }
-                                } finally {
-                                    MachineListener.CONTAINER_LOCK.writeLock().unlock();
-                                }
+                    Container container = syncCall(() -> {
+                        MachineListener.CONTAINER_LOCK.writeLock().lock();
+                        try {
+                            BlockState blockState = structure.getBlock(node, mainBlock, ways).getState();
+                            if (blockState instanceof Container) {
+                                return (Container) blockState;
                             }
-                    );
-
+                        } finally {
+                            MachineListener.CONTAINER_LOCK.writeLock().unlock();
+                        }
+                        return null;
+                    }).get();
+                    if (container != null) {
+                        inputs.add(container);
+                        if (!oldInputs.remove(container)) {
+                            container.setMetadata(MachineListener.MULTI_BLOCK_MACHINE_CONTAINER_KEY, new FixedMetadataValue(
+                                    MultiBlockCraftExtension.getInstance().getPlugin(), ""
+                            ));
+                        }
+                    }
                 }
                 for (MultiBlockStructureMainBlock.Node node : structure.getOutputPath()) {
-                    MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
-                            MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
-                                MachineListener.CONTAINER_LOCK.writeLock().lock();
-                                try {
-                                    BlockState blockState = structure.getBlock(node, mainBlock, ways).getState();
-                                    if (blockState instanceof Container) {
-                                        outputs.add((Container) blockState);
-                                        oldOutputs.remove(blockState);
-                                        blockState.setMetadata(MachineListener.MULTI_BLOCK_MACHINE_CONTAINER_KEY, new FixedMetadataValue(
-                                                MultiBlockCraftExtension.getInstance().getPlugin(), blockState
-                                        ));
-                                    }
-                                } finally {
-                                    MachineListener.CONTAINER_LOCK.writeLock().unlock();
-                                }
+                    Container container = syncCall(() -> {
+                        MachineListener.CONTAINER_LOCK.writeLock().lock();
+                        try {
+                            BlockState blockState = structure.getBlock(node, mainBlock, ways).getState();
+                            if (blockState instanceof Container) {
+                                return ((Container) blockState);
                             }
-                    );
+                        } finally {
+                            MachineListener.CONTAINER_LOCK.writeLock().unlock();
+                        }
+                        return null;
+                    }).get();
+                    if (container != null) {
+                        outputs.add(container);
+                        if (!oldOutputs.remove(container)) {
+                            container.setMetadata(MachineListener.MULTI_BLOCK_MACHINE_CONTAINER_KEY, new FixedMetadataValue(
+                                    MultiBlockCraftExtension.getInstance().getPlugin(), ""
+                            ));
+                        }
+                    }
                 }
 
-                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTaskLater(
-                        MultiBlockCraftExtension.getInstance().getPlugin(), () -> {
-                            MachineListener.CONTAINER_LOCK.writeLock().lock();
-                            try {
-                                for (Container old : oldInputs) {
-                                    old.removeMetadata(MachineListener.MULTI_BLOCK_MACHINE_CONTAINER_KEY, MultiBlockCraftExtension.getInstance().getPlugin());
-                                }
-                                for (Container old : oldOutputs) {
-                                    old.removeMetadata(MachineListener.MULTI_BLOCK_MACHINE_CONTAINER_KEY, MultiBlockCraftExtension.getInstance().getPlugin());
-                                }
-                            } finally {
-                                MachineListener.CONTAINER_LOCK.writeLock().unlock();
-                            }
-                        }, 2L
-                );
+                MachineListener.CONTAINER_LOCK.writeLock().lock();
+                try {
+                    for (Container old : oldInputs) {
+                        old.removeMetadata(MachineListener.MULTI_BLOCK_MACHINE_CONTAINER_KEY, MultiBlockCraftExtension.getInstance().getPlugin());
+                    }
+                    for (Container old : oldOutputs) {
+                        old.removeMetadata(MachineListener.MULTI_BLOCK_MACHINE_CONTAINER_KEY, MultiBlockCraftExtension.getInstance().getPlugin());
+                    }
+                } finally {
+                    MachineListener.CONTAINER_LOCK.writeLock().unlock();
+                }
                 return;
             }
         }

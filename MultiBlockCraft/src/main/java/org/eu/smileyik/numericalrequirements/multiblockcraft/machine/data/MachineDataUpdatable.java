@@ -1,8 +1,13 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data;
 
+import org.bukkit.scheduler.BukkitTask;
 import org.eu.smileyik.numericalrequirements.core.api.Updatable;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.TimeRecipe;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public interface MachineDataUpdatable extends MachineData, Updatable {
     /**
@@ -57,5 +62,17 @@ public interface MachineDataUpdatable extends MachineData, Updatable {
      */
     default double getTotalTime() {
         return getRecipe() == null ? 0 : getTimeRecipe().getTime();
+    }
+
+    default <T> Future<T> syncCall(Callable<T> callable) {
+        return MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().callSyncMethod(
+                MultiBlockCraftExtension.getInstance().getPlugin(), callable
+        );
+    }
+
+    default BukkitTask runSync(Runnable runnable) {
+        return MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
+                MultiBlockCraftExtension.getInstance().getPlugin(), runnable
+        );
     }
 }
