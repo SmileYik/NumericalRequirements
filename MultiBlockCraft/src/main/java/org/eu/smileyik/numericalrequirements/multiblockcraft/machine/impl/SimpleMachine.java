@@ -5,7 +5,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineData;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.FindRecipeEvent;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.PreFindRecipeEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.item.InvItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.item.ItemButton;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.OrderedRecipe;
@@ -51,13 +54,23 @@ public abstract class SimpleMachine extends YamlMachine {
 
     @Override
     public Recipe findRecipe(ItemStack[] inputs) {
+        {
+            PreFindRecipeEvent event = new PreFindRecipeEvent(this, inputs);
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+            if (event.getRecipe() != null) {
+                return event.getRecipe();
+            }
+        }
+
         if (!shapeRecipes.isEmpty()) {
             Pair<Byte[], ItemStack[]> pair = OrderedRecipe.spawnShape(inputs);
             Set<String> set = shapeRecipes.getOrDefault(HexUtil.bytesToHex(pair.getFirst()), Collections.emptySet());
             for (String id : set) {
                 Recipe recipe = recipes.get(id);
                 if (((OrderedRecipe) recipe).isMatch(pair)) {
-                    return recipe;
+                    FindRecipeEvent event = new FindRecipeEvent(this, recipe);
+                    MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+                    if (!event.isCancelled()) return recipe;
                 }
             }
         }
@@ -65,7 +78,9 @@ public abstract class SimpleMachine extends YamlMachine {
         for (String id : normalRecipes) {
             Recipe recipe = recipes.get(id);
             if (recipe.isMatch(inputs)) {
-                return recipe;
+                FindRecipeEvent event = new FindRecipeEvent(this, recipe);
+                MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+                if (!event.isCancelled()) return recipe;
             }
         }
         return null;
