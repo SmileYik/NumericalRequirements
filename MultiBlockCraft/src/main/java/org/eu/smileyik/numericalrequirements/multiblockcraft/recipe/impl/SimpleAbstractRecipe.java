@@ -8,6 +8,7 @@ import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.event.RecipeFormatItemEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.event.RecipeTakeItemEvent;
 
 import java.util.*;
@@ -138,14 +139,23 @@ public abstract class SimpleAbstractRecipe implements Recipe {
     }
 
     protected Map<ItemStack, Integer> mapItemAmount(ItemStack[] inputs) {
+        final long eventId = RecipeFormatItemEvent.nextId();
+
         Map<ItemStack, Integer> map = new HashMap<>();
-        for (ItemStack item : inputs) {
+        int size = inputs.length - 1;
+        for (int i = 0; i <= size; i++) {
+            ItemStack item = inputs[i];
             if (item == null) continue;
+            item = item.clone();
+
+            // call recipe format item event
+            RecipeFormatItemEvent event = new RecipeFormatItemEvent(this, eventId, i, i, size, item);
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+            item = event.getItem();
+            if (item == null) continue;
+
             int amount = item.getAmount();
-            if (amount != 1) {
-                item = item.clone();
-                item.setAmount(1);
-            }
+            if (amount != 1) item.setAmount(1);
 
             map.put(item, map.getOrDefault(item, 0) + amount);
         }

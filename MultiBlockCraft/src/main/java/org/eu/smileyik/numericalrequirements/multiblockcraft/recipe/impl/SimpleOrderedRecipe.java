@@ -34,7 +34,7 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
     public boolean isMatch(ItemStack[] inputs) {
         // 调用此方法前必须判断是否满足形状
         if (inputs == null) return false;
-        ItemStack[] a = OrderedRecipe.spawnShape(inputs).getSecond();
+        ItemStack[] a = OrderedRecipe.spawnShape(this, inputs).getSecond();
         return doIsMatch(a);
     }
 
@@ -87,7 +87,7 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
     private void lazyLoad() {
         if (inputs == null) {
             rawInputs = Arrays.stream(super.rawInputs).map(SimpleItem::getItemStack).toArray(ItemStack[]::new);
-            inputs = OrderedRecipe.spawnShape(rawInputs);
+            inputs = OrderedRecipe.spawnShape(this, rawInputs);
             shapeString = HexUtil.bytesToHex(inputs.getFirst());
             inputAmountMap = mapItemAmount(rawInputs);
         }
