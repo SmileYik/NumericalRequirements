@@ -1,6 +1,7 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
@@ -21,6 +22,7 @@ public abstract class SimpleAbstractRecipe implements Recipe {
     protected ItemStack[] displayedOutput;
 
     protected Map<ItemStack, Integer> inputAmountMap;
+    protected ConfigurationSection attribute;
 
     @Override
     public String getId() {
@@ -52,6 +54,7 @@ public abstract class SimpleAbstractRecipe implements Recipe {
         for (SimpleItem item : rawOutputs) {
             item.store(s.createSection("output-" + idx++));
         }
+        section.set("attribute", attribute);
     }
 
     @Override
@@ -85,6 +88,9 @@ public abstract class SimpleAbstractRecipe implements Recipe {
             itemStack.setItemMeta(itemMeta);
             return itemStack;
         }).toArray(ItemStack[]::new);
+
+        attribute = section.getConfigurationSection("attribute");
+        if (attribute == null) attribute = new YamlConfiguration();
     }
 
     @Override
@@ -120,6 +126,11 @@ public abstract class SimpleAbstractRecipe implements Recipe {
     @Override
     public ItemStack[] getDisplayedOutput() {
         return displayedOutput;
+    }
+
+    @Override
+    public ConfigurationSection getAttribute() {
+        return attribute;
     }
 
     protected Map<ItemStack, Integer> mapItemAmount(ItemStack[] inputs) {
