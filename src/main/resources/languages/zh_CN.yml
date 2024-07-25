@@ -169,6 +169,32 @@ extension:
     tag:
       name: "口渴值"
       description: "带有此标签的物品将会能够被消耗，并且能够影响口渴值"
+  multi-block-craft:
+    task:
+      create-recipe:
+        name: "创建配方"
+        description: "创建配方"
+        not-player: "只有玩家才能运行此指令"
+        not-valid-args: "给予的参数不正确"
+        not-valid-machine-id: "不存在ID为 {0} 的机器"
+    recipe-creator:
+      title: "{0}-创建配方-{1}"
+      recipe-head: "# 以下配置可能不为完整的配置，请根据自己的需求对该配方文件进行修改"
+      stop: "&a配方创建流程中断"
+      success: "&a配方创建成功，配方文件存储在 {0}, 你可能需要&a&l重新载入&a才能使该配方生效。"
+      failure: "&c配方创建失败，如果你现在已经启用了Debug模式，则可以在日志中查询当前堆栈信息。"
+      step:
+        help: "&b在任何时候你可以在聊天框中输入‘&9&lhelp&b’以获取当前步骤帮助,‘&9&lexit&b’以中断创建流程"
+        set-id:
+          help: "&b请在聊天框中输入要创建配方的&b&l唯一标识符"
+        set-name:
+          help: "&b请在聊天框中输入要创建配方的&b&l显示名称"
+        choose-recipes:
+          help: "&b请在聊天框中输入要创建的&b&l配方类型&b，目前支持以下配方类型：\n  * &c&lSimpleRecipe&b: 无序配方\n  * &c&lSimpleOrderedRecipe: &b有序配方\n  * &c&lSimpleTimeRecipe: &b无序配方，附带制作时间\n  * &c&lSimpleTimeOrderedRecipe: &b有序配方，附带制作时间\n输入样例： ‘SimpleTimeOrderedRecipe’"
+          not-valid-recipe: "&c你输入的 &c&l{0} &c并不是一个有效的配方类型"
+        set-time:
+          help: "&b请在聊天框中输入要创建配方的&b&l制作时间&b，时间类型为&b&l小数&b，单位为&b&l秒\n&b例如：‘10.5’代表制作该配方需要10.5秒得到产物。"
+          not-valid-time: "&c需要注意的是 &c&l{0} &c并不是一个有效的小数类型"
 effect:
   bounded:
     normal-name: "{0}边界"

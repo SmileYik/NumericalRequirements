@@ -1,9 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
-import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionTask;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.SimpleMachineService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.MachineListener;
@@ -12,6 +9,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.MultiBlo
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.RecipeListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.DurabilityLore;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.NotConsumableInputLore;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.task.CreateRecipeTask;
 
 public class MultiBlockCraftExtension extends Extension {
     private static MultiBlockCraftExtension instance;
@@ -33,33 +31,9 @@ public class MultiBlockCraftExtension extends Extension {
         getPlugin().getServer().getPluginManager().registerEvents(new RecipeListener(
                 durabilityLore, notConsumableInputLore
         ), getPlugin());
-
-        getApi().getExtensionService().registerTask(new ExtensionTask() {
-            @Override
-            public String getId() {
-                return "create-recipe";
-            }
-
-            @Override
-            public String getName() {
-                return "create-recipe";
-            }
-
-            @Override
-            public String getDescription() {
-                return "create-simple-craft-recipe";
-            }
-
-            @Override
-            public Extension getExtension() {
-                return instance;
-            }
-
-            @Override
-            public void run(CommandSender sender, String[] args) {
-                machineService.getMachine(args[0]).createRecipe((Player) sender);
-            }
-        });
+        CreateRecipeTask createRecipeTask = new CreateRecipeTask();
+        getApi().getExtensionService().registerTask(createRecipeTask);
+        getApi().getCommandService().registerTabSuggest(createRecipeTask);
 
         machineService = new SimpleMachineService(this);
         getPlugin().getServer().getPluginManager().registerEvents(new MachineListener(machineLoreTag), getPlugin());

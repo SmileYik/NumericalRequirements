@@ -10,6 +10,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -29,7 +30,7 @@ public class SimpleMachineService implements MachineService {
         File dataFolder = extension.getDataFolder();
         machineBlockMetadataFilePath = new File(dataFolder, "machine-metadata.yml").toString();
         loadMachineBlockMetadata(machineBlockMetadataFilePath);
-        loadMachines(dataFolder);
+        loadMachines(new File(dataFolder, "machines"));
 
         machineDataService = new SimpleMachineDataService(extension, this);
     }
@@ -82,9 +83,16 @@ public class SimpleMachineService implements MachineService {
     }
 
     @Override
+    public Collection<String> getMachineIds() {
+        return machines.keySet();
+    }
+
+    @Override
     public File createRecipe(String machineId, Recipe recipe) {
         File file = machinesFiles.get(machineId);
-        file = new File(new File(file, "recipes"), recipe.getId() + ".yml");
+        File recipesDir = new File(file, "recipes");
+        if (!recipesDir.exists()) recipesDir.mkdirs();
+        file = new File(recipesDir, recipe.getId() + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         recipe.store(config);
         try {
@@ -117,7 +125,7 @@ public class SimpleMachineService implements MachineService {
         machineBlockMetadataMapLock.writeLock().lock();
         try {
             config.getKeys(false).forEach(key -> {
-                    ConfigurationSection section = config.getConfigurationSection(key);
+                ConfigurationSection section = config.getConfigurationSection(key);
                 section.getKeys(false).forEach(it -> {
                     machineBlockMetadataMap.putIfAbsent(key, new HashMap<>());
                     machineBlockMetadataMap.get(key).put(it, section.getString(it));

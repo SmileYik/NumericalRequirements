@@ -5,6 +5,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.Simple
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.io.File;
+import java.util.Collection;
 
 public interface MachineService {
     void setMachineMetadata(Block block, String key, String value);
@@ -14,6 +15,8 @@ public interface MachineService {
     String getMachineMetadata(Block block, String key);
 
     Machine getMachine(String id);
+
+    Collection<String> getMachineIds();
 
     File createRecipe(String machineId, Recipe recipe);
 
