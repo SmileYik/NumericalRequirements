@@ -19,13 +19,13 @@ public class FinishedCraftEvent extends MachineDataEvent {
     public FinishedCraftEvent(Machine machine, String identifier, MachineData machineData, Recipe recipe, Collection<ItemStack> outputs) {
         super(machine, identifier, machineData);
         this.recipe = recipe;
-        this.outputs = outputs.stream().map(ItemStack::clone).collect(Collectors.toList());
+        this.outputs = outputs.stream().map(it -> it == null ? null : it.clone()).collect(Collectors.toList());
     }
 
     public FinishedCraftEvent(boolean isAsync, Machine machine, String identifier, MachineData machineData, Recipe recipe, Collection<ItemStack> outputs) {
         super(isAsync, machine, identifier, machineData);
         this.recipe = recipe;
-        this.outputs = outputs.stream().map(ItemStack::clone).collect(Collectors.toList());
+        this.outputs = outputs.stream().map(it -> it == null ? null : it.clone()).collect(Collectors.toList());
     }
 
     /**
