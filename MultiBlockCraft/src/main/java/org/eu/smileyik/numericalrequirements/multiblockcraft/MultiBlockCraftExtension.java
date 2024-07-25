@@ -5,7 +5,6 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineServ
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.SimpleMachineService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.MachineListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.MultiBlockListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.RecipeListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.DurabilityLore;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.NotConsumableInputLore;
@@ -41,7 +40,6 @@ public class MultiBlockCraftExtension extends Extension {
 
         machineService = new SimpleMachineService(this);
         getPlugin().getServer().getPluginManager().registerEvents(new MachineListener(machineLoreTag), getPlugin());
-        getPlugin().getServer().getPluginManager().registerEvents(new MultiBlockListener(), getPlugin());
     }
 
     @Override
