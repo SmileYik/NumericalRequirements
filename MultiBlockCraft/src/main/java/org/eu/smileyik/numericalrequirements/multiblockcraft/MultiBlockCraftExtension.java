@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft;
 
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.extension.Extension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.SimpleMachineService;
@@ -43,6 +44,13 @@ public class MultiBlockCraftExtension extends Extension {
 
         machineService = new SimpleMachineService(this);
         getPlugin().getServer().getPluginManager().registerEvents(new MachineListener(machineLoreTag, machineNBTTag), getPlugin());
+        getPlugin().getServer().getScheduler().runTaskLaterAsynchronously(
+                getPlugin(), () -> {
+                    machineService.load();
+                    I18N.info("multi-block-craft.machine-service-enabled");
+                }, 60
+        );
+        I18N.info("multi-block-craft.enable");
     }
 
     @Override

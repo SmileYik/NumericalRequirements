@@ -22,17 +22,21 @@ public class SimpleMachineService implements MachineService {
 
     private final ReentrantReadWriteLock machineBlockMetadataMapLock = new ReentrantReadWriteLock();
     private final Map<String, Map<String, String>> machineBlockMetadataMap = new HashMap<>();
-    private final String machineBlockMetadataFilePath;
 
-    private final SimpleMachineDataService machineDataService;
+    private String machineBlockMetadataFilePath;
+    private SimpleMachineDataService machineDataService;
 
     public SimpleMachineService(MultiBlockCraftExtension extension) {
-        File dataFolder = extension.getDataFolder();
+
+    }
+
+    @Override
+    public void load() {
+        File dataFolder = MultiBlockCraftExtension.getInstance().getDataFolder();
+        loadMachines(new File(dataFolder, "machines"));
         machineBlockMetadataFilePath = new File(dataFolder, "machine-metadata.yml").toString();
         loadMachineBlockMetadata(machineBlockMetadataFilePath);
-        loadMachines(new File(dataFolder, "machines"));
-
-        machineDataService = new SimpleMachineDataService(extension, this);
+        machineDataService = new SimpleMachineDataService(MultiBlockCraftExtension.getInstance(), this);
     }
 
     @Override

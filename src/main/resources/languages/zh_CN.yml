@@ -111,6 +111,9 @@ log:
     lua-effect:
       enabled: "Lua 脚本效果拓展加载完毕！"
       lua-in-minecraft-bukkit-not-enabled: "未找到前置插件: LuaInMinecraftBukkit. 本拓展将被禁用."
+    multi-block-craft:
+      enabled: "多方块机器拓展已加载"
+      machine-service-enabled: "多方块机器服务已启用"
   warning:
     language-not-fount: "没有找到有关 [{0}] 地域的语言文件！"
     failed-create-directors: "创建文件夹失败！"

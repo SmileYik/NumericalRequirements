@@ -8,6 +8,8 @@ import java.io.File;
 import java.util.Collection;
 
 public interface MachineService {
+    void load();
+
     void setMachineMetadata(Block block, String key, String value);
 
     String delMachineMetadata(Block block, String key);
