@@ -9,6 +9,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.MultiBlo
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.RecipeListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.DurabilityLore;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.NotConsumableInputLore;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.task.CreateMachineTask;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.task.CreateRecipeTask;
 
 public class MultiBlockCraftExtension extends Extension {
@@ -34,6 +35,9 @@ public class MultiBlockCraftExtension extends Extension {
         CreateRecipeTask createRecipeTask = new CreateRecipeTask();
         getApi().getExtensionService().registerTask(createRecipeTask);
         getApi().getCommandService().registerTabSuggest(createRecipeTask);
+        CreateMachineTask createMachineTask = new CreateMachineTask();
+        getApi().getExtensionService().registerTask(createMachineTask);
+        getApi().getCommandService().registerTabSuggest(createMachineTask);
 
         machineService = new SimpleMachineService(this);
         getPlugin().getServer().getPluginManager().registerEvents(new MachineListener(machineLoreTag), getPlugin());

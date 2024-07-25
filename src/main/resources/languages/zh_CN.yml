@@ -174,9 +174,53 @@ extension:
       create-recipe:
         name: "创建配方"
         description: "创建配方"
-        not-player: "只有玩家才能运行此指令"
-        not-valid-args: "给予的参数不正确"
-        not-valid-machine-id: "不存在ID为 {0} 的机器"
+        not-player: "&c只有玩家才能运行此指令"
+        not-valid-args: "&c给予的参数不正确"
+        not-valid-machine-id: "&c不存在ID为 &c&l{0} &c的机器"
+      create-machine:
+        name: "创建机器"
+        description: "创建机器"
+        not-player: "&c只有玩家才能运行此指令"
+        not-valid-args: "&c给予的参数不正确"
+        not-number: "&c给予的 &c&l{0} &c参数并不是一个整数。"
+        not-valid-number: "&c给予的整数 &c&l{0} &c不合理！\n 期望的整数需要&c&l大于0&c、&c&l小于等于54&c，并且是&c&l9的倍数&c。"
+        tab-suggest: "[输入库存大小(整数、9的倍  数)]"
+    machine-creator:
+      title: "&5&l创建机器库存页面"
+      input-placeholder-name: "&2&l输入槽位"
+      output-placeholder-name: "&3&l输出槽位"
+      empty-placeholder-name: "&7&l空白槽位"
+      stop: "&a机器创建流程中断"
+      inventory-not-full: "&c机器库存页面中需要&c&l摆满&c物品&c&l才能&c继续下一步操作，创建流程中断。\n&a若你想为机器页面留空，请手动修改配置文件。"
+      success: "&a机器创建成功，你可能需要 &a&l重新加载配置文件 &a来应用这个新机器配置。\n此外，也许你需要对配置文件进一步修改后再继续使用该新机器？"
+      failure: "&c机器创建失败，如果你现在已经启用了Debug模式，则可以在日志中查询当前堆栈信息。"
+      step:
+        help: "\n&b在任何时候你可以在聊天框中输入‘&9&lhelp&b’以获取当前步骤帮助,‘&9&lexit&b’以中断创建流程"
+        set-id:
+          help: "&b请在聊天框中输入要创建的机器的&b&l唯一标识符"
+          display: "&a成功设置唯一标识符为: &a&l{0}"
+        set-name:
+          help: "&b请在聊天框中输入要创建的机器的&b&l显示名称"
+          display: "&a成功设置显示名称为: &a&l{0}"
+        set-title:
+          help: "&b请在聊天框中输入要创建的机器的&b&l库存页面标题"
+          display: "&a成功设置库存页面标题为: &a&l{0}"
+        set-machine-item:
+          help: "&b请手持&b&l设定好的机器物品&b后，在聊天框输入任意字符继续下一步\n&c机器物品将会在机器被拆除时作为掉落物掉落，请确保机器物品设置无误后继续！"
+          not-item-in-hand: "&c你手上没有拿着物品哦"
+          display: "&a成功设置机器物品"
+        set-type:
+          help: "&b设置机器类型，现在有以下几款机器类型可以选择:\n  &c&l* &a&lSimpleCraftTable&b: 普通合成台\n  &c&l* &a&lSimpleStorableCraftTable&b: 普通合成台，可缓存原材料\n  &c&l* &a&lSimpleTimeCraftTable&b: 普通工作台、根据配方设定时间制作物品\n  &c&l* &a&lSimpleMultiBlockMachine&b: 普通多方块机器\n输入样例‘SimpleMultiBlockMachine’"
+          not-valid-type: "&c你输入的 &c&l{0} &c并不是一个有效的机器类型"
+          display: "&a成功设置机器类型为 {0}"
+        set-structure:
+          help: "&a设置多方块结构，请在&a&l近距离&a且&a&l正着面向&a多方块结构的主方块，并&a&l用准星对准多方块结构的主方块&a后，在聊天框中输入任意&a&l‘数字’&a来调整探测距离。设置探测距离完成后，在聊天框中输入&a&l‘ok’&a即可应用。\n&c&l注意&c：  多方块机器需要&5&l浮空&c放置，以保证多方块结构&5&l周围&c都是&5&l空气"
+          not-find-block: "&c在 &c&l{0} &c距离下没有找到合适的方块作为主方块，请重新设定探测距离。"
+          not-find-block-first: "&c未先设定探测距离，请先在聊天框中输入任意&c&l‘数字’&c来调整探测距离。"
+          find-block: "&a在探测距离为 &a&l{0} &a情况下，寻找到方块 &a&l{1}&a。\n&5该方块是主方块吗？ 如果是则请在输入框输入&5&l‘ok’&5以结束该流程。"
+        set-check-period:
+          help: "&a请在聊天框中输入一个&a&l整数&a以设置检测多方块结构是否完整的&a&l时间间隔&a，时间单位为&a&l毫秒"
+          not-valid-time: "&c你输入的 &c&l{0} &c并不是一个合理的时间间隔。"
     recipe-creator:
       title: "{0}-创建配方-{1}"
       recipe-head: "# 以下配置可能不为完整的配置，请根据自己的需求对该配方文件进行修改"

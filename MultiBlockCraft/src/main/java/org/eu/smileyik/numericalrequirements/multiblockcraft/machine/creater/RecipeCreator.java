@@ -95,6 +95,7 @@ public class RecipeCreator implements Listener, Machine {
         Inventory inv = machine.createGui();
         Holder holder = new Holder(this);
         Inventory gui = extension.getPlugin().getServer().createInventory(holder, inv.getSize(), I18N.tr("extension.multi-block-craft.recipe-creator.title", machine.getTitle(), machine.getName()));
+        holder.setInventory(gui);
         gui.setContents(inv.getContents());
         player.openInventory(gui);
     }
