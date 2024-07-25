@@ -90,6 +90,11 @@ public abstract class YamlMachine implements Machine {
     }
 
     @Override
+    public Inventory createGui() {
+        return inventory;
+    }
+
+    @Override
     public List<Integer> getInputSlots() {
         return inputSlots;
     }

@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.item.InvItem;
@@ -25,6 +26,10 @@ public interface Machine {
 
     default void createRecipe(Player player) {
 
+    }
+
+    default Inventory createGui() {
+        return null;
     }
 
     List<Integer> getInputSlots();
