@@ -84,7 +84,7 @@ public interface MySimpleReflect {
             DebugLogger.debug("该反射路径不为集合： %s", path);
             T mySimpleReflect = get(path, forceAccess);
 
-            return mySimpleReflect == null ? new ArrayList<>() : List.of(mySimpleReflect);
+            return mySimpleReflect == null ? new ArrayList<>() : Collections.singletonList(mySimpleReflect);
         }
 
         String prefix = path.substring(0, path.indexOf("{"));
@@ -126,7 +126,7 @@ public interface MySimpleReflect {
         }
     }
 
-    private static List<String> getElements(String collection) {
+    static List<String> getElements(String collection) {
         List<String> elements = null;
         if (collection.contains("}")) {
             int left = 0;
@@ -190,9 +190,9 @@ public interface MySimpleReflect {
         String[] $s = path.split("\\\\$");
         Class<?> targetClass = null;
         if ($s.length != 1) {
-            targetClass = Class.forName($s[0].strip().replace("+", "$"));
+            targetClass = Class.forName($s[0].replace("+", "$"));
             for (int i = 1; i < $s.length; i++) {
-                targetClass = getClassInClass(targetClass, $s[i].strip().replace("+", "$"));
+                targetClass = getClassInClass(targetClass, $s[i].replace("+", "$"));
             }
         } else {
             targetClass = Class.forName(path);

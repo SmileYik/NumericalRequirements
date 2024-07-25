@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'org.eu.smileyik'
-version = 'PREVIEW-SNAPSHOT'
+version = 'PREVIEW-SNAPSHOT-2'
 
 def pluginVersions() {
     [

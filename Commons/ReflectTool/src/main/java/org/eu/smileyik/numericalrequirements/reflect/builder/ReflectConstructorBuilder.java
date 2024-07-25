@@ -55,7 +55,7 @@ public class ReflectConstructorBuilder {
         }
         return String.format(
                 "<%s>(%s)%s", name,
-                sb.isEmpty() ? "" : sb.substring(0, sb.length() - 2),
+                sb.length() == 0 ? "" : sb.substring(0, sb.length() - 2),
                 description == null ? "" : ( " // " + description )
         );
     }

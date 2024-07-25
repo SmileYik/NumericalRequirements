@@ -150,7 +150,7 @@ public class ItemServiceImpl implements Listener, ItemService {
             if (itemTag instanceof NBTTag<?>) {
                 NBTTag<?> nbtTag = (NBTTag<?>) itemTag;
                 Object value = nbtTag.getValue(tagCompound);
-                if (value != null) map.put(itemTag, List.of(value));
+                if (value != null) map.put(itemTag, Arrays.asList(value));
             }
         }
         return map;

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -24,8 +25,8 @@ public class ReflectPathGenerator {
             File file = new File("src/main/resources/reflect-class", String.format("%s.txt", declaredMethod.getName()));
             System.out.println(file.getCanonicalPath());
             Path path = file.toPath();
-            Files.writeString(
-                    path, prettyString,
+            Files.write(
+                    path, prettyString.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE
             );
         }

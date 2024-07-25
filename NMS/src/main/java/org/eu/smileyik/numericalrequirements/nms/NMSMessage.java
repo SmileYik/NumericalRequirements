@@ -21,7 +21,7 @@ public interface NMSMessage {
         }
     }
 
-    private static void sendActionBar_1_7(Player p, String text) {
+    static void sendActionBar_1_7(Player p, String text) {
         CraftPlayer craftPlayer = new CraftPlayer(p);
         craftPlayer.getHandle().playerConnection().sendPacket(
                 PacketPlayOutChat.create(
@@ -31,7 +31,7 @@ public interface NMSMessage {
         );
     }
 
-    private static void sendActionBar_1_12(Player p, String text) {
+    static void sendActionBar_1_12(Player p, String text) {
         CraftPlayer craftPlayer = new CraftPlayer(p);
         craftPlayer.getHandle().playerConnection().sendPacket(
                 PacketPlayOutChat.create(
@@ -41,7 +41,7 @@ public interface NMSMessage {
         );
     }
 
-    private static void sendActionBar_1_16(Player p, String text) {
+    static void sendActionBar_1_16(Player p, String text) {
         CraftPlayer craftPlayer = new CraftPlayer(p);
         craftPlayer.getHandle().playerConnection().sendPacket(
                 PacketPlayOutChat.create(
@@ -52,7 +52,7 @@ public interface NMSMessage {
         );
     }
 
-    private static void sendActionBar_1_19(Player p, String text) {
+    static void sendActionBar_1_19(Player p, String text) {
         CraftPlayer craftPlayer = new CraftPlayer(p);
         craftPlayer.getHandle().playerConnection().sendPacket(
                 ClientboundSystemChatPacket.create(
@@ -62,7 +62,7 @@ public interface NMSMessage {
         );
     }
 
-    private static void sendActionBar_1_20(Player p, String text) {
+    static void sendActionBar_1_20(Player p, String text) {
         CraftPlayer craftPlayer = new CraftPlayer(p);
         craftPlayer.getHandle().playerConnection().sendCommonPacket(
                 ClientboundSystemChatPacket.create(
@@ -89,7 +89,7 @@ public interface NMSMessage {
         }
     }
 
-    private static void sendTitle_1_8(Player p, EnumTitleAction action, String text, int fadeIn, int stay, int fadeOut) {
+    static void sendTitle_1_8(Player p, EnumTitleAction action, String text, int fadeIn, int stay, int fadeOut) {
         new CraftPlayer(p).getHandle().playerConnection().sendPacket(
                 PacketPlayOutTitle.newTitle(
                         action, ChatComponentText.create(text), fadeIn, stay, fadeOut
@@ -97,7 +97,7 @@ public interface NMSMessage {
         );
     }
 
-    private static void sendTitle_1_17(Player p, EnumTitleAction action, String text, int fadeIn, int stay, int fadeOut) {
+    static void sendTitle_1_17(Player p, EnumTitleAction action, String text, int fadeIn, int stay, int fadeOut) {
         if (action == EnumTitleAction.RESET) {
             p.resetTitle();
             return;

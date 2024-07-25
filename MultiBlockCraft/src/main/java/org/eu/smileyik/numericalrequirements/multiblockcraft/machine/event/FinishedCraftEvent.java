@@ -7,6 +7,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 当配方完成制造时触发。 部分机器的MachineData可能为null。
@@ -18,13 +19,13 @@ public class FinishedCraftEvent extends MachineDataEvent {
     public FinishedCraftEvent(Machine machine, String identifier, MachineData machineData, Recipe recipe, Collection<ItemStack> outputs) {
         super(machine, identifier, machineData);
         this.recipe = recipe;
-        this.outputs = outputs.stream().map(ItemStack::clone).toList();
+        this.outputs = outputs.stream().map(ItemStack::clone).collect(Collectors.toList());
     }
 
     public FinishedCraftEvent(boolean isAsync, Machine machine, String identifier, MachineData machineData, Recipe recipe, Collection<ItemStack> outputs) {
         super(isAsync, machine, identifier, machineData);
         this.recipe = recipe;
-        this.outputs = outputs.stream().map(ItemStack::clone).toList();
+        this.outputs = outputs.stream().map(ItemStack::clone).collect(Collectors.toList());
     }
 
     /**

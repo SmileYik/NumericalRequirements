@@ -5,15 +5,17 @@ import org.eu.smileyik.numericalrequirements.reflect.builder.ReflectClassBuilder
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class ReflectPathGenerator {
     private static final String CURRENT_PACKET = "${version}";
 
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException, IOException {
-        String template = Files.readString(Path.of("plugins", "NumericalRequirements", "reflect_class_template.txt"));
+        String template = new String(Files.readAllBytes(Paths.get("plugins", "NumericalRequirements", "reflect_class_template.txt")));
         for (int i = 1; i < args.length; i += 2) {
             String name = args[i - 1];
             String className = args[i];
@@ -28,13 +30,13 @@ public class ReflectPathGenerator {
                 System.out.println(file.getCanonicalPath());
                 Path path = file.toPath();
                 prettyString = prettyString.replace(NMS.VERSION, CURRENT_PACKET);
-                Files.writeString(
-                        path, prettyString,
+                Files.write(
+                        path, prettyString.getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE
                 );
-                Files.writeString(
+                Files.write(
                         new File(parent, String.format("%s.java", name)).toPath(),
-                        template.replace("${class_name}", name).replace("${script_path}", String.format("/version-script/%s.txt", name)),
+                        template.replace("${class_name}", name).replace("${script_path}", String.format("/version-script/%s.txt", name)).getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE
                 );
             } catch (Exception e) {

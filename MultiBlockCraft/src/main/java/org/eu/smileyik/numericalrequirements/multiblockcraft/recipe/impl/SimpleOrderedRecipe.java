@@ -10,7 +10,6 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.util.HexUtil;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements OrderedRecipe {
     protected ItemStack[] rawInputs;
@@ -21,13 +20,13 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
     @Override
     public Collection<ItemStack> getInputs() {
         lazyLoad();
-        return List.of(inputs.getSecond());
+        return Arrays.asList(inputs.getSecond());
     }
 
     @Override
     public Collection<ItemStack> getOutputs() {
         lazyLoad();
-        return List.of(outputs);
+        return Arrays.asList(outputs);
     }
 
     @Override

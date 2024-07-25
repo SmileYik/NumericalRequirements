@@ -72,7 +72,7 @@ public class ReflectMethodBuilder {
         }
         return String.format(
                 "%s<%s>(%s)%s", name, newName,
-                sb.isEmpty() ? "" : sb.substring(0, sb.length() - 2),
+                sb.length() == 0 ? "" : sb.substring(0, sb.length() - 2),
                 description == null ? "" : (" // " + description)
         );
     }

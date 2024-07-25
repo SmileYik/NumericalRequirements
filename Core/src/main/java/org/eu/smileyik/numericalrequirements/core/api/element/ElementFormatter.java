@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public interface ElementFormatter <K extends org.eu.smileyik.numericalrequirements.core.api.element.Element, V extends Element> {
     Pattern PATTERN = Pattern.compile("(\\$\\{format:.+?;).+?}");
 
-    Map<String, ElementFormatter<?, ?>> ELEMENT_FORMATTERS = new HashMap<>() {
+    Map<String, ElementFormatter<?, ?>> ELEMENT_FORMATTERS = new HashMap<String, ElementFormatter<?, ?>>() {
         {
             add(new SimpleElementFormatter());
             add(new ProcessBarFormatter());

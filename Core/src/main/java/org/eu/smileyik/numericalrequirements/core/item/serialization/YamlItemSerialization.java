@@ -13,6 +13,7 @@ import org.eu.smileyik.numericalrequirements.core.item.serialization.yaml.*;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class YamlItemSerialization implements ItemSerialization {
     private final List<YamlItemEntry> entries;
@@ -43,7 +44,7 @@ public class YamlItemSerialization implements ItemSerialization {
             });
         });
 
-        this.entries = entries.stream().filter(YamlItemEntry::isAvailable).sorted(Comparator.comparingInt(YamlItemEntry::getPriority)).toList();
+        this.entries = entries.stream().filter(YamlItemEntry::isAvailable).sorted(Comparator.comparingInt(YamlItemEntry::getPriority)).collect(Collectors.toList());
 
         DebugLogger.debug((d) -> {
             this.entries.forEach(it -> {

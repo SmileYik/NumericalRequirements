@@ -63,7 +63,7 @@ public class RecipeListener implements Listener {
     }
 
     private boolean handleLoreItem(Recipe recipe, ItemStack item, RecipeTakeItemEvent event) {
-        if (!item.hasItemMeta()) return false;
+        if (item == null || !item.hasItemMeta()) return false;
         ItemMeta itemMeta = item.getItemMeta();
         if (!itemMeta.hasLore()) return false;
         List<String> lore = itemMeta.getLore();

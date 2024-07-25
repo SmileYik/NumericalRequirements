@@ -12,6 +12,7 @@ import org.eu.smileyik.numericalrequirements.reflect.ReflectMethod;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ItemFlagEntry implements YamlItemEntry {
     final boolean flag;
@@ -56,7 +57,7 @@ public class ItemFlagEntry implements YamlItemEntry {
     public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
         Set<?> flags = getItemFlags.execute(itemMeta);
         if (flags == null || flags.isEmpty()) return;
-        section.set(getId(), flags.stream().map(it -> (String) name.execute(it)).toList());
+        section.set(getId(), flags.stream().map(it -> (String) name.execute(it)).collect(Collectors.toList()));
     }
 
     @Override

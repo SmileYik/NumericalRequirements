@@ -5,7 +5,6 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public class SimpleRecipe extends SimpleAbstractRecipe {
@@ -20,7 +19,7 @@ public class SimpleRecipe extends SimpleAbstractRecipe {
     @Override
     public Collection<ItemStack> getOutputs() {
         lazyMap();
-        return List.of(outputs);
+        return Arrays.asList(outputs);
     }
 
     @Override

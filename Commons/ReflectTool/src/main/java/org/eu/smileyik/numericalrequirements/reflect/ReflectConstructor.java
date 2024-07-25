@@ -19,7 +19,7 @@ public class ReflectConstructor implements MySimpleReflect {
     // "a.b.c.D$DA$DAA<constructor name>(fields...)"
     public ReflectConstructor(String fullPath, Class<?> clazz, String path, boolean forceAccess) throws ClassNotFoundException, NoSuchMethodException {
         this.fullPath = fullPath;
-        String className = path.substring(0, path.indexOf('(')).strip().replace("+", "$");
+        String className = path.substring(0, path.indexOf('(')).replace("+", "$");
         if (className.contains("<")) {
             name = className.substring(className.indexOf("<") + 1, className.indexOf(">"));
             className = className.substring(0, className.lastIndexOf("<"));
@@ -33,12 +33,12 @@ public class ReflectConstructor implements MySimpleReflect {
             clazz = MySimpleReflect.getClassInClass(clazz, className);
         }
 
-        path = path.substring(path.indexOf('(') + 1, path.indexOf(')')).strip();
+        path = path.substring(path.indexOf('(') + 1, path.indexOf(')'));
         if (!path.isEmpty()) {
             String[] $s = path.split(",");
             Class[] params = new Class[$s.length];
             for (int i = 0; i < $s.length; i++) {
-                params[i] = MySimpleReflect.forName($s[i].strip());
+                params[i] = MySimpleReflect.forName($s[i]);
             }
             constructor = clazz.getDeclaredConstructor(params);
         } else {

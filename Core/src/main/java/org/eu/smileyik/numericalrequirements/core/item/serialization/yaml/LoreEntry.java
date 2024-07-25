@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LoreEntry implements YamlItemEntry {
     @Override
@@ -95,7 +96,7 @@ public class LoreEntry implements YamlItemEntry {
                     .split(";"))
                     .filter(it -> !it.isEmpty())
                     .map(it -> it.replace("${&1}", ";"))
-                    .toList();
+                    .collect(Collectors.toList());
             DebugLogger.debug("values: %s", values);
             if (!tag.isValidValues(values)) {
                 I18N.warning("item.serialization.lore.invalid-tag-value", old, tag.getId(), tag.getName());

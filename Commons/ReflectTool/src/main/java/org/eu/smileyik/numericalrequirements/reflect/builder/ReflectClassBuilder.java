@@ -152,7 +152,7 @@ public class ReflectClassBuilder {
         for (Object o : list) {
             sb.append(o).append(";");
         }
-        return String.format("{%s}", sb.isEmpty() ? "" : sb.substring(0, sb.length() - 1));
+        return String.format("{%s}", sb.length() == 0 ? "" : sb.substring(0, sb.length() - 1));
     }
 
     public static ReflectClassBuilder newByClass(String className) throws ClassNotFoundException {

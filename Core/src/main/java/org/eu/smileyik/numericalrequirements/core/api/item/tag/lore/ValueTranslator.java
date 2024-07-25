@@ -16,7 +16,7 @@ public interface ValueTranslator<T> {
         VALUE_TRANSLATOR_MAP.put(translator.getName(), translator);
     }
 
-    private static Map<String, ValueTranslator<?>> init() {
+    static Map<String, ValueTranslator<?>> init() {
         Map<String, ValueTranslator<?>> map = new HashMap<>();
         addValueTranslator(map, new IntTranslator());
         addValueTranslator(map, new NumberTranslator());
@@ -25,7 +25,7 @@ public interface ValueTranslator<T> {
         return map;
     }
 
-    private static void addValueTranslator(Map<String, ValueTranslator<?>> map, ValueTranslator<?> translator) {
+    static void addValueTranslator(Map<String, ValueTranslator<?>> map, ValueTranslator<?> translator) {
         map.put(translator.getName(), translator);
     }
 
