@@ -26,12 +26,14 @@ public interface OrderedRecipe {
         List<ItemStack> idItemList = new ArrayList<>();
         Map<ItemStack, Byte> itemIdMap = new HashMap<>();
         int size = inputs.length - 1;
+        boolean latest = true;
         for (int i = 0; i <= size; i++) {
             ItemStack item = inputs[i];
             if (item != null) {
                 item = item.clone();
 
                 // call recipe format item event
+                latest = i != size;
                 RecipeFormatItemEvent event = new RecipeFormatItemEvent(recipe, eventId, i, i, size, item);
                 MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
                 item = event.getItem();
@@ -47,6 +49,13 @@ public interface OrderedRecipe {
             }
             shape.add(id);
         }
+
+        // 确保系列事件的最后一个事件发出
+        if (latest) {
+            RecipeFormatItemEvent event = new RecipeFormatItemEvent(recipe, eventId, size, size, size, null);
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
+        }
+
         return Pair.newUnchangablePair(
                 shape.toArray(new Byte[0]),
                 idItemList.toArray(new ItemStack[0])

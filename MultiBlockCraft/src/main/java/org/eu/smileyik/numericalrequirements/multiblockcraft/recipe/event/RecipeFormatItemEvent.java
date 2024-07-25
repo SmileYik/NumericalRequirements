@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * 配方重新格式化物品事件。
  * 配方在加载时以及在使用 Recipe.isMatch 的方法时，都要将输入的物品格式化为易于比对的物品序列。
- * 在 Recipe 类规范输入物品时，将会为每一个不为 null 的物品广播一次本事件。
+ * 在 Recipe 类规范输入物品时，将会为每一个不为 null 的物品广播一次本事件。（若物品为 null 则代表为最后一个事件）
  * 对于部分需要校验可变物品数据的物品的配方，可以使用此事件更改对应物品为一个标准的物品模板，
  * 以通过配方校验，并配合 RecipeTakeItemEvent 事件，对输入物品进行扣除数据或其他操作。
  */
@@ -43,7 +43,7 @@ public class RecipeFormatItemEvent extends RecipeEvent {
     }
 
     /**
-     * 获取当前物品。
+     * 获取当前物品。一般情况下当前物品都不会为null,而当本事件作为一系列事件的尾包时，可能会返回null.
      * @return
      */
     public ItemStack getItem() {
@@ -51,7 +51,7 @@ public class RecipeFormatItemEvent extends RecipeEvent {
     }
 
     /**
-     * 设定当前物品。
+     * 设定当前物品。当当前物品为null时，本事件将作为一个补充尾包触发，故在此时不应该调用此方法。
      * @param item
      */
     public void setItem(ItemStack item) {
