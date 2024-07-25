@@ -87,7 +87,7 @@ public abstract class SimpleMachine extends YamlMachine {
     }
 
     public boolean isClickedButton(int slot, Inventory inv, MachineData data) {
-        if (inv.getSize() <= slot) return false;
+        if (slot < 0 || inv.getSize() <= slot) return false;
         ItemStack clickedItem = inv.getItem(slot);
         if (data == null || clickedItem == null || clickedItem.getType() == Material.AIR) return false;
         InvItem invItem = funcItems.get(slot);
