@@ -56,10 +56,12 @@ public class ChatInteract implements Listener {
             callback.callback(map);
             return;
         }
-        currentStep = nextStep;
+        if (!nextStep.equalsIgnoreCase(currentStep)) {
+            currentStep = nextStep;
+            Msg.trMsg(player, i18nPrefix + ".step.help");
+            Msg.trMsg(player, i18nPrefix + ".step." + currentStep + ".help");
+        }
 
-        Msg.trMsg(player, i18nPrefix + ".step.help");
-        Msg.trMsg(player, i18nPrefix + ".step." + currentStep + ".help");
     }
 
     public interface Step {
