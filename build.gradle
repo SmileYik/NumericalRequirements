@@ -13,7 +13,8 @@ def pluginVersions() {
     [
         plugin: version,
         thirst: version,
-        luaEffect: version
+        luaEffect: version,
+        "multiBlockCraft": version
     ]
 }
 

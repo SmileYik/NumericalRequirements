@@ -1,3 +1,9 @@
+multi-block-craft:
+  name: MultiBlockCraft
+  author: SmileYik
+  version: ${multiBlockCraftVersion}
+  main: org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension
+  description: "多方块工作台"
 thirst:
   name: ThirstExtension
   author: SmileYik
@@ -9,10 +15,4 @@ lua-effect:
   author: SmileYik
   version: ${luaEffectVersion}
   main: org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectExtension
-  description: "可以用Lua编写效果逻辑"
-multi-block-craft:
-  name: MultiBlockCraft
-  author: SmileYik
-  version: ${luaEffectVersion}
-  main: org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension
   description: "可以用Lua编写效果逻辑"
