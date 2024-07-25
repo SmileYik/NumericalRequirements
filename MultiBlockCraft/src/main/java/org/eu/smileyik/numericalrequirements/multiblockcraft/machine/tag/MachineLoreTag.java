@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag;
 
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 
 public class MachineLoreTag extends LoreTag {
@@ -10,16 +11,16 @@ public class MachineLoreTag extends LoreTag {
 
     @Override
     public String getId() {
-        return "machine-lore";
+        return "lore-machine";
     }
 
     @Override
     public String getName() {
-        return "机器类型";
+        return I18N.tr("extension.multi-block-craft.tag.machine.name");
     }
 
     @Override
     public String getDescription() {
-        return "机器类型";
+        return I18N.tr("extension.multi-block-craft.tag.machine.description");
     }
 }

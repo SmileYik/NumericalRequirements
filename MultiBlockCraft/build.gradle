@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(":NMS")
     implementation project(":Core")
     implementation project(':Core:Command')
     implementation project(":Commons:DebugTool")

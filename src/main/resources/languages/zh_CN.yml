@@ -185,6 +185,10 @@ extension:
         not-number: "&c给予的 &c&l{0} &c参数并不是一个整数。"
         not-valid-number: "&c给予的整数 &c&l{0} &c不合理！\n 期望的整数需要&c&l大于0&c、&c&l小于等于54&c，并且是&c&l9的倍数&c。"
         tab-suggest: "[输入库存大小(整数、9的倍  数)]"
+    tag:
+      machine:
+        name: "机器类型"
+        description: "机器类型"
     machine-creator:
       title: "&5&l创建机器库存页面"
       input-placeholder-name: "&2&l输入槽位"

@@ -5,6 +5,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineServ
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.SimpleMachineService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.MachineListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineNBTTag;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.RecipeListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.DurabilityLore;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.NotConsumableInputLore;
@@ -23,8 +24,10 @@ public class MultiBlockCraftExtension extends Extension {
     public void onEnable() {
         instance = this;
         machineLoreTag = new MachineLoreTag();
+        MachineNBTTag machineNBTTag = new MachineNBTTag();
         durabilityLore = new DurabilityLore();
         notConsumableInputLore = new NotConsumableInputLore();
+        getApi().getItemService().registerItemTag(machineNBTTag);
         getApi().getItemService().registerItemTag(machineLoreTag);
         getApi().getItemService().registerItemTag(durabilityLore);
         getApi().getItemService().registerItemTag(notConsumableInputLore);
@@ -39,7 +42,7 @@ public class MultiBlockCraftExtension extends Extension {
         getApi().getCommandService().registerTabSuggest(createMachineTask);
 
         machineService = new SimpleMachineService(this);
-        getPlugin().getServer().getPluginManager().registerEvents(new MachineListener(machineLoreTag), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new MachineListener(machineLoreTag, machineNBTTag), getPlugin());
     }
 
     @Override

@@ -21,6 +21,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.Machine;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineService;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.CraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineNBTTag;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -30,28 +31,36 @@ public class MachineListener implements Listener {
 
 
     private final MachineLoreTag machineLoreTag;
+    private final MachineNBTTag machineNBTTag;
     private final MachineService machineService = MultiBlockCraftExtension.getInstance().getMachineService();
 
-    public MachineListener(MachineLoreTag machineLoreTag) {
+    public MachineListener(MachineLoreTag machineLoreTag, MachineNBTTag machineNBTTag) {
         this.machineLoreTag = machineLoreTag;
+        this.machineNBTTag = machineNBTTag;
+    }
+
+    private String getMachineId(ItemStack itemStack) {
+        if (itemStack == null) return null;
+        String id = machineNBTTag.getValue(itemStack);
+        if (id != null) return id;
+        if (!itemStack.hasItemMeta() || !itemStack.getItemMeta().hasLore()) return null;
+        for (String s : itemStack.getItemMeta().getLore()) {
+            if (!machineLoreTag.matches(s)) {
+                continue;
+            }
+            LoreValue value = machineLoreTag.getValue(s);
+            return value.get(0);
+        }
+        return null;
     }
 
 
     @EventHandler(ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent event) {
         if (!event.canBuild()) return;
-        ItemStack itemInHand = event.getItemInHand();
-        if (itemInHand == null || !itemInHand.hasItemMeta() || !itemInHand.getItemMeta().hasLore()) return;
-        for (String s : itemInHand.getItemMeta().getLore()) {
-            if (!machineLoreTag.matches(s)) {
-                continue;
-            }
-            LoreValue value = machineLoreTag.getValue(s);
-            String machineId = value.get(0);
-            Block blockPlaced = event.getBlockPlaced();
-            machineService.setMachineMetadata(blockPlaced, "machine", machineId);
-            break;
-        }
+        String machineId = getMachineId(event.getItemInHand());
+        Block blockPlaced = event.getBlockPlaced();
+        machineService.setMachineMetadata(blockPlaced, "machine", machineId);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -71,7 +80,7 @@ public class MachineListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
-        if (event.hasItem() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getPlayer().isSneaking()) return;
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
         String machineId = machineService.getMachineMetadata(clickedBlock, "machine");
