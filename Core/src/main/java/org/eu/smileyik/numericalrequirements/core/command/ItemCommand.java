@@ -12,6 +12,7 @@ import org.eu.smileyik.numericalrequirements.core.api.item.tag.ItemTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.MergeableLore;
+import org.eu.smileyik.numericalrequirements.core.api.item.tag.nbt.DisplayableNBTTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.nbt.NBTTag;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
@@ -59,6 +60,9 @@ public class ItemCommand {
             NBTTag<?> nbtTag = (NBTTag<?>) itemTag;
             if (nbtTag.isValidValue(list)) {
                 nbtTag.setValue(item, list);
+                if (nbtTag instanceof DisplayableNBTTag) {
+                    ((DisplayableNBTTag<?>) nbtTag).refreshDisplayLore(item);
+                }
             } else {
                 player.sendMessage(I18N.trp("command", "command.item.error.wrong-tag-value"));
             }

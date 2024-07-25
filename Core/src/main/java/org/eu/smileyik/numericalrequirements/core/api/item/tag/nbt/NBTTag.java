@@ -28,6 +28,9 @@ public abstract class NBTTag <V> implements ItemTag<V> {
 
     public abstract void setValue(ItemStack itemStack, List<String> value);
 
+    public void setValue(ItemStack itemStack, V value) {
+        throw new RuntimeException("not implemented yet");
+    }
     /**
      * 从物品中获取值。
      * @param itemStack
