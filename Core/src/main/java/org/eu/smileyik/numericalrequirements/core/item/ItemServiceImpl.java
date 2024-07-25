@@ -298,12 +298,10 @@ public class ItemServiceImpl implements Listener, ItemService {
         if (itemStack == null || isStore && !idTagMap.containsKey(id)) {
             return null;
         }
-        if (itemConfig.getBoolean(String.format("%s.sync", id), true)) {
-            NBTItem cast = NBTItemHelper.cast(itemStack.clone());
-            if (cast != null) {
-                cast.getTag().setString(NBT_KEY_ID, id);
-                itemStack = cast.getItemStack();
-            }
+        NBTItem cast = NBTItemHelper.cast(itemStack.clone());
+        if (cast != null) {
+            cast.getTag().setString(NBT_KEY_ID, id);
+            itemStack = cast.getItemStack();
         }
         itemStackCache.put(id, itemStack);
         return itemStack;
@@ -368,6 +366,7 @@ public class ItemServiceImpl implements Listener, ItemService {
     public synchronized boolean updateItem(ItemStack item) {
         String id = getItemId(item);
         if (id == null) return false;
+        if (!itemConfig.getBoolean(String.format("%s.sync", id), true)) return false;
         ItemStack itemStack = loadItem(id, item.getAmount());
         if (itemStack == null || itemStack.isSimilar(item)) return false;
         item.setItemMeta(itemStack.getItemMeta());
