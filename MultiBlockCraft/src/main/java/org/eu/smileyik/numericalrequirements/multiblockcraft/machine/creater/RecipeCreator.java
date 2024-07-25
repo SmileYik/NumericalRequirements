@@ -3,12 +3,8 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.creater;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.I18N;
@@ -32,28 +28,27 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class RecipeCreator implements Listener, Machine {
-    private static final Map<String, Step> STEPS = new HashMap<>();
+
+    private static final Map<String, ChatInteract.Step> STEPS = new HashMap<>();
     private static final List<Class<? extends Recipe>> RECIPES = Arrays.asList(
             SimpleRecipe.class, SimpleOrderedRecipe.class,
             SimpleTimeRecipe.class, SimpleTimeOrderedRecipe.class
     );
 
-    interface Step {
-        String apply(Map<String, String> map, Player p, String str);
-    }
-
     static {
-        STEPS.put("set-id", (map, p, str) -> {
+        STEPS.put("set-id", (map, p, prefix, str) -> {
             if (str == null) return "set-id";
             map.put("id", str);
+            Msg.trMsg(p, prefix + ".step.set-id.display", str);
             return "set-name";
         });
-        STEPS.put("set-name", (map, p, str) -> {
+        STEPS.put("set-name", (map, p, prefix, str) -> {
             if (str == null) return "set-name";
             map.put("name", str);
+            Msg.trMsg(p, prefix + ".step.set-name.display", str);
             return "choose-recipes";
         });
-        STEPS.put("choose-recipes", (map, p, str) -> {
+        STEPS.put("choose-recipes", (map, p, prefix, str) -> {
             if (str == null) return "choose-recipes";
             Class<? extends Recipe> target = null;
             for (Class<? extends Recipe> recipe : RECIPES) {
@@ -63,20 +58,23 @@ public class RecipeCreator implements Listener, Machine {
                 }
             }
             if (target == null) {
-                Msg.trMsg(p, "extension.multi-block-craft.recipe-creator.step.choose-recipes.not-valid-recipe", str);
+                Msg.trMsg(p, prefix + ".step.choose-recipes.not-valid-recipe", str);
                 return "choose-recipes";
             }
             map.put("type", target.getName());
+            Msg.trMsg(p, prefix + ".step.choose-recipes.display", target.getSimpleName());
             return TimeRecipe.class.isAssignableFrom(target) ? "set-time" : null;
         });
-        STEPS.put("set-time", (map, p, str) -> {
+        STEPS.put("set-time", (map, p, prefix, str) -> {
             if (str == null) return "set-time";
             try {
                 Double.parseDouble(str);
                 map.put("time", str);
+
+                Msg.trMsg(p, prefix + ".step.set-time.display", str);
                 return null;
             } catch (NumberFormatException e) {
-                Msg.trMsg(p, "extension.multi-block-craft.recipe-creator.step.set-time.not-valid-time", str);
+                Msg.trMsg(p, prefix + ".step.set-time.not-valid-time", str);
                 return "set-time";
             }
         });
@@ -85,9 +83,7 @@ public class RecipeCreator implements Listener, Machine {
     private final MultiBlockCraftExtension extension;
     private final Machine machine;
     private final Player player;
-    private final Map<String, String> map = new HashMap<>();
     private SimpleItem[] inputs, outputs;
-    private String currentStep = "set-id";
 
     public RecipeCreator(MultiBlockCraftExtension extension, Machine machine, Player player) {
         this.extension = extension;
@@ -146,41 +142,12 @@ public class RecipeCreator implements Listener, Machine {
         this.inputs = inputs;
         this.outputs = outputs;
 
-        currentStep = "set-id";
-        extension.getPlugin().getServer().getPluginManager().registerEvents(this, extension.getPlugin());
-
-        Msg.trMsg(player, "extension.multi-block-craft.recipe-creator.step.help");
-        Msg.trMsg(player, "extension.multi-block-craft.recipe-creator.step." + currentStep + ".help");
+        new ChatInteract(
+                STEPS, this.player, this::finishedCreate, "extension.multi-block-craft.recipe-creator"
+        ).start("set-id");
     }
 
-    @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (event.getPlayer() != player) return;
-        event.setCancelled(true);
-        String message = event.getMessage();
-        if ("help".equalsIgnoreCase(message)) {
-            Msg.trMsg(player, "extension.multi-block-craft.recipe-creator.step.help");
-            Msg.trMsg(player, "extension.multi-block-craft.recipe-creator.step." + currentStep + ".help");
-            return;
-        } else if ("exit".equalsIgnoreCase(message)) {
-            event.getHandlers().unregister(this);
-            Msg.trMsg(player, "extension.multi-block-craft.recipe-creator.stop");
-            return;
-        }
-        String nextStep = STEPS.get(currentStep).apply(map, player, message);
-        if (nextStep == null) {
-            // finished
-            event.getHandlers().unregister(this);
-            finishedCreate();
-            return;
-        }
-        currentStep = nextStep;
-
-        Msg.trMsg(player, "extension.multi-block-craft.recipe-creator.step.help");
-        Msg.trMsg(player, "extension.multi-block-craft.recipe-creator.step." + currentStep + ".help");
-    }
-
-    private void finishedCreate() {
+    private void finishedCreate(Map<String, String> map) {
         Recipe recipe = new SimpleAbstractRecipe() {
             {
                 this.rawInputs = inputs;
@@ -205,16 +172,6 @@ public class RecipeCreator implements Listener, Machine {
             Msg.trMsg(player, "extension.multi-block-craft.recipe-creator.failure");
             DebugLogger.debug(e);
         }
-    }
-
-    @Override
-    public void onClick(InventoryClickEvent event) {
-
-    }
-
-    @Override
-    public void onDrag(InventoryDragEvent event) {
-
     }
 
     @Override
