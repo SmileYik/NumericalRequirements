@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag;
 
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 
 public class DurabilityLore extends LoreTag {
@@ -10,16 +11,16 @@ public class DurabilityLore extends LoreTag {
 
     @Override
     public String getId() {
-        return "recipe-durability";
+        return "lore-tool-durability";
     }
 
     @Override
     public String getName() {
-        return "耐久度";
+        return I18N.tr("extension.multi-block-craft.tag.tool-durability.name");
     }
 
     @Override
     public String getDescription() {
-        return "耐久度";
+        return I18N.tr("extension.multi-block-craft.tag.tool-durability.description");
     }
 }

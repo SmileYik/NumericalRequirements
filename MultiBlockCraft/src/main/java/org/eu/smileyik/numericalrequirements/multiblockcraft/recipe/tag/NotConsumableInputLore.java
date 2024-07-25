@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag;
 
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 
 public class NotConsumableInputLore extends LoreTag {
@@ -10,16 +11,16 @@ public class NotConsumableInputLore extends LoreTag {
 
     @Override
     public String getId() {
-        return "recipe-not-consumable-lore";
+        return "lore-recipe-not-consumable";
     }
 
     @Override
     public String getName() {
-        return "不被消耗";
+        return I18N.tr("extension.multi-block-craft.tag.recipe-not-consumable.name");
     }
 
     @Override
     public String getDescription() {
-        return "不被消耗";
+        return I18N.tr("extension.multi-block-craft.tag.recipe-not-consumable.description");
     }
 }

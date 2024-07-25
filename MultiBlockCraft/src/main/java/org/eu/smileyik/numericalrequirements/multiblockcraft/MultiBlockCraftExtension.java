@@ -7,9 +7,11 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.SimpleMachi
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.MachineListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineNBTTag;
-import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.RecipeListener;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.RecipeToolListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.DurabilityLore;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.DurabilityNBT;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.NotConsumableInputLore;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.NotConsumableInputNBT;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.task.CreateMachineTask;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.task.CreateRecipeTask;
 
@@ -28,12 +30,16 @@ public class MultiBlockCraftExtension extends Extension {
         MachineNBTTag machineNBTTag = new MachineNBTTag();
         durabilityLore = new DurabilityLore();
         notConsumableInputLore = new NotConsumableInputLore();
+        NotConsumableInputNBT notConsumableInputNBT = new NotConsumableInputNBT();
+        DurabilityNBT durabilityNBT = new DurabilityNBT();
+        getApi().getItemService().registerItemTag(notConsumableInputNBT);
+        getApi().getItemService().registerItemTag(durabilityNBT);
         getApi().getItemService().registerItemTag(machineNBTTag);
         getApi().getItemService().registerItemTag(machineLoreTag);
         getApi().getItemService().registerItemTag(durabilityLore);
         getApi().getItemService().registerItemTag(notConsumableInputLore);
-        getPlugin().getServer().getPluginManager().registerEvents(new RecipeListener(
-                durabilityLore, notConsumableInputLore
+        getPlugin().getServer().getPluginManager().registerEvents(new RecipeToolListener(
+                durabilityLore, notConsumableInputLore, durabilityNBT, notConsumableInputNBT
         ), getPlugin());
         CreateRecipeTask createRecipeTask = new CreateRecipeTask();
         getApi().getExtensionService().registerTask(createRecipeTask);
