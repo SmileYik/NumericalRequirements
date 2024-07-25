@@ -154,7 +154,7 @@ public abstract class SimpleAbstractRecipe implements Recipe {
 
         Map<ItemStack, Integer> map = new HashMap<>();
         int size = inputs.length - 1;
-        boolean latest = true;
+        boolean latest = true, triggered = false;
         for (int i = 0; i <= size; i++) {
             ItemStack item = inputs[i];
             if (item == null) continue;
@@ -162,6 +162,7 @@ public abstract class SimpleAbstractRecipe implements Recipe {
 
             // call recipe format item event
             latest = i != size;
+            triggered = true;
             RecipeFormatItemEvent event = new RecipeFormatItemEvent(this, eventId, i, i, size, item);
             MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
             item = event.getItem();
@@ -174,7 +175,7 @@ public abstract class SimpleAbstractRecipe implements Recipe {
         }
 
         // 补充尾包
-        if (latest) {
+        if (latest && triggered) {
             RecipeFormatItemEvent event = new RecipeFormatItemEvent(this, eventId, size, size, size, null);
             MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
         }

@@ -26,7 +26,7 @@ public interface OrderedRecipe {
         List<ItemStack> idItemList = new ArrayList<>();
         Map<ItemStack, Byte> itemIdMap = new HashMap<>();
         int size = inputs.length - 1;
-        boolean latest = true;
+        boolean latest = true, triggered = false;
         for (int i = 0; i <= size; i++) {
             ItemStack item = inputs[i];
             if (item != null) {
@@ -34,6 +34,7 @@ public interface OrderedRecipe {
 
                 // call recipe format item event
                 latest = i != size;
+                triggered = true;
                 RecipeFormatItemEvent event = new RecipeFormatItemEvent(recipe, eventId, i, i, size, item);
                 MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
                 item = event.getItem();
@@ -51,7 +52,7 @@ public interface OrderedRecipe {
         }
 
         // 确保系列事件的最后一个事件发出
-        if (latest) {
+        if (latest && triggered) {
             RecipeFormatItemEvent event = new RecipeFormatItemEvent(recipe, eventId, size, size, size, null);
             MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
         }
