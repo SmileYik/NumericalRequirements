@@ -314,6 +314,17 @@ public class ItemServiceImpl implements Listener, ItemService {
         return Collections.unmodifiableCollection(itemConfig.getKeys(false));
     }
 
+    @Override
+    public String getItemId(ItemStack itemStack) {
+        if (itemStack == null) return null;
+        NBTItem nbtItem = NBTItemHelper.cast(itemStack);
+        if (nbtItem == null) return null;
+        NBTTagCompound tag = nbtItem.getTag();
+        if (tag == null) return null;
+        if (!tag.hasKey(NBT_KEY_ID)) return null;
+        return tag.getString(NBT_KEY_ID);
+    }
+
     private void saveItemFile() {
         try {
             itemConfig.save(itemFile);
@@ -355,14 +366,7 @@ public class ItemServiceImpl implements Listener, ItemService {
 
     @Override
     public synchronized boolean updateItem(ItemStack item) {
-        NBTItem nbtItem = NBTItemHelper.cast(item);
-        if (nbtItem == null) return false;
-        NBTTagCompound tag = nbtItem.getTag();
-        if (tag == null) return false;
-        if (!tag.hasKey(NBT_KEY_ID)) {
-            return false;
-        }
-        String id = tag.getString(NBT_KEY_ID);
+        String id = getItemId(item);
         if (id == null) return false;
         ItemStack itemStack = loadItem(id, item.getAmount());
         if (itemStack == null || itemStack.isSimilar(item)) return false;

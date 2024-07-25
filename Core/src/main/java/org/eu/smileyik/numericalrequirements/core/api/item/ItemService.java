@@ -109,6 +109,13 @@ public interface ItemService {
     Collection<String> getItemIds();
 
     /**
+     * 获取物品ID，如果该物品不存在ID则返回null
+     * @param itemStack
+     * @return
+     */
+    String getItemId(ItemStack itemStack);
+
+    /**
      * 更新物品。
      * @param itemStack 要更新的物品
      * @return 如果更新成功返回true, 无需更新或无法更新等其他情况返回false.
