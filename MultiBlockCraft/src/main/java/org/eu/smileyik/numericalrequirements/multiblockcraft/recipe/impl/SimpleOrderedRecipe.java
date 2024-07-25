@@ -68,10 +68,13 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
     public void takeInputs(ItemStack[] inputs) {
         long id = RecipeTakeItemEvent.nextId();
         int size = this.rawInputs.length - 1;
+        boolean latest = true, triggered = false;
         for (int i = size; i >= 0; i--) {
             if (inputs[i] == null) continue;
 
             // call recipe take item event
+            latest = i != 0;
+            triggered = true;
             RecipeTakeItemEvent event = new RecipeTakeItemEvent(
                     !MultiBlockCraftExtension.getInstance().getPlugin().getServer().isPrimaryThread(),
                     this, id, i, size - i, size, inputs[i]
@@ -81,6 +84,14 @@ public class SimpleOrderedRecipe extends SimpleAbstractRecipe implements Ordered
             if (event.isCancelled()) continue;
 
             inputs[i].setAmount(inputs[i].getAmount() - this.rawInputs[i].getAmount());
+        }
+
+        if (triggered && latest) {
+            RecipeTakeItemEvent event = new RecipeTakeItemEvent(
+                    !MultiBlockCraftExtension.getInstance().getPlugin().getServer().isPrimaryThread(),
+                    this, id, size, size, size, null
+            );
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
         }
     }
 

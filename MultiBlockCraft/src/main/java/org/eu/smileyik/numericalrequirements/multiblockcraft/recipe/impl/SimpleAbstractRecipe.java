@@ -99,12 +99,15 @@ public abstract class SimpleAbstractRecipe implements Recipe {
         Map<ItemStack, Integer> inputAmountMap = new HashMap<>(this.inputAmountMap);
         long id = RecipeTakeItemEvent.nextId();
         int size = inputs.length - 1;
+        boolean latest = true, triggered = false;
         for (int i = 0; i <= size; i++) {
             ItemStack item = inputs[i];
             if (inputAmountMap.isEmpty()) break;
             if (item == null) continue;
 
             // call recipe take item event
+            latest = i != size;
+            triggered = true;
             RecipeTakeItemEvent event = new RecipeTakeItemEvent(
                     !MultiBlockCraftExtension.getInstance().getPlugin().getServer().isPrimaryThread(),
                     this, id, i, i, size, item
@@ -125,6 +128,14 @@ public abstract class SimpleAbstractRecipe implements Recipe {
                 item.setAmount(itemAmount - needAmount);
                 inputAmountMap.remove(clone);
             }
+        }
+
+        if (latest && triggered) {
+            RecipeTakeItemEvent event = new RecipeTakeItemEvent(
+                    !MultiBlockCraftExtension.getInstance().getPlugin().getServer().isPrimaryThread(),
+                    this, id, size, size, size, null
+            );
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
         }
     }
 
