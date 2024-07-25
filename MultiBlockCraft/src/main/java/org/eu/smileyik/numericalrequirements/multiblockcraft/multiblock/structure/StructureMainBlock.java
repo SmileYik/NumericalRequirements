@@ -1,10 +1,15 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.structure;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.multiblock.MultiBlockFace;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public interface StructureMainBlock extends Structure {
 
@@ -49,4 +54,25 @@ public interface StructureMainBlock extends Structure {
     List<MultiBlockStructureMainBlock.Node> getInputPath();
 
     List<MultiBlockStructureMainBlock.Node> getOutputPath();
+
+    static StructureMainBlock create(Block clickedBlock, BlockFace[] ways, StructureMainBlock structure, int maxBlocks) {
+        LinkedList<Pair<Structure, Block>> queue = new LinkedList<>();
+        structure.setBlock(clickedBlock);
+        queue.add(Pair.newPair(structure, clickedBlock));
+        Set<Location> checked = new HashSet<>();
+        checked.add(clickedBlock.getLocation());
+        int count = 1;
+        while (!queue.isEmpty() && count < maxBlocks) {
+            Pair<Structure, Block> pair = queue.removeFirst();
+
+            for (int i = ways.length - 1; i >= 0; i--) {
+                Block block = pair.getSecond().getRelative(ways[i]);
+                if (block != null && !block.isEmpty() && checked.add(block.getLocation())) {
+                    queue.add(Pair.newPair(pair.getFirst().set(i, block), block));
+                    if (++count > maxBlocks) break;
+                }
+            }
+        }
+        return structure;
+    }
 }
