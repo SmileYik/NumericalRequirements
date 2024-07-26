@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class SimpleUpdatableMachineData extends SimpleStorableMachineData implements MachineDataUpdatable {
@@ -76,6 +77,16 @@ public class SimpleUpdatableMachineData extends SimpleStorableMachineData implem
     public void removeItem(int slot) {
         super.removeItem(slot);
         changedItems = true;
+    }
+
+    @Override
+    public void forEach(BiConsumer<Integer, ItemStack> consumer) {
+        lock.writeLock().lock();
+        try {
+            super.forEach(consumer);
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -94,6 +95,14 @@ public class MachineListener implements Listener {
                     machine.open(event.getPlayer(), identifier);
                 }
         );
+    }
+
+    @EventHandler
+    public void onOpenInventory(InventoryOpenEvent event) {
+        InventoryHolder holder = event.getInventory().getHolder();
+        if (holder instanceof CraftHolder) {
+            ((CraftHolder) holder).getMachine().onOpen(event);
+        }
     }
 
     @EventHandler

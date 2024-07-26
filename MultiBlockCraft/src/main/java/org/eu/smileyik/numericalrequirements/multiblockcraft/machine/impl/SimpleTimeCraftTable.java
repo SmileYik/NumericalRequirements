@@ -12,6 +12,7 @@ import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.MachineDataStorable;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.impl.SimpleUpdatableMachineData;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.CreateSimpleUpdatableDataEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.OpenMachineGuiEvent;
@@ -59,8 +60,6 @@ public class SimpleTimeCraftTable extends SimpleMachine {
             data = dataEvent.getMachineData();
 
             MultiBlockCraftExtension.getInstance().getMachineService().getMachineDataService().storeMachineData(data);
-        } else {
-            data.forEach(inv::setItem);
         }
         holder.setMachineData(data);
         player.openInventory(inv);
@@ -75,6 +74,12 @@ public class SimpleTimeCraftTable extends SimpleMachine {
         holder.setInventory(inv);
         holder.setMachine(creative);
         player.openInventory(inv);
+    }
+
+    @Override
+    public void onOpen(InventoryOpenEvent event) {
+        Inventory inv = event.getInventory();
+        ((MachineDataStorable) ((Holder) inv.getHolder()).getMachineData()).forEach(inv::setItem);
     }
 
     @Override
@@ -138,22 +143,7 @@ public class SimpleTimeCraftTable extends SimpleMachine {
     public void onClose(InventoryCloseEvent event) {
         Inventory inv = event.getInventory();
         Holder holder = (Holder) inv.getHolder();
-        SimpleUpdatableMachineData data = (SimpleUpdatableMachineData) holder.getMachineData();
-
         holder.close();
-
-        data.getWriteLock().lock();
-        try {
-            for (Integer slot : inputSlots) {
-                data.setItem(slot, inv.getItem(slot));
-            }
-
-            for (Integer slot : emptySlots) {
-                data.setItem(slot, inv.getItem(slot));
-            }
-        } finally {
-            data.getWriteLock().unlock();
-        }
     }
 
     private void syncItem(SimpleUpdatableMachineData data, Inventory inv) {

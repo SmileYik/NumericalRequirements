@@ -7,14 +7,14 @@ plugins {
 }
 
 group = 'org.eu.smileyik'
-version = 'PREVIEW-SNAPSHOT-2'
+version = '0.0.0'
 
 def pluginVersions() {
     [
         plugin: version,
-        thirst: version,
-        luaEffect: version,
-        "multiBlockCraft": version
+        thirst: "0.0.0",
+        luaEffect: "0.0.0",
+        "multiBlockCraft": "0.0.0"
     ]
 }
 

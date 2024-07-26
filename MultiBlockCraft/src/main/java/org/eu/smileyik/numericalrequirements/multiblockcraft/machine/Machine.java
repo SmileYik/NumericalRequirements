@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
@@ -41,6 +42,10 @@ public interface Machine {
     void addRecipe(Recipe recipe);
     Recipe findRecipe(String id);
     Recipe findRecipe(ItemStack[] inputs);
+
+    default void onOpen(InventoryOpenEvent event) {
+
+    }
 
     default void onClick(InventoryClickEvent event) {
 
