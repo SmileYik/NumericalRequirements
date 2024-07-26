@@ -2,11 +2,12 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag;
 
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 
 public class NotConsumableInputLore extends LoreTag {
     @Override
     public String getModeString() {
-        return "在合成中不被消耗";
+        return MultiBlockCraftExtension.getConfig().getString("recipe-tool.tag.lore-recipe-not-consumable");
     }
 
     @Override

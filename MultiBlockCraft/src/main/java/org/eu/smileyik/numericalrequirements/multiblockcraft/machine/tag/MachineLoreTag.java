@@ -2,11 +2,12 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag;
 
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 
 public class MachineLoreTag extends LoreTag {
     @Override
     protected String getModeString() {
-        return "机器: <%:str>";
+        return MultiBlockCraftExtension.getConfig().getString("machine.tag.lore-machine", "机器: <%:str>");
     }
 
     @Override

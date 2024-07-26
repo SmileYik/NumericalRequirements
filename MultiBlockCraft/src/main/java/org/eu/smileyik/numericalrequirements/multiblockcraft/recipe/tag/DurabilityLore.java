@@ -2,11 +2,12 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag;
 
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 
 public class DurabilityLore extends LoreTag {
     @Override
     protected String getModeString() {
-        return "耐久: <%:int>";
+        return MultiBlockCraftExtension.getConfig().getString("recipe-tool.tag.lore-tool-durability");
     }
 
     @Override

@@ -53,7 +53,7 @@ public abstract class SimpleAbstractRecipe implements Recipe {
         s = section.createSection("outputs");
         idx = 0;
         for (SimpleItem item : rawOutputs) {
-            item.store(s.createSection("output-" + idx++));
+            if (item != null) item.store(s.createSection("output-" + idx++));
         }
         section.set("attribute", attribute);
     }

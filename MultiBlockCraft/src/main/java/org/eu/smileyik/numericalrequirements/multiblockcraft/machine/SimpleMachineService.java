@@ -26,16 +26,14 @@ public class SimpleMachineService implements MachineService {
     private String machineBlockMetadataFilePath;
     private SimpleMachineDataService machineDataService;
 
-    public SimpleMachineService(MultiBlockCraftExtension extension) {
-
-    }
-
     @Override
     public void load() {
         File dataFolder = MultiBlockCraftExtension.getInstance().getDataFolder();
         loadMachines(new File(dataFolder, "machines"));
+
         machineBlockMetadataFilePath = new File(dataFolder, "machine-metadata.yml").toString();
         loadMachineBlockMetadata(machineBlockMetadataFilePath);
+
         machineDataService = new SimpleMachineDataService(MultiBlockCraftExtension.getInstance(), this);
     }
 
@@ -160,6 +158,7 @@ public class SimpleMachineService implements MachineService {
     }
 
     private void loadMachines(File folder) {
+        if (!folder.exists()) folder.mkdirs();
         for (File dir : Objects.requireNonNull(folder.listFiles())) {
             if (!dir.isDirectory()) continue;
             File file = new File(dir, "machine.yml");
@@ -177,7 +176,6 @@ public class SimpleMachineService implements MachineService {
             }
             if (m == null) continue;
 
-            System.out.println("loaded machine " + m.getId());
             machines.put(m.getId(), m);
             machinesFiles.put(m.getId(), dir);
 

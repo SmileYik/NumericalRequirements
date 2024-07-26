@@ -5,6 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.event.RecipeFormatItemEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.event.RecipeTakeItemEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag.DurabilityLore;
@@ -23,11 +24,18 @@ public class RecipeToolListener implements Listener {
     private final NotConsumableInputNBT notConsumableInputNBT;
     private final Map<Long, Set<ItemStack>> checkingRecipeTakeItem = new HashMap<>();
 
-    public RecipeToolListener(DurabilityLore durabilityLore, NotConsumableInputLore notConsumableInputLore, DurabilityNBT durabilityNBT, NotConsumableInputNBT notConsumableInputNBT) {
-        this.durabilityLore = durabilityLore;
-        this.notConsumableInputLore = notConsumableInputLore;
-        this.durabilityNBT = durabilityNBT;
-        this.notConsumableInputNBT = notConsumableInputNBT;
+    public RecipeToolListener(MultiBlockCraftExtension extension) {
+        this.durabilityLore = new DurabilityLore();
+        this.notConsumableInputLore = new NotConsumableInputLore();
+        this.durabilityNBT = new DurabilityNBT();
+        this.notConsumableInputNBT = new NotConsumableInputNBT();
+
+        extension.getApi().getItemService().registerItemTag(this.durabilityLore);
+        extension.getApi().getItemService().registerItemTag(this.notConsumableInputLore);
+        extension.getApi().getItemService().registerItemTag(this.durabilityNBT);
+        extension.getApi().getItemService().registerItemTag(this.notConsumableInputNBT);
+
+        extension.getPlugin().getServer().getPluginManager().registerEvents(this, extension.getPlugin());
     }
 
 

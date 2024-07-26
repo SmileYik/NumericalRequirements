@@ -103,7 +103,7 @@ public class MachineCreator implements Machine {
                 ).getBlock();
                 BlockFace face = BlockFace.valueOf(map.get("face"));
 
-                StructureMainBlock structure = StructureMainBlock.create(targetBlock, MultiBlockFace.getByFace(face)[0].getFaces(), new MultiBlockStructureMainBlock(), 81);
+                StructureMainBlock structure = StructureMainBlock.create(targetBlock, MultiBlockFace.getByFace(face)[0].getFaces(), new MultiBlockStructureMainBlock(), MultiBlockCraftExtension.getConfig().getInt("machine.max-structure-block", 81));
                 YamlConfiguration config = new YamlConfiguration();
                 structure.store(config);
                 map.put("structure", config.saveToString());

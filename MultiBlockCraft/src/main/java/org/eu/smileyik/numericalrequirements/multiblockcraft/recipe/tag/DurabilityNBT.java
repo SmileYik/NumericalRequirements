@@ -3,6 +3,7 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.nbt.DisplayableNBTTag;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagTypeId;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
@@ -13,7 +14,7 @@ import java.util.List;
 public class DurabilityNBT extends DisplayableNBTTag<Integer> {
 
     public DurabilityNBT() {
-        super("当前耐久度: <%:int>");
+        super(MultiBlockCraftExtension.getConfig().getString("recipe-tool.tag.nreq-tool-durability"));
     }
 
     @Override

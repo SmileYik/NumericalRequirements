@@ -34,6 +34,7 @@ public class SimpleMachineDataService implements MachineDataService, Listener {
     public SimpleMachineDataService(MultiBlockCraftExtension extension, MachineService machineService) {
         this.machineService = machineService;
         folder = new File(extension.getDataFolder(), "machine-data");
+        if (!folder.exists()) folder.mkdirs();
         metadataFile = new File(folder, "metadata.yml");
         YamlConfiguration metadata = YamlConfiguration.loadConfiguration(metadataFile);
         ConfigurationSection chunk = metadata.getConfigurationSection("chunk");
@@ -52,7 +53,7 @@ public class SimpleMachineDataService implements MachineDataService, Listener {
                     DebugLogger.debug(e);
                 }
             });
-        }, 40, 40, TimeUnit.MILLISECONDS);
+        }, 40, MultiBlockCraftExtension.getConfig().getLong("machine.update-period", 40), TimeUnit.MILLISECONDS);
         extension.getPlugin().getServer().getPluginManager().registerEvents(this, extension.getPlugin());
     }
 
