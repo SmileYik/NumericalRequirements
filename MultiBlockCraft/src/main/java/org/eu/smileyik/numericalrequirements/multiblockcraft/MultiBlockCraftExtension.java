@@ -38,7 +38,7 @@ public class MultiBlockCraftExtension extends Extension {
 
     @Override
     public void onDisable() {
-        if (instance == null) return;
+        if (instance == null || machineService == null) return;
         machineService.stop();
     }
 
