@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.data.SimpleMachineDataService;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.MachineLoadEvent;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 
 import java.io.File;
@@ -178,6 +179,12 @@ public class SimpleMachineService implements MachineService {
 
             machines.put(m.getId(), m);
             machinesFiles.put(m.getId(), dir);
+
+            MachineLoadEvent event = new MachineLoadEvent(
+                    !MultiBlockCraftExtension.getInstance().getPlugin().getServer().isPrimaryThread(),
+                    m, machine
+            );
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
 
             file = new File(dir, "recipes");
             if (!file.exists()) continue;
