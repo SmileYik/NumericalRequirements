@@ -122,6 +122,7 @@ public class RecipeCreator implements Listener, Machine {
                 outputs[idx] = new SimpleItem(SimpleItem.TYPE_BUKKIT, item);
             }
             if (outputs[idx].getItemStack() != null) outputsAllEmpty = false;
+            else outputs[idx] = null;
             ++idx;
         }
 

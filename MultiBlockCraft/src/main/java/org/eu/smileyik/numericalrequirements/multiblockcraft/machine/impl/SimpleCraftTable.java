@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.FinishedCraftEvent;
@@ -166,6 +167,22 @@ public class SimpleCraftTable extends SimpleMachine {
                 holder.setCrafted(false);
                 runTask(() -> {
                     if (recipe.isMatch(inputs)) displayOutput(inv, recipe);
+                });
+            } else {
+                runTask(() -> {
+                    boolean flag = true;
+                    for (int i : outputSlots) {
+                        ItemStack stack = inv.getItem(i);
+                        DebugLogger.debug("check craft status: %s", stack);
+                        if (stack != null && stack.getType() != Material.AIR) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        holder.setCrafted(false);
+                        if (recipe.isMatch(inputs)) displayOutput(inv, recipe);
+                    }
                 });
             }
             return;
