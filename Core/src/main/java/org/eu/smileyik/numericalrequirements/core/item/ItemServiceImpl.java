@@ -342,11 +342,7 @@ public class ItemServiceImpl implements Listener, ItemService {
     @Override
     public synchronized void reloadItems() {
         if (!itemFile.exists()) {
-            try {
-                itemFile.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            plugin.saveResource("items.yml", false);
         }
         itemStackCache.clear();
         itemConfig = YamlConfiguration.loadConfiguration(itemFile);
