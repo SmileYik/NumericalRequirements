@@ -174,6 +174,9 @@ extension:
       description: "带有此标签的物品将会能够被消耗，并且能够影响口渴值"
   multi-block-craft:
     task:
+      convert-recipe:
+        name: "转换原版配方"
+        description: "将原版配方转换成机器能够识别的配方"
       create-recipe:
         name: "创建配方"
         description: "创建配方"

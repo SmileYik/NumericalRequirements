@@ -10,6 +10,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.Ma
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineNBTTag;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.RecipeToolListener;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.task.ConvertRecipeTask;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.task.CreateMachineTask;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.task.CreateRecipeTask;
 
@@ -56,6 +57,9 @@ public class MultiBlockCraftExtension extends Extension {
         CreateMachineTask createMachineTask = new CreateMachineTask();
         getApi().getExtensionService().registerTask(createMachineTask);
         getApi().getCommandService().registerTabSuggest(createMachineTask);
+
+        getApi().getExtensionService().registerTask(new ConvertRecipeTask());
+
     }
 
     private void setupRecipeTool() {
