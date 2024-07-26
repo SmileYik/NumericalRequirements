@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.tag;
 
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.nbt.DisplayableNBTTag;
@@ -14,7 +15,7 @@ import java.util.List;
 public class DurabilityNBT extends DisplayableNBTTag<Integer> {
 
     public DurabilityNBT() {
-        super(MultiBlockCraftExtension.getConfig().getString("recipe-tool.tag.nreq-tool-durability"));
+        super(ChatColor.translateAlternateColorCodes('&', MultiBlockCraftExtension.getConfig().getString("recipe-tool.tag.nreq-tool-durability")));
     }
 
     @Override

@@ -35,7 +35,7 @@ public class MachineNBTTag extends NBTTag<String> {
 
     @Override
     public String getId() {
-        return "nreg-machine";
+        return "nreq-machine";
     }
 
     @Override
