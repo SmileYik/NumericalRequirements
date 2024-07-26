@@ -90,7 +90,7 @@ public abstract class SimpleAbstractRecipe implements Recipe {
             itemStack = itemStack.clone();
             ItemMeta itemMeta = itemStack.getItemMeta();
             List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
-            lore.add(I18N.tr("extension.multi-block-craft.recipe.displayed-lore"));
+            lore.add(I18N.tr("extension.multi-block-craft.recipe.display-lore"));
             itemMeta.setLore(lore);
             itemStack.setItemMeta(itemMeta);
             return itemStack;

@@ -67,6 +67,8 @@ public interface Recipe {
      */
     void load(ConfigurationSection section);
 
+    int getValidInputCount();
+
     ItemStack[] getDisplayedOutput();
 
     ConfigurationSection getAttribute();

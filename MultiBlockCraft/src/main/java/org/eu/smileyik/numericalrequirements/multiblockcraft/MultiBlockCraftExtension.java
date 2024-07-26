@@ -9,6 +9,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.SimpleMachi
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.listener.MachineListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineNBTTag;
+import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.MinecraftRecipeListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.listener.RecipeToolListener;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.task.ConvertRecipeTask;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.task.CreateMachineTask;
@@ -30,6 +31,7 @@ public class MultiBlockCraftExtension extends Extension {
         }
 
         instance = this;
+        setupMinecraftRecipe();
         setupMachineService();
         setupRecipeTool();
         registerTasks();
@@ -81,6 +83,12 @@ public class MultiBlockCraftExtension extends Extension {
                     I18N.info("multi-block-craft.machine-service-enabled");
                 }, 60
         );
+    }
+
+    private void setupMinecraftRecipe() {
+        if (config.getBoolean("enable-minecraft-recipe", true)) {
+            new MinecraftRecipeListener(this);
+        }
     }
 
     public static ConfigurationSection getConfig() {

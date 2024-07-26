@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -62,13 +63,18 @@ public interface RecipeConvertor {
 
     static SimpleOrderedRecipe convertRecipe(ShapedRecipe recipe, int length) {
         String[] shape = recipe.getShape();
+        if (shape.length > length) return null;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < shape.length; i++) {
-            if (shape[i].length() > length) return null;
-            while (shape[i].length() != length) {
-                shape[i] += " ";
+        for (int i = 0; i < length; i++) {
+            String str = "";
+            if (shape.length > i) {
+                if (shape[i].length() > length) return null;
+                str = shape[i];
             }
-            sb.append(shape[i]);
+            while (str.length() != length) {
+                str += " ";
+            }
+            sb.append(str);
         }
         char[] charArray = sb.toString().toCharArray();
         Map<Character, ItemStack> ingredientMap = recipe.getIngredientMap();
@@ -91,11 +97,13 @@ public interface RecipeConvertor {
     static ConfigurationSection convertRecipe(ItemStack[] inputs, ItemStack[] outputs, String recipeId, String recipeName) {
         SimpleItem[] simpleItemInputs = new SimpleItem[inputs.length];
         for (int i = 0; i < inputs.length; i++) {
-            simpleItemInputs[i] = new SimpleItem(SimpleItem.TYPE_BUKKIT, inputs[i]);
+            if (inputs[i] != null && inputs[i].getType() == Material.AIR) inputs[i] = null;
+            simpleItemInputs[i] = new SimpleItem(SimpleItem.TYPE_NREQ, inputs[i]);
         }
         SimpleItem[] simpleItemOutputs = new SimpleItem[outputs.length];
         for (int i = 0; i < outputs.length; i++) {
-            simpleItemOutputs[i] = new SimpleItem(SimpleItem.TYPE_BUKKIT, outputs[i]);
+            if (outputs[i] != null && outputs[i].getType() == Material.AIR) outputs[i] = null;
+            simpleItemOutputs[i] = new SimpleItem(SimpleItem.TYPE_NREQ, outputs[i]);
         }
 
         Recipe recipe = new SimpleRecipe() {
