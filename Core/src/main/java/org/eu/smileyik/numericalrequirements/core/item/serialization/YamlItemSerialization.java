@@ -120,13 +120,13 @@ public class YamlItemSerialization implements ItemSerialization {
             }
 
             SimpleHandler handler = new SimpleHandler();
-            DebugLogger.debug("Before: \n item: %s\nmeta: %s", itemStack, meta);
-            DebugLogger.debug("Serialization class: %s", entry.getClass().getName());
+            // DebugLogger.debug("Before: \n item: %s\nmeta: %s", itemStack, meta);
+            // DebugLogger.debug("Serialization class: %s", entry.getClass().getName());
             ItemStack deserialize = entry.deserialize(handler, section, itemStack, meta);
             if (!handler.isDeny()) {
                 itemStack.setItemMeta(meta);
                 meta = itemStack.getItemMeta();
-                DebugLogger.debug("After: \n item: %s\nmeta: %s", itemStack, meta);
+                // DebugLogger.debug("After: \n item: %s\nmeta: %s", itemStack, meta);
                 if (deserialize != null) {
                     itemStack = deserialize;
                     meta = itemStack.getItemMeta();

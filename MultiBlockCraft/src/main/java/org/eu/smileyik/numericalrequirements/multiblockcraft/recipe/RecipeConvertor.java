@@ -2,6 +2,7 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -38,8 +39,11 @@ public interface RecipeConvertor {
             }
         }
         try {
+            config = (YamlConfiguration) YamlUtil.loadFromString(config.saveToString().replace("32767", "0"));
             config.save(new File(extension.getDataFolder(), "minecraft-recipe.yml"));
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
     }
@@ -98,12 +102,12 @@ public interface RecipeConvertor {
         SimpleItem[] simpleItemInputs = new SimpleItem[inputs.length];
         for (int i = 0; i < inputs.length; i++) {
             if (inputs[i] != null && inputs[i].getType() == Material.AIR) inputs[i] = null;
-            simpleItemInputs[i] = new SimpleItem(SimpleItem.TYPE_NREQ, inputs[i]);
+            simpleItemInputs[i] = new SimpleItem(SimpleItem.TYPE_BUKKIT, inputs[i]);
         }
         SimpleItem[] simpleItemOutputs = new SimpleItem[outputs.length];
         for (int i = 0; i < outputs.length; i++) {
             if (outputs[i] != null && outputs[i].getType() == Material.AIR) outputs[i] = null;
-            simpleItemOutputs[i] = new SimpleItem(SimpleItem.TYPE_NREQ, outputs[i]);
+            simpleItemOutputs[i] = new SimpleItem(SimpleItem.TYPE_BUKKIT, outputs[i]);
         }
 
         Recipe recipe = new SimpleRecipe() {
