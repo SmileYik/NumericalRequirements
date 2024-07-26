@@ -1,8 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.command;
 
 import org.bukkit.ChatColor;
-import org.bukkit.EntityEffect;
-import org.bukkit.Particle;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.eu.smileyik.numericalrequirements.core.I18N;
@@ -47,8 +45,8 @@ public class RootCommand {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            p.spawnParticle(Particle.HEART, p.getEyeLocation(), 1);
-            p.playEffect(EntityEffect.HURT);
+//            p.spawnParticle(Particle.HEART, p.getEyeLocation(), 1);
+//            p.playEffect(EntityEffect.HURT);
         }
 
         plugin.onDisable();

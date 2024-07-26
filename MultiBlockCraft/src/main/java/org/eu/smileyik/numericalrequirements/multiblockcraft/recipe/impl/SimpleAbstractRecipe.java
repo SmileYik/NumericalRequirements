@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -127,9 +128,10 @@ public abstract class SimpleAbstractRecipe implements Recipe {
             Integer needAmount = inputAmountMap.getOrDefault(clone, 0);
             if (needAmount == 0) continue;
             int itemAmount = item.getAmount();
-            if (itemAmount < needAmount) {
+            if (itemAmount <= needAmount) {
                 inputAmountMap.put(clone, needAmount - itemAmount);
                 item.setAmount(0);
+                item.setType(Material.AIR);
             } else {
                 item.setAmount(itemAmount - needAmount);
                 inputAmountMap.remove(clone);

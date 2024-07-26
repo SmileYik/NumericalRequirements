@@ -22,6 +22,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.MachineServ
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.CraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineLoreTag;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.tag.MachineNBTTag;
+import org.eu.smileyik.numericalrequirements.nms.NMS;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -104,6 +105,14 @@ public class MachineListener implements Listener {
             return;
         }
 
+        if (NMS.MIDDLE_VERSION == 7) {
+            CONTAINER_LOCK.writeLock().lock();
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
+                    MultiBlockCraftExtension.getInstance().getPlugin(), () -> CONTAINER_LOCK.writeLock().unlock()
+            );
+            return;
+        }
+
         Location location = inv.getLocation();
         if (location == null) return;
         Block block = location.getBlock();
@@ -121,6 +130,14 @@ public class MachineListener implements Listener {
         InventoryHolder holder = inv.getHolder();
         if (holder instanceof CraftHolder) {
             ((CraftHolder) holder).getMachine().onDrag(event);
+            return;
+        }
+
+        if (NMS.MIDDLE_VERSION == 7) {
+            CONTAINER_LOCK.writeLock().lock();
+            MultiBlockCraftExtension.getInstance().getPlugin().getServer().getScheduler().runTask(
+                    MultiBlockCraftExtension.getInstance().getPlugin(), () -> CONTAINER_LOCK.writeLock().unlock()
+            );
             return;
         }
 

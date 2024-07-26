@@ -38,10 +38,12 @@ public class PlayerConnection extends ServerCommonPacketListenerImpl implements 
     }
 
     public void sendPacket(Packet packet) {
+        if (packet == null) return;
         CLASS.execute("sendPacket", instance, packet.getInstance());
     }
 
     public void sendPacket(Object packet) {
+        if (packet == null) return;
         CLASS.execute("sendPacket", instance, packet);
     }
 

@@ -22,7 +22,7 @@ public class NBTItemHelper {
     public static NBTItem cast(ItemStack itemStack) {
         if (MIDDLE_VERSION >= 21) {
             return new NBTItemImplFor_1_21(itemStack);
-        } else if (MIDDLE_VERSION >= 5) {
+        } else if (MIDDLE_VERSION >= 8) {
             return new NBTItemImpl(itemStack);
         }
         return null;

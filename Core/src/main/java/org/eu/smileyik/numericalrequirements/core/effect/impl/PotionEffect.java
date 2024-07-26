@@ -74,7 +74,7 @@ public class PotionEffect extends AbstractRegisterInfo implements Effect {
         if (potionEffect != null) {
             // if (!player.getPlayer().hasPotionEffect(potionEffect.getType())) {
                 NumericalRequirements.getInstance().runTask(() -> {
-                    player.getPlayer().addPotionEffect(potionEffect);
+                    player.getPlayer().addPotionEffect(potionEffect, true);
                 });
             //}
         }

@@ -16,6 +16,7 @@ import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.event.OpenM
 import org.eu.smileyik.numericalrequirements.multiblockcraft.machine.holder.SimpleCraftHolder;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.Recipe;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.recipe.impl.SimpleAbstractRecipe;
+import org.eu.smileyik.numericalrequirements.nms.NMS;
 
 import java.io.File;
 import java.util.UUID;
@@ -135,10 +136,22 @@ public class SimpleCraftTable extends SimpleMachine {
 
                 do {
                     recipe.takeInputs(inputs);
+                    if (NMS.MIDDLE_VERSION == 7) {
+                        int idx = 0;
+                        for (int islot : inputSlots) {
+                            inv.setItem(islot, inputs[idx++]);
+                        }
+                    }
                     times++;
                 } while (max * times < 64 && recipe.isMatch(inputs));
             } else {
                 recipe.takeInputs(inputs);
+                if (NMS.MIDDLE_VERSION == 7) {
+                    int idx = 0;
+                    for (int islot : inputSlots) {
+                        inv.setItem(islot, inputs[idx++]);
+                    }
+                }
                 times = 1;
             }
 
