@@ -1,71 +1,16 @@
-id:
-  name: aaa              # 名称
-  material: APPLE        # 材质
-  durability: 0          # 耐久
-  hide-tooltip: false    # 隐藏
-  unbreakable: false     # 不可损坏
-  fire-resistant: false
-  rarity: EPIC
-  custom-model-data: 1
-  sync: false
-  lore:
-  - aaaa
-  - aaaaaaaaaaaaaaaaaaaa
-  - '${Thirst: 10}'
-  - '${Thirst: ;10}'
-  - '${Thirst: 1;0}'
-  - '${Thirst: 10;}'
-  - '${Thirst: ;;10}'
-  - '${Thirst: 1;;0}'
-  - '${Thirst: 10;;}'
-  - '${Thirst: ;;;10}'
-  - '${Thirst: 1;;;0}'
-  - '${Thirst: 10;;;}'
-  enchantment:
-    thorns: 1
-  flags:
-  - HIDE_ATTRIBUTES
-  - a
-  - b
-  attribute:
-    724fb7e3-a-4e1c-95e7-61eba0a31b36:
-      attribute: GENERIC_MAX_HEALTH
-      operation: ADD_NUMBER
-      amount: 100.0
-      uuid: 724fb7e3-bd96-4e1c-95e7-61eba0a31b36
-      slot-group: any
-  food:
-    can-always-eat: true
-    eat-seconds: 1
-    nutrition: 100
-    saturation: 10.0
-    effects:
-      SPEED:
-        probability: 1.0
-        duration: 100
-        amplifier: 0
-id2:
-  material: APPLE
-  durability: 0
-  name: aaa
-  unbreakable: false
-  lore:
-  - aaaa
-  - aaaaaaaaaaaaaaaaaaaa
-  - '${Thirst: 10}'
-  - '${Thirst: 10}'
-  - '${Thirst: 10}'
-  flags:
-  - HIDE_ATTRIBUTES
-  nbt:
-    HideFlags: 2i
-  nbt-sync: false
-  enchantment: {}
 default-water:
-  name: '&b未知的水'
+  name: "&3&l不知道哪弄来的水"
   material: POTION
   lore:
-    - 这是一瓶未知的水，不过在野外也不能这么挑剔啦～
+    - ''
+    - '&3这是一瓶&c成分未知&3的水'
+    - '&3里面可能会有一些&c 脏东西😭'
+    - '&3不过在野外也不能这么挑剔啦～'
+    - ''
     - '${Thirst: 10}'
+  nbt:
+    CustomPotionColor: 6463722i
+  flags:
+    - HIDE_POTION_EFFECTS
   potion:
-    color: '#00F0000F'
+    color: '#FF62A0EA'
