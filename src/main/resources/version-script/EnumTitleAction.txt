@@ -1,4 +1,5 @@
 $1 >= 9; /reflect-class/EnumTitleAction_1_8_R3.txt
 $1 = 8; $2 = R3; /reflect-class/EnumTitleAction_1_8_R3.txt
+$1 = 8; $2 = R1; null
 $1 = 7; null
 true; /reflect-class/EnumTitleAction.txt

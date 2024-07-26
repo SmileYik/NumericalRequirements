@@ -15,20 +15,22 @@ public class PacketPlayOutTitle implements ReflectClassBase, Packet {
     private static final ReflectClass CLASS;
 
     static {
+        ReflectClass clazz;
         try {
             String currentVersion = VersionScript.runScriptByResource(SCRIPT_PATH);
             if (currentVersion != null) {
-                CLASS = MySimpleReflect.readByResource(
+                clazz = MySimpleReflect.readByResource(
                         currentVersion, false,
                         "${version}", VersionScript.VERSION
                 );
             } else {
-                CLASS = null;
+                clazz = null;
             }
         } catch (NoSuchFieldException | ClassNotFoundException | NoSuchMethodException | IOException e) {
             DebugLogger.debug(e);
-            throw new RuntimeException(e);
+            clazz = null;
         }
+        CLASS = clazz;
     }
 
     private final Object instance;

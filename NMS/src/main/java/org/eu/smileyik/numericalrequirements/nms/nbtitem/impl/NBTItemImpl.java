@@ -25,6 +25,7 @@ public class NBTItemImpl implements NBTItem {
 
     @Override
     public NBTTagCompound getTag() {
+        if (nmsItem == null) return null;
         if (tag == null) {
             tag = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
         }
