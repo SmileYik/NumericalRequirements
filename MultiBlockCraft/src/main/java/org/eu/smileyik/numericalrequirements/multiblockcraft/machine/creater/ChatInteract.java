@@ -64,6 +64,15 @@ public class ChatInteract implements Listener {
 
     }
 
+    public static Step newSimpleStep(String stepName, String nextStep, String key) {
+        return ((map, p, prefix, str) -> {
+            if (str == null) return stepName;
+            map.put(key, str);
+            Msg.trMsg(p, prefix + ".step." + stepName + ".display", str);
+            return nextStep;
+        });
+    }
+
     public interface Step {
         String apply(Map<String, String> map, Player p, String i18nPrefix, String str);
     }

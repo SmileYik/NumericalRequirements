@@ -51,24 +51,9 @@ public class MachineCreator implements Machine {
         INPUT_PLACEHOLDER = createItem(I18N.tr("extension.multi-block-craft.machine-creator.input-placeholder-name"));
         OUTPUT_PLACEHOLDER = createItem(I18N.tr("extension.multi-block-craft.machine-creator.output-placeholder-name"));
         EMPTY_PLACEHOLDER = createItem(I18N.tr("extension.multi-block-craft.machine-creator.empty-placeholder-name"));
-        STEPS.put("set-id", ((map, p, prefix, str) -> {
-            if (str == null) return "set-id";
-            map.put("id", str);
-            Msg.trMsg(p, prefix + ".step.set-id.display", str);
-            return "set-name";
-        }));
-        STEPS.put("set-name", ((map, p, prefix, str) -> {
-            if (str == null) return "set-name";
-            map.put("name", str);
-            Msg.trMsg(p, prefix + ".step.set-name.display", str);
-            return "set-title";
-        }));
-        STEPS.put("set-title", ((map, p, prefix, str) -> {
-            if (str == null) return "set-title";
-            map.put("title", str);
-            Msg.trMsg(p, prefix + ".step.set-title.display", str);
-            return "set-machine-item";
-        }));
+        STEPS.put("set-id", ChatInteract.newSimpleStep("set-id", "set-name", "id"));
+        STEPS.put("set-name", ChatInteract.newSimpleStep("set-name", "set-title", "name"));
+        STEPS.put("set-title", ChatInteract.newSimpleStep("set-title", "set-machine-item", "title"));
         STEPS.put("set-machine-item", ((map, p, prefix, str) -> {
             if (str == null) return "set-machine-item";
 

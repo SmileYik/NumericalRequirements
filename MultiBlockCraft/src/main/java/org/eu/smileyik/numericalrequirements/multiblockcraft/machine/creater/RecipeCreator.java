@@ -36,18 +36,8 @@ public class RecipeCreator implements Listener, Machine {
     );
 
     static {
-        STEPS.put("set-id", (map, p, prefix, str) -> {
-            if (str == null) return "set-id";
-            map.put("id", str);
-            Msg.trMsg(p, prefix + ".step.set-id.display", str);
-            return "set-name";
-        });
-        STEPS.put("set-name", (map, p, prefix, str) -> {
-            if (str == null) return "set-name";
-            map.put("name", str);
-            Msg.trMsg(p, prefix + ".step.set-name.display", str);
-            return "choose-recipes";
-        });
+        STEPS.put("set-id", ChatInteract.newSimpleStep("set-id", "set-name", "id"));
+        STEPS.put("set-name", ChatInteract.newSimpleStep("set-name", "choose-recipes", "name"));
         STEPS.put("choose-recipes", (map, p, prefix, str) -> {
             if (str == null) return "choose-recipes";
             Class<? extends Recipe> target = null;
