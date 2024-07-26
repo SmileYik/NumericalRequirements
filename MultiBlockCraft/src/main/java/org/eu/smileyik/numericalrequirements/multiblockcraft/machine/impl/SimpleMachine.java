@@ -19,7 +19,7 @@ import java.util.*;
 
 public abstract class SimpleMachine extends YamlMachine {
     protected Map<String, Recipe> recipes = new HashMap<>();
-    protected Map<String, Set<String>> shapeRecipes = new HashMap<>();
+    protected Map<String, List<String>> shapeRecipes = new HashMap<>();
     protected List<String> normalRecipes = new ArrayList<>();
 
     public SimpleMachine() {
@@ -35,10 +35,14 @@ public abstract class SimpleMachine extends YamlMachine {
         recipes.put(recipe.getId(), recipe);
         if (recipe instanceof OrderedRecipe) {
             String shapeString = ((OrderedRecipe) recipe).getShapeString();
-            shapeRecipes.putIfAbsent(shapeString, new HashSet<>());
-            shapeRecipes.get(shapeString).add(recipe.getId());
+            shapeRecipes.putIfAbsent(shapeString, new LinkedList<>());
+            if (!shapeRecipes.get(shapeString).contains(recipe.getId())) {
+                shapeRecipes.get(shapeString).add(recipe.getId());
+                shapeRecipes.get(shapeString).sort(Comparator.comparingInt(it -> recipes.get(it).getValidInputCount()).reversed());
+            }
         } else {
             normalRecipes.add(recipe.getId());
+            normalRecipes.sort(Comparator.comparingInt(it -> recipes.get(it).getValidInputCount()).reversed());
         }
     }
 
@@ -61,11 +65,12 @@ public abstract class SimpleMachine extends YamlMachine {
                 return event.getRecipe();
             }
         }
-
+        // 00000001000200010000000101010101
+        // 00000001000200010000000101010101
         if (!shapeRecipes.isEmpty()) {
             Pair<Byte[], ItemStack[]> pair = OrderedRecipe.spawnShape(inputs);
-            Set<String> set = shapeRecipes.getOrDefault(HexUtil.bytesToHex(pair.getFirst()), Collections.emptySet());
-            for (String id : set) {
+            List<String> shapedList = shapeRecipes.getOrDefault(HexUtil.bytesToHex(pair.getFirst()), Collections.emptyList());
+            for (String id : shapedList) {
                 Recipe recipe = recipes.get(id);
                 if (((OrderedRecipe) recipe).isMatch(pair)) {
                     FindRecipeEvent event = new FindRecipeEvent(this, recipe);

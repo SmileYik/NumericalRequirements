@@ -17,6 +17,7 @@ public abstract class SimpleAbstractRecipe implements Recipe {
     protected String id;
     protected String name;
 
+    protected int validInputCount;
     protected SimpleItem[] rawInputs;
     protected SimpleItem[] rawOutputs;
 
@@ -69,6 +70,11 @@ public abstract class SimpleAbstractRecipe implements Recipe {
             inputs.add(SimpleItem.load(i.getConfigurationSection(key)));
         });
         this.rawInputs = inputs.toArray(new SimpleItem[0]);
+        this.validInputCount = 0;
+        for (SimpleItem rawInput : this.rawInputs) {
+            if (rawInput == null || rawInput.getItemStack() == null) continue;
+            this.validInputCount++;
+        }
         inputAmountMap = mapItemAmount(Arrays.stream(rawInputs).map(SimpleItem::getItemStack).toArray(ItemStack[]::new));
 
         List<SimpleItem> outputs = new ArrayList<>();
@@ -137,6 +143,11 @@ public abstract class SimpleAbstractRecipe implements Recipe {
             );
             MultiBlockCraftExtension.getInstance().getPlugin().getServer().getPluginManager().callEvent(event);
         }
+    }
+
+    @Override
+    public int getValidInputCount() {
+        return validInputCount;
     }
 
     @Override
