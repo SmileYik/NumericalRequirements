@@ -10,17 +10,17 @@
 **插件核心提供**：
 * PotionEffect: 最典型的效果，能给予玩家 Minecraft 原版的药水效果。
 * EffectBundle: 效果包，是多个 `Effect` 的整合，主要依赖于配置项来给予玩家效果。
-* ChatMessageEffect: 向玩家发送一条消息，并且发送完消息后会立即进入**卸载**流程
-* ActionBarEffect: 向玩家发送一条行动栏上的信息，与 `ChatMessageEffect` 相同，作用完后会被立即卸载
-* TitleMessageEffect: 向玩家发送一条Title消息，与 `ChatMessageEffect` 相同，作用完后会被立即卸载
+* ChatMessageEffect: 向玩家发送一条消息，并且发送完消息后会立即进入**卸载**流程。
+* ActionBarEffect: 向玩家发送一条行动栏上的信息，与 `ChatMessageEffect` 相同，作用完后会被立即卸载。
+* TitleMessageEffect: 向玩家发送一条Title消息，与 `ChatMessageEffect` 相同，作用完后会被立即卸载。
 * ElementRateEffect: 影响元素的值的增加与减少的比例，举个例子，某元素加减值的计算方式为 `元素值 + 修改值 * 比例`，该效果就是影响 `比例` 这一值。
-**该效果无法直接使用，需要由各个元素拓展主动启用才能够使用，实际出现的Effect的唯一标识符一般为 `元素ID-ElementRateEffect`**
+**该效果无法直接使用，需要由各个元素拓展主动启用才能够使用，实际出现的Effect的唯一标识符一般为 `元素ID-ElementRateEffect`**。
 * ElementNaturalDepletionEffect: 影响元素的自然消减的值，举个例子，某个元素随时间每秒扣`A`点数值，而此效果就是影响 `A` 的值。
-**该效果无法直接使用，需要由各个元素拓展主动启用才能够使用，实际出现的Effect的唯一标识符一般为 `元素ID-ElementNaturalDepletionEffect`**
+**该效果无法直接使用，需要由各个元素拓展主动启用才能够使用，实际出现的Effect的唯一标识符一般为 `元素ID-ElementNaturalDepletionEffect`**。
 
-**拓展提供**：
-ThirstElement-ElementRateEffect: `Thirst` 拓展提供的 `ElementRateEffect` 效果
-ThirstElement-NaturalDepletionEffect: `Thirst` 拓展提供的 `ElementNaturalDepletionEffect` 效果
+**拓展提供**：  
+* ThirstElement-ElementRateEffect: `Thirst` 拓展提供的 `ElementRateEffect` 效果。  
+* ThirstElement-NaturalDepletionEffect: `Thirst` 拓展提供的 `ElementNaturalDepletionEffect` 效果。  
 
 ### Effect 的配置
 
