@@ -41,7 +41,6 @@ recipe-tool:
     nreq-tool-durability: "当前耐久度: <%:int>"
     # 非消耗品合成原材料Lore格式
     lore-recipe-not-consumable: "在合成中不被消耗"
-
 ```
 
 ### 注册的指令任务
@@ -155,10 +154,8 @@ recipe-tool:
 
 **PS**: 如果觉得本拓展自带的机器类型不够用或者不合意, 没关系, 自己动手做吧! 仅需要继承 `SimpleMachine` 类, 你也能有属于你自己的机器!
 
-<details>
-<summary>多方块机器使用展示</summary>
+多方块机器使用展示:
 <video src="https://github.com/SmileYik/NumericalRequirements/raw/master/docs/video/multi-block-01.mp4" controls></video>
-</details>
 
 ##### 机器的配置位置
 
