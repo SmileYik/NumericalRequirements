@@ -13,6 +13,9 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
+    compileOnly 'io.netty:netty-all:4.0.23.Final'
+    implementation 'net.bytebuddy:byte-buddy-agent:1.14.18'
+    implementation 'net.bytebuddy:byte-buddy:1.14.18'
     implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
 
     implementation project(":NMS")

@@ -1,4 +1,4 @@
-package org.eu.smileyik.numericalrequirements.test.multiblockcraft.recipe;
+package org.eu.smileyik.numericalrequirements.test.recipe;
 
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;

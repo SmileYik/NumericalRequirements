@@ -58,8 +58,6 @@ public class TestCommandServer {
 
             } catch (SocketException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         }).start();
     }
