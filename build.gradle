@@ -3,6 +3,7 @@ import java.util.jar.JarOutputStream
 import java.util.zip.ZipEntry
 
 plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'java'
 }
 
@@ -24,35 +25,40 @@ repositories {
 
 dependencies {
     testImplementation 'junit:junit:4.13.1'
+
     implementation project(":Commons:ReflectTool")
+    implementation project(":Core")
+    implementation project(":MultiBlockCraft")
+    implementation project(":Thirst")
+    implementation project(":Test")
 }
 
-def getModelClass(model) {
-    return new String[] {
-        "${project(model).buildDir}/classes/java/main/",
-        "${project(model).projectDir}/src/main/resources/"
-    }
-}
+shadowJar {
+    dependencies {
+        exclude(dependency("org.spigotmc:spigot-api:"))
+        exclude(dependency("org.spigotmc:spigot:"))
+        exclude(dependency("commons-lang:commons-lang:"))
+        exclude(dependency("com.google.guava:guava:"))
+        exclude(dependency("com.google.code.gson:gson:"))
+        exclude(dependency("net.md-5:bungeecord-chat:"))
+        exclude(dependency("com.google.code.gson:gson:"))
 
-jar {
-    getAllprojects().forEach {
-        if (getRootProject() != it) {
-            from "${it.buildDir}/classes/java/main/"
-            from "${it.projectDir}/src/main/resources/"
-        }
+        exclude(dependency(":junit*:"))
+        exclude(dependency(":LuaInMinecraftBukkit:"))
+        exclude(dependency {
+            it.moduleGroup.startsWith("org") && !it.moduleGroup.startsWith("org.eu") ||
+                    it.moduleGroup.startsWith("net.m") ||
+                    it.moduleGroup.startsWith("com.google")
+        })
     }
-    from "${project(":Test").buildDir}/classes/java/test/"
+
+    relocate('net.bytebuddy', "org.eu.smileyik.numericalrequirements")
 
     doLast {
-        delete "${buildDir}/libs/${archivesBaseName}-${version}-ori.jar"
-        copy {
-            from file("${buildDir}/libs/${archivesBaseName}-${version}.jar")
-            into file("${buildDir}/libs/")
-            rename "${archivesBaseName}-${version}.jar", "${archivesBaseName}-${version}-ori.jar"
-        }
+        delete "${buildDir}/libs/${archivesBaseName}-${version}-final.jar"
 
-        JarFile inFile = new JarFile(new File("${buildDir}/libs/${archivesBaseName}-${version}-ori.jar"))
-        JarOutputStream jos = new JarOutputStream(new FileOutputStream(new File("${buildDir}/libs/${archivesBaseName}-${version}.jar")))
+        JarFile inFile = new JarFile(new File("${buildDir}/libs/${archivesBaseName}-${version}-all.jar"))
+        JarOutputStream jos = new JarOutputStream(new FileOutputStream(new File("${buildDir}/libs/${archivesBaseName}-${version}-final.jar")))
         def entries = inFile.entries()
         while (entries.hasMoreElements()) {
             def element = entries.nextElement()
@@ -96,9 +102,9 @@ task deleteOldBuilds(type: Delete) {
 
 // 复制当前版本到plugins文件夹中z
 task copyTask(type: Copy) {
-    dependsOn(jar)
+    dependsOn(shadowJar)
     dependsOn(deleteOldBuilds)
-    from "${buildDir}/libs/${archivesBaseName}-${version}.jar"
+    from "${buildDir}/libs/${archivesBaseName}-${version}-final.jar"
     into "${projectDir}/server/plugins/"
 
     doLast {
