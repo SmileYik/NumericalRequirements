@@ -9,6 +9,7 @@ import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.player.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.command.CommandService;
 import org.eu.smileyik.numericalrequirements.core.extension.placeholderapi.PlaceholderApiExtension;
+import org.eu.smileyik.numericalrequirements.core.network.NetworkService;
 
 public interface NumericalRequirements {
     static NumericalRequirements getInstance() {
@@ -36,6 +37,8 @@ public interface NumericalRequirements {
     PlaceholderApiExtension getPlaceholderApiExtension();
 
     CommandService getCommandService();
+
+    NetworkService getNetworkService();
 
     void runTask(Runnable task);
 

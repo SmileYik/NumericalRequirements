@@ -15,6 +15,8 @@ import org.eu.smileyik.numericalrequirements.core.element.formatter.ElementForma
 import org.eu.smileyik.numericalrequirements.core.extension.ExtensionServiceImpl;
 import org.eu.smileyik.numericalrequirements.core.extension.placeholderapi.PlaceholderApiExtension;
 import org.eu.smileyik.numericalrequirements.core.item.ItemServiceImpl;
+import org.eu.smileyik.numericalrequirements.core.network.NetworkService;
+import org.eu.smileyik.numericalrequirements.core.network.NetworkServiceImpl;
 import org.eu.smileyik.numericalrequirements.core.player.YamlPlayerService;
 import org.eu.smileyik.numericalrequirements.core.util.Metrics;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
@@ -30,6 +32,7 @@ import java.util.Set;
 public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements {
     private static NumericalRequirements instance;
 
+    private NetworkService networkService;
     private PlayerService playerService;
     private ElementService elementService;
     private EffectService effectService;
@@ -53,6 +56,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                 loadAvailableWorlds();
                 setupDebugTools();
                 new I18N(this, getConfig().getString("language", null));
+                networkService = new NetworkServiceImpl(this);
                 playerService = new YamlPlayerService(this);
                 effectService = new SimpleEffectService(this);
                 elementService = new ElementServiceImpl(this);
@@ -179,6 +183,11 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
     @Override
     public CommandService getCommandService() {
         return commandService;
+    }
+
+    @Override
+    public NetworkService getNetworkService() {
+        return networkService;
     }
 
     @Override

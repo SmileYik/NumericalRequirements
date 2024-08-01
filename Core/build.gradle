@@ -22,8 +22,11 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
 
     compileOnly 'org.jetbrains:annotations:24.0.0'
-    implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.5'
+    compileOnly 'io.netty:netty-all:4.0.23.Final'
+
+    implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
+
     implementation(project(":Core:Command"))
     implementation(project(":NMS"))
     implementation(project(":Commons:ReflectTool"))
