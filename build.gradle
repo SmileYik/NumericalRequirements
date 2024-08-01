@@ -69,7 +69,7 @@ shadowJar {
         })
     }
 
-    relocate('net.bytebuddy', "org.eu.smileyik.numericalrequirements")
+    // relocate('net.bytebuddy', "org.eu.smileyik.numericalrequirements")
 
     doLast {
         delete "${buildDir}/libs/${archivesBaseName}-${version}-final.jar"
