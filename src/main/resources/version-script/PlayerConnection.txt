@@ -1,3 +1,4 @@
-        $1 >= 18; /reflect-class/PlayerConnection_1_18.txt
+$1 >= 19; /reflect-class/PlayerConnection_1_19.txt
+$1 >= 18; /reflect-class/PlayerConnection_1_18.txt
 $1  = 17; /reflect-class/PlayerConnection_1_17.txt
 true; /reflect-class/PlayerConnection.txt

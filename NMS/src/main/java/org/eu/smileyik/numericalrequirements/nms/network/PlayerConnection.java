@@ -18,7 +18,7 @@ public class PlayerConnection extends ServerCommonPacketListenerImpl implements 
             String currentVersion = VersionScript.runScriptByResource(SCRIPT_PATH);
             if (currentVersion != null) {
                 CLASS = MySimpleReflect.readByResource(
-                        currentVersion, false,
+                        currentVersion, true,
                         "${version}", VersionScript.VERSION
                 );
             } else {
@@ -48,7 +48,11 @@ public class PlayerConnection extends ServerCommonPacketListenerImpl implements 
     }
 
     public NetworkManager getNetworkManager() {
-        return new NetworkManager(CLASS.execute("getNetworkManager", instance));
+        if (CLASS.hasMethod("getNetworkManager")) {
+            return new NetworkManager(CLASS.execute("getNetworkManager", instance));
+        } else {
+            return new NetworkManager(CLASS.get("networkManager", instance));
+        }
     }
 
     @Override

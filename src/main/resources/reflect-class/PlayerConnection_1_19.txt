@@ -1,0 +1,9 @@
+net.minecraft.server.network.PlayerConnection{
+    @{
+        h<networkManager>;
+    }
+    #{
+        a<sendPacket>(net.minecraft.network.protocol.Packet);
+    }
+}
+
