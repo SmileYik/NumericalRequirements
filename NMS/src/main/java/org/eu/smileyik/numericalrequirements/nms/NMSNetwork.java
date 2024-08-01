@@ -27,6 +27,7 @@ public class NMSNetwork {
                 }
             }
         } catch (Throwable t) {
+            DebugLogger.debug("failed to register channel %s for player %s", channelName, player.getName());
             DebugLogger.debug(t);
             return false;
         }

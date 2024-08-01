@@ -19,6 +19,7 @@ public class NetworkServiceImpl implements Listener, NetworkService {
     public NetworkServiceImpl(NumericalRequirements plugin) {
         this.plugin = plugin;
 
+        DebugLogger.debug("network service created");
         listenAllPlayer();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
