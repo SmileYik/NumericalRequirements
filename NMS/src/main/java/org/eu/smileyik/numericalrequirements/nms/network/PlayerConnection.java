@@ -50,8 +50,10 @@ public class PlayerConnection extends ServerCommonPacketListenerImpl implements 
     public NetworkManager getNetworkManager() {
         if (CLASS.hasMethod("getNetworkManager")) {
             return new NetworkManager(CLASS.execute("getNetworkManager", instance));
-        } else {
+        } else if (CLASS.hasField("networkManager")) {
             return new NetworkManager(CLASS.get("networkManager", instance));
+        } else {
+            return super.getNetworkManager();
         }
     }
 

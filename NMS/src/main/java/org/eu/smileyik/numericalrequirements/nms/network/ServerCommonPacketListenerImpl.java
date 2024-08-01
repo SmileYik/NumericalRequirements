@@ -18,7 +18,7 @@ public class ServerCommonPacketListenerImpl implements ReflectClassBase {
             String currentVersion = VersionScript.runScriptByResource(SCRIPT_PATH);
             if (currentVersion != null) {
                 CLASS = MySimpleReflect.readByResource(
-                        currentVersion, false,
+                        currentVersion, true,
                         "${version}", VersionScript.VERSION
                 );
             } else {
@@ -41,6 +41,14 @@ public class ServerCommonPacketListenerImpl implements ReflectClassBase {
 
     public void sendCommonPacket(Packet packet) {
         CLASS.execute("sendCommonPacket", instance, packet.getInstance());
+    }
+
+    public NetworkManager getNetworkManager() {
+        if (CLASS.hasField("networkManager")) {
+            return new NetworkManager(CLASS.get("networkManager", instance));
+        } else {
+            return null;
+        }
     }
 
     @Override
