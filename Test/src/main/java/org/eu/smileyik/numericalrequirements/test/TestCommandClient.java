@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class TestCommandClient {
@@ -18,13 +20,28 @@ public class TestCommandClient {
     public static void luaConsole(DatagramSocket socket, Scanner scanner) throws IOException {
         System.out.println("input 'exit' to quit");
         sendPacket(socket, "lua run init console");
-        while (true) {
-            System.out.print("> ");
-            String command = scanner.nextLine();
-            if (command.equals("exit")) {
-                break;
+        String basePath = "./";
+        boolean exit = false;
+        while (!exit) {
+            while (scanner.hasNextLine()) {
+                String command = scanner.nextLine();
+                if (command.equals("exit")) {
+                    exit = true;
+                    break;
+                } else if (command.startsWith("import")) {
+                    String substring = command.substring("import ".length());
+                    try {
+                        command = String.join(" ", Files.readAllLines(Paths.get(basePath + "/luascripts/" + substring + ".lua")));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        continue;
+                    }
+                } else if (command.startsWith("setbase")) {
+                    basePath = command.substring("setbase ".length());
+                    continue;
+                }
+                sendPacket(socket, "lua run " + command);
             }
-            sendPacket(socket, "lua run " + command);
         }
         sendPacket(socket, "lua run close console");
     }
