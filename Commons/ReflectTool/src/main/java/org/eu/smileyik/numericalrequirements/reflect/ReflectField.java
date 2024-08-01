@@ -19,13 +19,24 @@ public class ReflectField implements MySimpleReflect {
 
         String fieldName = $s[1].replace("+", "$");
         String rename = fieldName;
+        String targetType = null;
         if (fieldName.contains("<")) {
             rename = fieldName.substring(fieldName.indexOf("<") + 1, fieldName.indexOf(">"));
             fieldName = fieldName.substring(0, fieldName.indexOf("<"));
+            if (rename.contains("|")) {
+                String[] split = rename.split("\\|");
+                rename = split[0];
+                targetType = split[1];
+            }
         }
 
         this.fieldName = rename;
         field = clazz.getDeclaredField(fieldName);
+
+        if (targetType != null && !field.getType().getName().equals(targetType)) {
+            throw new TypeNotMatchException(field.getType().getName(), targetType);
+        }
+
         if (forceAccess) {
             field.setAccessible(true);
         }

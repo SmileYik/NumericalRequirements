@@ -42,13 +42,19 @@ public interface MySimpleReflect {
                 classAndOther = $s[0];
             }
 
-            if (classAndOther.contains("@")) {
-                return (T) new ReflectField(fullPath, targetClass, classAndOther, forceAccess);
-            } else if (classAndOther.contains("#")) {
-                return (T) new ReflectMethod<>(fullPath, targetClass, classAndOther, forceAccess);
-            } else {
-                return (T) new ReflectConstructor(fullPath, targetClass, classAndOther, forceAccess);
+            try {
+                if (classAndOther.contains("@")) {
+                    return (T) new ReflectField(fullPath, targetClass, classAndOther, forceAccess);
+                } else if (classAndOther.contains("#")) {
+                    return (T) new ReflectMethod<>(fullPath, targetClass, classAndOther, forceAccess);
+                } else {
+                    return (T) new ReflectConstructor(fullPath, targetClass, classAndOther, forceAccess);
+                }
+            } catch (TypeNotMatchException e) {
+                DebugLogger.debug(e);
+                return null;
             }
+
         } catch (Exception e) {
             if (ignoreExceptions) {
                 DebugLogger.debug("未找到相应对象，跳过路径： %s", fullPath);
