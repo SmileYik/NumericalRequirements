@@ -8,14 +8,31 @@ plugins {
 }
 
 group = 'org.eu.smileyik'
-version = '1.0.0'
+
+
+def totalFix = 0
+
+pluginFixCount().forEach((k, v) -> {
+    totalFix += v
+})
+
+version = "1.0.${totalFix}"
+
+static def pluginFixCount() {
+    [
+        core: 1,
+        thirst: 0,
+        luaEffect: 0,
+        multiBlockCraft: 0
+    ]
+}
 
 def pluginVersions() {
     [
         plugin: version,
-        thirst: "1.0.0",
-        luaEffect: "1.0.0",
-        "multiBlockCraft": "1.0.0"
+        thirst: "1.0.${pluginFixCount()['thirst']}",
+        luaEffect: "1.0.${pluginFixCount()['luaEffect']}",
+        "multiBlockCraft": "1.0.${pluginFixCount()['luaEffect']}"
     ]
 }
 

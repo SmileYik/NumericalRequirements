@@ -102,7 +102,7 @@ public abstract class PotionEntry implements YamlItemEntry {
                 ret = Integer.parseUnsignedInt(string, 16);
             }
             DebugLogger.debug("%s to rgb %d", string, ret);
-            return ret;
+            return ret & 0x0FFFFFF;
         }
 
         @Override
