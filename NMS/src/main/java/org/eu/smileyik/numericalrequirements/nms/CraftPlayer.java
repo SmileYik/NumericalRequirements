@@ -47,6 +47,10 @@ public class CraftPlayer implements ReflectClassBase {
         return new EntityPlayer(CLASS.execute("getHandle", instance));
     }
 
+    public static EntityPlayer getHandle(Player player) {
+        return new EntityPlayer(CLASS.execute("getHandle", player));
+    }
+
     @Override
     public Object getInstance() {
         return instance;

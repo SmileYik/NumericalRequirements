@@ -1,16 +1,16 @@
 package org.eu.smileyik.numericalrequirements.nms.network;
 
+import io.netty.channel.Channel;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.ReflectClassBase;
-import org.eu.smileyik.numericalrequirements.nms.network.packet.Packet;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 
 import java.io.IOException;
 
-public class PlayerConnection extends ServerCommonPacketListenerImpl implements ReflectClassBase {
-    private static final String SCRIPT_PATH = "/version-script/PlayerConnection.txt";
+public class NetworkManager implements ReflectClassBase {
+    private static final String SCRIPT_PATH = "/version-script/NetworkManager.txt";
     private static final ReflectClass CLASS;
 
     static {
@@ -30,29 +30,21 @@ public class PlayerConnection extends ServerCommonPacketListenerImpl implements 
         }
     }
 
-    public PlayerConnection(Object instance) {
-        super(instance);
+    private final Object instance;
+
+    public NetworkManager(Object instance) {
         if (CLASS == null) {
             throw new IllegalStateException("Class not initialized");
         }
-    }
-
-    public void sendPacket(Packet packet) {
-        if (packet == null) return;
-        CLASS.execute("sendPacket", instance, packet.getInstance());
-    }
-
-    public void sendPacket(Object packet) {
-        if (packet == null) return;
-        CLASS.execute("sendPacket", instance, packet);
-    }
-
-    public NetworkManager getNetworkManager() {
-        return new NetworkManager(CLASS.execute("getNetworkManager", instance));
+        this.instance = instance;
     }
 
     @Override
     public Object getInstance() {
         return instance;
+    }
+
+    public Channel channel() {
+        return (Channel) CLASS.get("channel", instance);
     }
 }

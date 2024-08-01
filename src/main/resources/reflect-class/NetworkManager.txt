@@ -1,0 +1,5 @@
+net.minecraft.network.NetworkManager{
+    @{
+        k<channel> // public io.netty.channel.Channel net.minecraft.network.NetworkManager.k;
+    }
+}

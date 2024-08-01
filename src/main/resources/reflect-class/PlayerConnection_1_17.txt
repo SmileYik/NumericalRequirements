@@ -1,5 +1,6 @@
 net.minecraft.server.network.PlayerConnection{
     #{
         sendPacket<sendPacket>(net.minecraft.network.protocol.Packet);
+        a<getNetworkManager>();
     }
 }
