@@ -102,6 +102,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
         synchronized (this) {
             stopTest();
             HandlerList.unregisterAll(this);
+            networkService.shutdown();
             playerService.shutdown();
             extensionService.shutdown();
             commandService.shutdown();
@@ -112,6 +113,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                 metrics.shutdown();
             }
             I18N.clear();
+            networkService = null;
             extensionService = null;
             commandService = null;
             effectService = null;

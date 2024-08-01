@@ -15,4 +15,9 @@ public interface NetworkService {
      * @param packetListener
      */
     void removePacketListener(@NotNull PacketListener packetListener);
+
+    /**
+     * 关闭服务
+     */
+    void shutdown();
 }

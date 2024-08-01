@@ -50,7 +50,11 @@ public class PlayerChannelHandler extends ChannelDuplexHandler implements NMSPla
         super.write(ctx, msg, promise);
     }
 
-    public static synchronized void registerPacketListener(@NotNull PacketListener listener) {
+    /**
+     * 注册一个包监听器
+     * @param listener
+     */
+    protected static synchronized void registerPacketListener(@NotNull PacketListener listener) {
         if (!packetListenerMap.containsKey(listener.getPacketName())) {
             packetListenerMap.put(listener.getPacketName(), new LinkedHashSet<>());
         }
@@ -58,9 +62,20 @@ public class PlayerChannelHandler extends ChannelDuplexHandler implements NMSPla
         packetListenerMap.get(listener.getPacketName()).add(listener);
     }
 
-    public static synchronized void removePacketListener(@NotNull PacketListener listener) {
+    /**
+     * 取消注册已经注册了的包监听器
+     * @param listener
+     */
+    protected static synchronized void removePacketListener(@NotNull PacketListener listener) {
         DebugLogger.debug("removing packet listener for packet: %s", listener.getPacketName());
         packetListenerMap.getOrDefault(listener.getPacketName(), Collections.emptySet()).remove(listener);
+    }
+
+    /**
+     * 清空所有已经注册了的包监听器
+     */
+    protected static synchronized void clearPacketListeners() {
+        packetListenerMap.clear();
     }
 
     @Override

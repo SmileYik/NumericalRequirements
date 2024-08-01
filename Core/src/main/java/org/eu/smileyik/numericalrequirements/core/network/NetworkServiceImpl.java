@@ -47,6 +47,12 @@ public class NetworkServiceImpl implements Listener, NetworkService {
         PlayerChannelHandler.removePacketListener(packetListener);
     }
 
+    @Override
+    public void shutdown() {
+        PlayerChannelHandler.clearPacketListeners();
+        playerChannelHandlers.clear();
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         listen(event.getPlayer());
