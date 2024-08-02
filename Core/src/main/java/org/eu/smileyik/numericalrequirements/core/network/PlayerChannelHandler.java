@@ -5,6 +5,7 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import org.bukkit.entity.Player;
+import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.NMSPlayerChannelHandler;
 import org.eu.smileyik.numericalrequirements.nms.network.packet.Packet;
@@ -20,34 +21,36 @@ public class PlayerChannelHandler extends ChannelDuplexHandler implements NMSPla
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg != null) {
+        try {
             String simpleName = msg.getClass().getSimpleName();
             Set<PacketListener> packetListeners = packetListenerMap.get(simpleName);
             if (packetListeners != null) {
                 for (PacketListener listener : packetListeners) {
-                    if (listener.handlePacketIn(this, msg)) {
-                        return;
-                    }
+                    msg = listener.handlePacketIn(this, msg);
                 }
             }
+        } catch (Throwable t) {
+            I18N.warning("Error handling packet in: %s", t.getMessage());
+            DebugLogger.debug(t);
         }
-        super.channelRead(ctx, msg);
+        if (msg != null) super.channelRead(ctx, msg);
     }
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        if (msg != null) {
+        try {
             String simpleName = msg.getClass().getSimpleName();
             Set<PacketListener> packetListeners = packetListenerMap.get(simpleName);
             if (packetListeners != null) {
                 for (PacketListener listener : packetListeners) {
-                    if (channel.isOpen() && listener.handlePacketOut(this, msg)) {
-                        return;
-                    }
+                    msg = listener.handlePacketOut(this, msg);
                 }
             }
+        } catch (Throwable t) {
+            I18N.severe("Error handling packet out: %s", t.getMessage());
+            DebugLogger.debug(t);
         }
-        super.write(ctx, msg, promise);
+        if (msg != null) super.write(ctx, msg, promise);
     }
 
     /**

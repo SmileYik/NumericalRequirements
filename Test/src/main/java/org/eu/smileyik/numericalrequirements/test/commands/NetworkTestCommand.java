@@ -28,15 +28,15 @@ public class NetworkTestCommand {
             }
 
             @Override
-            public boolean handlePacketIn(PlayerChannelHandler handler, Object packet) {
+            public Object handlePacketIn(PlayerChannelHandler handler, Object packet) {
                 System.out.printf("%s: %s\n", handler.getPlayer().getName(), PacketToString.toString(packet));
-                return result;
+                return result ? null : PacketListener.super.handlePacketIn(handler, packet);
             }
 
             @Override
-            public boolean handlePacketOut(PlayerChannelHandler handler, Object packet) {
+            public Object handlePacketOut(PlayerChannelHandler handler, Object packet) {
                 System.out.printf("%s: %s\n", handler.getPlayer().getName(), PacketToString.toString(packet));
-                return result;
+                return result ? null : PacketListener.super.handlePacketOut(handler, packet);
             }
         });
         NumericalRequirements.getInstance().getNetworkService().addPacketListener(map.get(packetName));

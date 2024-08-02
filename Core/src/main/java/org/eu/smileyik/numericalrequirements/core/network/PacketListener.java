@@ -8,18 +8,23 @@ public interface PacketListener {
     String getPacketName();
 
     /**
-     * 处理传入包，如果要阻止该包传入则返回true.
+     * 处理传入包，如果要拦截该包则返回null或其他包实例, 否则返回super.handlePacketIn()
+     *
      * @param handler
      * @param packet
      * @return
      */
-    boolean handlePacketIn(PlayerChannelHandler handler, Object packet);
+    default Object handlePacketIn(PlayerChannelHandler handler, Object packet) {
+        return packet;
+    }
 
     /**
-     * 处理传出包, 如果要阻止包继续传出则返回true.
+     * 处理传出包, 如果要拦截该包则返回null或其他包实例,否则返回super.handlePacketOut()
      * @param handler
      * @param packet
      * @return
      */
-    boolean handlePacketOut(PlayerChannelHandler handler, Object packet);
+    default Object handlePacketOut(PlayerChannelHandler handler, Object packet) {
+        return packet;
+    };
 }
