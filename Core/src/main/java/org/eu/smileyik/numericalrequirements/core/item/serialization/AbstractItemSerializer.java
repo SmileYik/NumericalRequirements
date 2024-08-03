@@ -11,12 +11,11 @@ import org.eu.smileyik.numericalrequirements.core.item.serialization.entry.*;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class AbstractItemSerializer implements ItemSerialization {
-    protected final List<ItemSerializationEntry> entries;
+    protected static final List<ItemSerializationEntry> ENTRIES;
 
-    public AbstractItemSerializer() {
+    static {
         List<ItemSerializationEntry> entries = new ArrayList<>();
         entries.add(new AttributeEntry.Attribute1Entry());
         entries.add(new AttributeEntry.Attribute2Entry());
@@ -42,20 +41,21 @@ public abstract class AbstractItemSerializer implements ItemSerialization {
             });
         });
 
-        this.entries = entries.stream().filter(ItemSerializationEntry::isAvailable).sorted(Comparator.comparingInt(ItemSerializationEntry::getPriority)).collect(Collectors.toList());
+        entries.removeIf(it -> !it.isAvailable());
+        entries.sort(Comparator.comparingInt(ItemSerializationEntry::getPriority));
+        ENTRIES = entries;
 
         DebugLogger.debug((d) -> {
-            this.entries.forEach(it -> {
+            entries.forEach(it -> {
                 DebugLogger.debug("YamlItemSerialization Entry Enabled:\nAvailable: %s\nClass: %s\ninstance: %s", it.isAvailable(), it.getClass().getName(), it);
             });
         });
-        entries.clear();
     }
 
     @Override
     public void configure(ConfigurationSection section) {
         if (section == null) return;
-        entries.forEach(entry -> {
+        ENTRIES.forEach(entry -> {
             if (section.isConfigurationSection(entry.getId())) {
                 entry.configure(section.getConfigurationSection(entry.getId()));
             }
@@ -68,7 +68,7 @@ public abstract class AbstractItemSerializer implements ItemSerialization {
         storeCommons(config, itemStack, meta);
 
         Set<String> ids = new HashSet<>();
-        entries.forEach(entry -> {
+        ENTRIES.forEach(entry -> {
             if (ids.contains(entry.getId())) return;
 
             ConfigurationHashMap section = config;
@@ -95,7 +95,7 @@ public abstract class AbstractItemSerializer implements ItemSerialization {
         ItemMeta meta = itemStack.getItemMeta();
 
         Set<String> ids = new HashSet<>();
-        for (ItemSerializationEntry entry : entries) {
+        for (ItemSerializationEntry entry : ENTRIES) {
             if (ids.contains(entry.getId())) continue;
 
             ConfigurationHashMap section = config;
