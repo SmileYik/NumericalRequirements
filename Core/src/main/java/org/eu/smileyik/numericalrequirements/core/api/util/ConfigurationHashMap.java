@@ -1,5 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.api.util;
 
+import com.google.gson.*;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,6 +10,22 @@ import java.util.List;
 import java.util.Map;
 
 public class ConfigurationHashMap extends HashMap<String, Object> {
+    public static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(ConfigurationHashMap.class, (JsonDeserializer<ConfigurationHashMap>) (json, typeOfT, context) -> {
+                if (json instanceof JsonObject) {
+                    ConfigurationHashMap map = new ConfigurationHashMap();
+                    for (Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
+                        JsonElement value = entry.getValue();
+                        Class<?> clazz = value instanceof JsonObject ? ConfigurationHashMap.class : Object.class;
+                        map.putWithoutCheck(entry.getKey(), context.deserialize(value, clazz));
+                    }
+                    return map;
+                } else {
+                    return context.deserialize(json, Object.class);
+                }
+            }).create();
+    private ConfigurationHashMap parent;
+
     public ConfigurationHashMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
@@ -22,6 +39,10 @@ public class ConfigurationHashMap extends HashMap<String, Object> {
 
     public ConfigurationHashMap(Map<? extends String, ?> m) {
         super(m);
+    }
+
+    private void putWithoutCheck(String key, Object value) {
+        super.put(key, value);
     }
 
     @Override
@@ -46,8 +67,37 @@ public class ConfigurationHashMap extends HashMap<String, Object> {
         return null;
     }
 
+    /**
+     * 删除值空的键值对.
+     * @param deep 是否循环删除后代中的空值键值对.
+     */
+    public void removeEmptyValue(boolean deep) {
+        super.entrySet().removeIf(entry -> entry.getValue() == null);
+        if (deep) {
+            super.forEach((k, v) -> {
+                if (v instanceof ConfigurationHashMap) {
+                    ((ConfigurationHashMap) v).removeEmptyValue(true);
+                }
+            });
+        }
+
+    }
+
+    private void setParent(ConfigurationHashMap parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * 获取上一节点.
+     * @return
+     */
+    public ConfigurationHashMap getParent() {
+        return parent;
+    }
+
     public ConfigurationHashMap createMap(String key) {
         ConfigurationHashMap configurationHashMap = new ConfigurationHashMap();
+        configurationHashMap.setParent(this);
         this.put(key, configurationHashMap);
         return configurationHashMap;
     }
@@ -69,7 +119,9 @@ public class ConfigurationHashMap extends HashMap<String, Object> {
     }
 
     public ConfigurationHashMap getMap(String key) {
-        return (ConfigurationHashMap) super.get(key);
+        ConfigurationHashMap configurationHashMap = (ConfigurationHashMap) super.get(key);
+        if (configurationHashMap != null) configurationHashMap.setParent(this);
+        return configurationHashMap;
     }
 
     public Number getNumber(String key) {
@@ -207,5 +259,13 @@ public class ConfigurationHashMap extends HashMap<String, Object> {
 
     public List<Float> getFloatList(String key) {
         return getList(key, Float.class);
+    }
+
+    public String toJson() {
+        return GSON.toJson(this);
+    }
+
+    public static ConfigurationHashMap fromJson(String json) {
+        return GSON.fromJson(json, ConfigurationHashMap.class);
     }
 }
