@@ -10,20 +10,28 @@ import java.util.List;
 import java.util.Map;
 
 public class ConfigurationHashMap extends HashMap<String, Object> {
+    public static final Object JSON_DESERIALIZER = (JsonDeserializer<ConfigurationHashMap>) (json, typeOfT, context) -> {
+        if (json instanceof JsonObject) {
+            ConfigurationHashMap map = new ConfigurationHashMap();
+            for (Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
+                JsonElement value = entry.getValue();
+                Class<?> clazz = value instanceof JsonObject ? ConfigurationHashMap.class : Object.class;
+                map.putWithoutCheck(entry.getKey(), context.deserialize(value, clazz));
+            }
+            return map;
+        } else {
+            return context.deserialize(json, Object.class);
+        }
+    };
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(ConfigurationHashMap.class, (JsonDeserializer<ConfigurationHashMap>) (json, typeOfT, context) -> {
-                if (json instanceof JsonObject) {
-                    ConfigurationHashMap map = new ConfigurationHashMap();
-                    for (Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
-                        JsonElement value = entry.getValue();
-                        Class<?> clazz = value instanceof JsonObject ? ConfigurationHashMap.class : Object.class;
-                        map.putWithoutCheck(entry.getKey(), context.deserialize(value, clazz));
-                    }
-                    return map;
-                } else {
-                    return context.deserialize(json, Object.class);
-                }
-            }).create();
+            .registerTypeAdapter(ConfigurationHashMap.class, JSON_DESERIALIZER)
+            .create();
+
+    public static final Gson GSON_PRETTY = new GsonBuilder()
+            .registerTypeAdapter(ConfigurationHashMap.class, JSON_DESERIALIZER)
+            .setPrettyPrinting()
+            .create();
+
     private ConfigurationHashMap parent;
 
     public ConfigurationHashMap(int initialCapacity, float loadFactor) {
@@ -262,7 +270,11 @@ public class ConfigurationHashMap extends HashMap<String, Object> {
     }
 
     public String toJson() {
-        return GSON.toJson(this);
+        return toJson(false);
+    }
+
+    public String toJson(boolean pretty) {
+        return (pretty ? GSON_PRETTY : GSON).toJson(this);
     }
 
     public static ConfigurationHashMap fromJson(String json) {
