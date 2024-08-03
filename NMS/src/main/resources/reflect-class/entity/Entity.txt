@@ -1,0 +1,13 @@
+net.minecraft.world.entity.Entity{
+    #{
+        getId<getId>() // public int net.minecraft.world.entity.Entity.getId();
+        getUniqueID<getUniqueID>() // public java.util.UUID net.minecraft.world.entity.Entity.getUniqueID();
+        getDataWatcher<getDataWatcher>() // public net.minecraft.network.syncher.DataWatcher net.minecraft.world.entity.Entity.getDataWatcher();
+        setPose<setPose>(net.minecraft.world.entity.EntityPose)+ // public void net.minecraft.world.entity.Entity.setPose(net.minecraft.world.entity.EntityPose);
+        getPose<getPose>()+ // public net.minecraft.world.entity.EntityPose net.minecraft.world.entity.Entity.getPose();
+        isNoGravity<isNoGravity>()+ // public boolean net.minecraft.world.entity.Entity.isNoGravity();
+        setNoGravity<setNoGravity>(boolean)+ // public void net.minecraft.world.entity.Entity.setNoGravity(boolean);
+        setInvisible<setInvisible>(boolean) // public void net.minecraft.world.entity.Entity.setInvisible(boolean);
+        getBukkitEntity<getBukkitEntity>() // public org.bukkit.craftbukkit.${version}.entity.CraftEntity net.minecraft.world.entity.Entity.getBukkitEntity();
+    }
+}

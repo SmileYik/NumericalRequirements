@@ -1,0 +1,5 @@
+org.bukkit.craftbukkit.${version}.CraftWorld{
+    #{
+        getHandle<getHandle>() // public net.minecraft.server.level.WorldServer org.bukkit.craftbukkit.${version}.CraftWorld.getHandle();
+    }
+}

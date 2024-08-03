@@ -1,0 +1,33 @@
+net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving{
+    @{
+        a<a>+ // private final int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.a;
+        b<b>+ // private final java.util.UUID net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.b;
+        c<c>+ // private final int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.c;
+        d<d>+ // private final double net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.d;
+        e<e>+ // private final double net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.e;
+        f<f>+ // private final double net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.f;
+        g<g>+ // private final int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.g;
+        h<h>+ // private final int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.h;
+        i<i>+ // private final int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.i;
+        j<j>+ // private final byte net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.j;
+        k<k>+ // private final byte net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.k;
+        l<l>+ // private final byte net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.l;
+    }
+    {
+        <newInstance>(net.minecraft.world.entity.EntityLiving) // public net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving(net.minecraft.world.entity.EntityLiving);
+    }
+    #{
+        i<i>()+ // public int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.i();
+        b<getEntityId>()+ // public int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.b();
+        e<getX>()+ // public double net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.e();
+        c<getUUID>()+ // public java.util.UUID net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.c();
+        h<h>()+ // public int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.h();
+        f<getY>()+ // public double net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.f();
+        l<l>()+ // public byte net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.l();
+        d<getEntityType>()+ // public int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.d();
+        m<m>()+ // public byte net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.m();
+        k<k>()+ // public byte net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.k();
+        g<getZ>()+ // public double net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.g();
+        j<j>()+ // public int net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving.j();
+    }
+}

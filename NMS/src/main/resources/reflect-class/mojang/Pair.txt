@@ -1,0 +1,9 @@
+com.mojang.datafixers.util.Pair{
+    {
+        <newInstance>(java.lang.Object, java.lang.Object) // public com.mojang.datafixers.util.Pair(java.lang.Object,java.lang.Object);
+    }
+    #{
+        getFirst<getFirst>() // public java.lang.Object com.mojang.datafixers.util.Pair.getFirst();
+        getSecond<getSecond>() // public java.lang.Object com.mojang.datafixers.util.Pair.getSecond();
+    }
+}

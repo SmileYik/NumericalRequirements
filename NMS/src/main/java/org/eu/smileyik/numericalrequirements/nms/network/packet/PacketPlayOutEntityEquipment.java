@@ -1,16 +1,16 @@
-package org.eu.smileyik.numericalrequirements.nms.entity;
+package org.eu.smileyik.numericalrequirements.nms.network.packet;
 
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.ReflectClassBase;
-import org.eu.smileyik.numericalrequirements.nms.network.PlayerConnection;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 
 import java.io.IOException;
+import java.util.List;
 
-public class EntityPlayer extends Entity implements NMSEntity, ReflectClassBase {
-    private static final String SCRIPT_PATH = "/version-script/EntityPlayer.txt";
+public class PacketPlayOutEntityEquipment implements ReflectClassBase {
+    private static final String SCRIPT_PATH = "/version-script/packet/PacketPlayOutEntityEquipment.txt";
     private static final ReflectClass CLASS;
 
     static {
@@ -30,14 +30,24 @@ public class EntityPlayer extends Entity implements NMSEntity, ReflectClassBase 
         }
     }
 
-    public EntityPlayer(Object instance) {
-        super(instance);
+    private final Object instance;
+
+    public PacketPlayOutEntityEquipment(Object instance) {
         if (CLASS == null) {
             throw new IllegalStateException("Class not initialized");
         }
+        this.instance = instance;
     }
 
-    public PlayerConnection playerConnection() {
-        return new PlayerConnection(CLASS.get("playerConnection", instance));
+    public static PacketPlayOutEntityEquipment newInstance(int entityId, List<?> equipmentList) {
+        if (CLASS == null) return null;
+        return new PacketPlayOutEntityEquipment(
+                CLASS.newInstance("newInstance", entityId, equipmentList)
+        );
+    }
+
+    @Override
+    public Object getInstance() {
+        return instance;
     }
 }

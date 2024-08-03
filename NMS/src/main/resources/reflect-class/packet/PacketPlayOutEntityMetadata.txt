@@ -1,0 +1,9 @@
+net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata{
+    {
+        <newInstance>(int, net.minecraft.network.syncher.DataWatcher, boolean) // public net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata(int,net.minecraft.network.syncher.DataWatcher,boolean);
+    }
+    #{
+        b<getDataWatcherItems>() // public java.util.List net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata.b();
+        c<getEntityId>() // public int net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata.c();
+    }
+}

@@ -1,0 +1,23 @@
+net.minecraft.network.syncher.DataWatcherRegistry{
+    @{
+        a<Byte>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.a;
+        b<Integer>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.b;
+        c<Float>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.c;
+        d<String>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.d;
+        e<IChatBaseComponent>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.e;
+        f<OptionalIChatBaseComponent>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.f;
+        g<ItemStack>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.g;
+        h<OptionalIBlockData>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.h;
+        i<Boolean>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.i;
+        j<ParticleParam>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.j;
+        k<Vector3f>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.k;
+        l<BlockPosition>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.l;
+        m<OptionalBlockPosition>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.m;
+        n<EnumDirection>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.n;
+        o<OptionalUUID>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.o;
+        p<NBTTagCompound>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.p;
+        q<VillagerData>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.q;
+        r<OptionalInt>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.r;
+        s<EntityPose>+ // public static final net.minecraft.network.syncher.DataWatcherSerializer net.minecraft.network.syncher.DataWatcherRegistry.s;
+    }
+}

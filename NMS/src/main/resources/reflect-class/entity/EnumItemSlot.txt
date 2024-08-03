@@ -1,0 +1,22 @@
+net.minecraft.world.entity.EnumItemSlot{
+    @{
+        a<mainhand> // public static final net.minecraft.world.entity.EnumItemSlot net.minecraft.world.entity.EnumItemSlot.a;
+        b<offhand> // public static final net.minecraft.world.entity.EnumItemSlot net.minecraft.world.entity.EnumItemSlot.b;
+        c<feet> // public static final net.minecraft.world.entity.EnumItemSlot net.minecraft.world.entity.EnumItemSlot.c;
+        d<legs> // public static final net.minecraft.world.entity.EnumItemSlot net.minecraft.world.entity.EnumItemSlot.d;
+        e<chest> // public static final net.minecraft.world.entity.EnumItemSlot net.minecraft.world.entity.EnumItemSlot.e;
+        f<head> // public static final net.minecraft.world.entity.EnumItemSlot net.minecraft.world.entity.EnumItemSlot.f;
+    }
+    // #{
+    //     values<values>() // public static net.minecraft.world.entity.EnumItemSlot[] net.minecraft.world.entity.EnumItemSlot.values();
+    //     valueOf<valueOf>(java.lang.String) // public static net.minecraft.world.entity.EnumItemSlot net.minecraft.world.entity.EnumItemSlot.valueOf(java.lang.String);
+    //     b<b>() // public int net.minecraft.world.entity.EnumItemSlot.b();
+    //     e<e>() // private static net.minecraft.world.entity.EnumItemSlot[] net.minecraft.world.entity.EnumItemSlot.e();
+    //     a<a>(net.minecraft.world.entity.EnumItemSlot$Function, int) // public static net.minecraft.world.entity.EnumItemSlot net.minecraft.world.entity.EnumItemSlot.a(net.minecraft.world.entity.EnumItemSlot$Function,int);
+    //     a<a>() // public net.minecraft.world.entity.EnumItemSlot$Function net.minecraft.world.entity.EnumItemSlot.a();
+    //     a<a>(int) // public int net.minecraft.world.entity.EnumItemSlot.a(int);
+    //     getSlotFlag<getSlotFlag>() // public int net.minecraft.world.entity.EnumItemSlot.getSlotFlag();
+    //     getSlotName<getSlotName>() // public java.lang.String net.minecraft.world.entity.EnumItemSlot.getSlotName();
+    //     fromName<fromName>(java.lang.String) // public static net.minecraft.world.entity.EnumItemSlot net.minecraft.world.entity.EnumItemSlot.fromName(java.lang.String);
+    // }
+}

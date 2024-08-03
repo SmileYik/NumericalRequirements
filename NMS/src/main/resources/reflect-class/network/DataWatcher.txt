@@ -1,0 +1,9 @@
+net.minecraft.network.syncher.DataWatcher{
+    {
+        <newInstance>(net.minecraft.world.entity.Entity) // public net.minecraft.network.syncher.DataWatcher(net.minecraft.world.entity.Entity);
+    }
+    #{
+        a<newDataWatcherObject>(java.lang.Class, net.minecraft.network.syncher.DataWatcherSerializer) // public static net.minecraft.network.syncher.DataWatcherObject net.minecraft.network.syncher.DataWatcher.a(java.lang.Class,net.minecraft.network.syncher.DataWatcherSerializer);
+        register<register>(net.minecraft.network.syncher.DataWatcherObject, java.lang.Object) // public void net.minecraft.network.syncher.DataWatcher.register(net.minecraft.network.syncher.DataWatcherObject,java.lang.Object);
+    }
+}

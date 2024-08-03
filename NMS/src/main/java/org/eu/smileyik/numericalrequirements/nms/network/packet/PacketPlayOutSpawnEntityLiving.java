@@ -1,16 +1,16 @@
-package org.eu.smileyik.numericalrequirements.nms.entity;
+package org.eu.smileyik.numericalrequirements.nms.network.packet;
 
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.ReflectClassBase;
-import org.eu.smileyik.numericalrequirements.nms.network.PlayerConnection;
+import org.eu.smileyik.numericalrequirements.nms.entity.EntityArmorStand;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 
 import java.io.IOException;
 
-public class EntityPlayer extends Entity implements NMSEntity, ReflectClassBase {
-    private static final String SCRIPT_PATH = "/version-script/EntityPlayer.txt";
+public class PacketPlayOutSpawnEntityLiving implements Packet, ReflectClassBase {
+    private static final String SCRIPT_PATH = "/version-script/packet/PacketPlayOutSpawnEntityLiving.txt";
     private static final ReflectClass CLASS;
 
     static {
@@ -30,14 +30,31 @@ public class EntityPlayer extends Entity implements NMSEntity, ReflectClassBase 
         }
     }
 
-    public EntityPlayer(Object instance) {
-        super(instance);
+    private final Object instance;
+
+    public PacketPlayOutSpawnEntityLiving(Object instance) {
         if (CLASS == null) {
             throw new IllegalStateException("Class not initialized");
         }
+        this.instance = instance;
     }
 
-    public PlayerConnection playerConnection() {
-        return new PlayerConnection(CLASS.get("playerConnection", instance));
+    public static PacketPlayOutSpawnEntityLiving newInstance(EntityArmorStand entityArmorStand) {
+        if (CLASS == null) return null;
+        return new PacketPlayOutSpawnEntityLiving(
+                CLASS.newInstance("newInstance", entityArmorStand.getInstance())
+        );
+    }
+
+    public static PacketPlayOutSpawnEntityLiving newInstance(Object nmsLivingEntity) {
+        if (CLASS == null) return null;
+        return new PacketPlayOutSpawnEntityLiving(
+                CLASS.newInstance("newInstance", nmsLivingEntity)
+        );
+    }
+
+    @Override
+    public Object getInstance() {
+        return instance;
     }
 }

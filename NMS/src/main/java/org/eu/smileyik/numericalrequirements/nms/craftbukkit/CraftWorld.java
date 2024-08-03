@@ -1,16 +1,16 @@
-package org.eu.smileyik.numericalrequirements.nms.entity;
+package org.eu.smileyik.numericalrequirements.nms.craftbukkit;
 
+import org.bukkit.World;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.ReflectClassBase;
-import org.eu.smileyik.numericalrequirements.nms.network.PlayerConnection;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 
 import java.io.IOException;
 
-public class EntityPlayer extends Entity implements NMSEntity, ReflectClassBase {
-    private static final String SCRIPT_PATH = "/version-script/EntityPlayer.txt";
+public class CraftWorld implements ReflectClassBase {
+    private static final String SCRIPT_PATH = "/version-script/craftbukkit/CraftWorld.txt";
     private static final ReflectClass CLASS;
 
     static {
@@ -30,14 +30,26 @@ public class EntityPlayer extends Entity implements NMSEntity, ReflectClassBase 
         }
     }
 
-    public EntityPlayer(Object instance) {
-        super(instance);
+    private final Object instance;
+
+    public CraftWorld(Object instance) {
         if (CLASS == null) {
             throw new IllegalStateException("Class not initialized");
         }
+        this.instance = instance;
     }
 
-    public PlayerConnection playerConnection() {
-        return new PlayerConnection(CLASS.get("playerConnection", instance));
+    @Override
+    public Object getInstance() {
+        return instance;
+    }
+
+    /**
+     * 获取NMS的World
+     * @param world
+     * @return
+     */
+    public static Object getHandle(World world) {
+        return CLASS.execute("getHandle", world);
     }
 }

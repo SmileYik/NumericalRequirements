@@ -1,0 +1,9 @@
+net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment{
+    {
+        <newInstance>(int, java.util.List) // public net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment(int,java.util.List);
+    }
+    #{
+        b<getEntityId>() // public int net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment.b();
+        c<getEquipmentList>() // public java.util.List net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment.c();
+    }
+}
