@@ -1,20 +1,19 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClassPathBuilder;
-import org.eu.smileyik.numericalrequirements.reflect.ReflectMethod;
 
 import java.util.List;
 
-public class FoodEntry implements YamlItemEntry {
+public class FoodEntry implements ItemSerializationEntry {
     final boolean flag;
 
     ReflectClass itemMetaClass;
@@ -74,31 +73,31 @@ public class FoodEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if (!(boolean) itemMetaClass.execute("hasFood", itemMeta)) {
             return;
         }
         Object food = itemMetaClass.execute("getFood", itemMeta);
         if (food == null) return;
-        section.set("can-always-eat", foodComponent.execute("canAlwaysEat", food));
-        section.set("eat-seconds", foodComponent.execute("getEatSeconds", food));
-        section.set("nutrition", foodComponent.execute("getNutrition", food));
-        section.set("saturation", foodComponent.execute("getSaturation", food));
-        ConfigurationSection ecs = section.createSection("effects");
+        section.put("can-always-eat", foodComponent.execute("canAlwaysEat", food));
+        section.put("eat-seconds", foodComponent.execute("getEatSeconds", food));
+        section.put("nutrition", foodComponent.execute("getNutrition", food));
+        section.put("saturation", foodComponent.execute("getSaturation", food));
+        ConfigurationHashMap ecs = section.createMap("effects");
         List<Object> effects = (List<Object>) foodComponent.execute("getEffects", food);
         for (Object effect : effects) {
             PotionEffect potionEffect = (PotionEffect) foodComponent.execute("getEffect", effect);
             float probability = (float) foodComponent.execute("getProbability", effect);
             String name = potionEffect.getType().getName();
-            ConfigurationSection ec = ecs.createSection(name);
-            ec.set("probability", probability);
-            ec.set("duration", potionEffect.getDuration());
-            ec.set("amplifier", potionEffect.getAmplifier());
+            ConfigurationHashMap ec = ecs.createMap(name);
+            ec.put("probability", probability);
+            ec.put("duration", potionEffect.getDuration());
+            ec.put("amplifier", potionEffect.getAmplifier());
         }
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         Object food = itemMetaClass.execute("getFood", itemMeta);
 
         if (section.contains("can-always-eat")) foodComponent.execute("setCanAlwaysEat", food, section.getBoolean("can-always-eat"));
@@ -106,9 +105,9 @@ public class FoodEntry implements YamlItemEntry {
         if (section.contains("nutrition")) foodComponent.execute("setNutrition", food, section.getInt("nutrition"));
         if (section.contains("saturation")) foodComponent.execute("setSaturation", food, (float) section.getInt("saturation"));
         if (section.contains("effects")) {
-            section = section.getConfigurationSection("effects");
-            for (String type : section.getKeys(false)) {
-                ConfigurationSection ec = section.getConfigurationSection(type);
+            section = section.getMap("effects");
+            for (String type : section.keySet()) {
+                ConfigurationHashMap ec = section.getMap(type);
                 PotionEffect pe = new PotionEffect(
                         PotionEffectType.getByName(type),
                         ec.getInt("duration"),

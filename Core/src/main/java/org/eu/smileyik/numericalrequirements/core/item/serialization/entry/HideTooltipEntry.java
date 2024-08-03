@@ -1,25 +1,25 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClassPathBuilder;
 
-public class UnbreakableEntry implements YamlItemEntry {
+public class HideTooltipEntry implements ItemSerializationEntry {
     final boolean flag;
     private ReflectClass itemMetaClass;
 
-    public UnbreakableEntry() {
+    public HideTooltipEntry() {
         boolean flag1 = true;
         try {
             itemMetaClass = MySimpleReflect.getReflectClass(new ReflectClassPathBuilder()
                             .newGroup("org.bukkit.inventory.meta.ItemMeta#")
-                            .append("isUnbreakable()")
-                            .append("setUnbreakable(boolean)")
+                            .append("isHideTooltip()")
+                            .append("setHideTooltip(boolean)")
                             .endGroup()
                             .finish());
         } catch (NoSuchFieldException | ClassNotFoundException | NoSuchMethodException e) {
@@ -31,7 +31,7 @@ public class UnbreakableEntry implements YamlItemEntry {
 
     @Override
     public String getId() {
-        return "unbreakable";
+        return "hide-tooltip";
     }
 
     @Override
@@ -45,14 +45,15 @@ public class UnbreakableEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
-        section.set(getId(), itemMetaClass.execute("isUnbreakable", itemMeta));
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
+        boolean flag = (boolean) itemMetaClass.execute("isHideTooltip", itemMeta);
+        if (flag) section.put("hide-tooltip", true);
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
-        if (section.contains(getId())) {
-            itemMetaClass.execute("setUnbreakable", itemMeta, section.getBoolean(getId()));
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
+        if (section.contains("hide-tooltip")) {
+            itemMetaClass.execute("setHideTooltip", itemMeta, section.getBoolean("hide-tooltip"));
         }
         return null;
     }

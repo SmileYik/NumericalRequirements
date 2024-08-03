@@ -1,10 +1,11 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization;
+package org.eu.smileyik.numericalrequirements.core.api.item;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 
-public interface YamlItemEntry {
+public interface ItemSerializationEntry {
 
     interface Handler {
         void deny();
@@ -53,7 +54,7 @@ public interface YamlItemEntry {
      * @param itemStack
      * @param itemMeta
      */
-    void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta);
+    void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta);
 
     /**
      * 将配置反序列化为物品，若在反序列化时需要产出新的物品，则将该新物品返回即可。
@@ -62,5 +63,5 @@ public interface YamlItemEntry {
      * @param itemMeta
      * @return
      */
-    ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta);
+    ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta);
 }

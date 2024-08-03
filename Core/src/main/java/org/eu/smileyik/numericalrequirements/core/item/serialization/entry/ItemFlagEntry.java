@@ -1,10 +1,10 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectMethod;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ItemFlagEntry implements YamlItemEntry {
+public class ItemFlagEntry implements ItemSerializationEntry {
     final boolean flag;
     ReflectMethod<Object> valueOf;
     ReflectMethod<String> name;
@@ -54,14 +54,14 @@ public class ItemFlagEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         Set<?> flags = getItemFlags.execute(itemMeta);
         if (flags == null || flags.isEmpty()) return;
-        section.set(getId(), flags.stream().map(it -> (String) name.execute(it)).collect(Collectors.toList()));
+        section.put(getId(), flags.stream().map(it -> (String) name.execute(it)).collect(Collectors.toList()));
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if (!section.contains(getId())) return null;
         List<String> stringList = section.getStringList(getId());
         if (stringList == null || stringList.isEmpty()) return null;

@@ -1,26 +1,25 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClassPathBuilder;
 
-public class CustomModelDataEntry implements YamlItemEntry {
+public class UnbreakableEntry implements ItemSerializationEntry {
     final boolean flag;
     private ReflectClass itemMetaClass;
 
-    public CustomModelDataEntry() {
+    public UnbreakableEntry() {
         boolean flag1 = true;
         try {
             itemMetaClass = MySimpleReflect.getReflectClass(new ReflectClassPathBuilder()
                             .newGroup("org.bukkit.inventory.meta.ItemMeta#")
-                            .append("getCustomModelData()")
-                            .append("setCustomModelData(java.lang.Integer)")
-                            .append("hasCustomModelData()")
+                            .append("isUnbreakable()")
+                            .append("setUnbreakable(boolean)")
                             .endGroup()
                             .finish());
         } catch (NoSuchFieldException | ClassNotFoundException | NoSuchMethodException e) {
@@ -32,7 +31,7 @@ public class CustomModelDataEntry implements YamlItemEntry {
 
     @Override
     public String getId() {
-        return "custom-model-data";
+        return "unbreakable";
     }
 
     @Override
@@ -46,16 +45,15 @@ public class CustomModelDataEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
-        if ((boolean) itemMetaClass.execute("hasCustomModelData", itemMeta)) {
-            section.set(getId(), itemMetaClass.execute("getCustomModelData", itemMeta));
-        }
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
+        boolean execute = (boolean) itemMetaClass.execute("isUnbreakable", itemMeta);
+        if (execute) section.put(getId(), true);
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if (section.contains(getId())) {
-            itemMetaClass.execute("setCustomModelData", itemMeta, section.getInt(getId()));
+            itemMetaClass.execute("setUnbreakable", itemMeta, section.getBoolean(getId()));
         }
         return null;
     }

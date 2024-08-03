@@ -1,13 +1,13 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 
-public class EnchantmentOldEntry implements YamlItemEntry {
+public class EnchantmentOldEntry implements ItemSerializationEntry {
 
     @Override
     public String getId() {
@@ -25,17 +25,17 @@ public class EnchantmentOldEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if (itemMeta.hasEnchants()) {
             itemMeta.getEnchants().forEach((k, v) -> {
-                section.set(k.getName(), v);
+                section.put(k.getName(), v);
             });
         }
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
-        for (String key : section.getKeys(false)) {
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
+        for (String key : section.keySet()) {
             Enchantment enchantment = Enchantment.getByName(key.toUpperCase());
             if (enchantment == null) {
                 I18N.warning("item.serialization.enchantment.unknown", key);

@@ -1,17 +1,17 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.ValueTranslator;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LoreEntry implements YamlItemEntry {
+public class LoreEntry implements ItemSerializationEntry {
     @Override
     public String getId() {
         return "lore";
@@ -37,7 +37,7 @@ public class LoreEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if (!itemMeta.hasLore()) return;
         ItemService itemService = NumericalRequirements.getInstance().getItemService();
 
@@ -63,11 +63,11 @@ public class LoreEntry implements YamlItemEntry {
             lore.add(String.format("${%s}", str));
         }
 
-        section.set("lore", lore);
+        if (!lore.isEmpty()) section.put("lore", lore);
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if (!section.contains("lore")) return null;
 
         ItemService itemService = NumericalRequirements.getInstance().getItemService();

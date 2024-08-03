@@ -1,11 +1,12 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagTypeId;
@@ -14,7 +15,7 @@ import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 
 import java.util.*;
 
-public class NBTEntry implements YamlItemEntry {
+public class NBTEntry implements ItemSerializationEntry {
     final boolean flag;
     private Map<String, NBTTypeCast> castMap;
     private Map<Byte, NBTTypeSerialize> serializeMap;
@@ -103,7 +104,7 @@ public class NBTEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         NBTItem nbtItem = NBTItemHelper.cast(itemStack);
         if (nbtItem == null) return;
         NBTTagCompound tag = nbtItem.getTag();
@@ -111,23 +112,23 @@ public class NBTEntry implements YamlItemEntry {
         serialize(tag, section);
     }
 
-    private void serialize(NBTTagCompound tag, ConfigurationSection section) {
+    private void serialize(NBTTagCompound tag, ConfigurationHashMap section) {
         for (String key : tag.getKeys()) {
             if (ignoreKeys.contains(key)) continue;
             if (tag.hasKeyOfType(key, NBTTagTypeId.COMPOUND)) {
-                serialize(tag.getCompound(key), section.createSection(key));
+                serialize(tag.getCompound(key), section.createMap(key));
                 continue;
             }
             serializeMap.forEach((type, cast) -> {
                 if (tag.hasKeyOfType(key, type)) {
-                    section.set(key, cast.cast(tag, key));
+                    section.put(key, cast.cast(tag, key));
                 }
             });
         }
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         NBTItem nbtItem = NBTItemHelper.cast(itemStack);
         if (nbtItem == null) return null;
 
@@ -138,13 +139,13 @@ public class NBTEntry implements YamlItemEntry {
         return nbtItem.getItemStack();
     }
 
-    private void deserialize(NBTTagCompound tag, ConfigurationSection section) {
-        Set<String> keys = section.getKeys(false);
+    private void deserialize(NBTTagCompound tag, ConfigurationHashMap section) {
+        Set<String> keys = section.keySet();
         for (String key : keys) {
             if (ignoreKeys.contains(key)) continue;
-            if (section.isConfigurationSection(key)) {
+            if (section.isMap(key)) {
                 NBTTagCompound subTag = new NBTTagCompound();
-                deserialize(subTag, section.getConfigurationSection(key));
+                deserialize(subTag, section.getMap(key));
                 tag.set(key, subTag);
                 continue;
             }

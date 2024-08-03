@@ -1,10 +1,10 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
 import com.google.common.collect.Multimap;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectConstructor;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class AttributeEntry implements YamlItemEntry {
+public abstract class AttributeEntry implements ItemSerializationEntry {
     protected ReflectMethod<String> enumName;
 
     protected ReflectMethod<Object> operationOf;
@@ -66,35 +66,34 @@ public abstract class AttributeEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         Multimap<Object, Object> attributes = getAttributeModifiers.execute(itemMeta);
         if (attributes == null) return;
 
         attributes.entries().forEach(entry -> {
-            ConfigurationSection attr = section.createSection(getName.execute(entry.getValue()));
-            attr.set("attribute", enumName.execute(entry.getKey()));
-            attr.set("operation", enumName.execute(getOperation.execute(entry.getValue())));
-            attr.set("amount", getAmount.execute(entry.getValue()));
+            ConfigurationHashMap attr = section.createMap(getName.execute(entry.getValue()));
+            attr.put("attribute", enumName.execute(entry.getKey()));
+            attr.put("operation", enumName.execute(getOperation.execute(entry.getValue())));
+            attr.put("amount", getAmount.execute(entry.getValue()));
             serialize(handler, attr, entry, itemStack, itemMeta);
         });
     }
 
-    protected abstract void serialize(Handler handler, ConfigurationSection section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta);
+    protected abstract void serialize(Handler handler, ConfigurationHashMap section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta);
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
-        for (String name : section.getKeys(false)) {
-            ConfigurationSection attr = section.getConfigurationSection(name);
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
+        for (Map.Entry<String, Object> entry : section.entrySet()) {
+            String name = entry.getKey();
+            ConfigurationHashMap attr = (ConfigurationHashMap) entry.getValue();
             Object am = deserialize(handler, attr, name, attr.getDouble("amount"), attr.getString("operation"));
-            if (handler.isDeny()) {
-                return null;
-            }
+            if (handler.isDeny()) continue;
             addAttributeModifier.execute(itemMeta, attributeOf.execute(null, attr.getString("attribute")), am);
         }
         return null;
     }
 
-    protected abstract Object deserialize(Handler handler, ConfigurationSection section, String name, double amount, String operation);
+    protected abstract Object deserialize(Handler handler, ConfigurationHashMap section, String name, double amount, String operation);
 
     public static class Attribute1Entry extends AttributeEntry {
         protected ReflectConstructor newAttributeModifier;
@@ -127,12 +126,12 @@ public abstract class AttributeEntry implements YamlItemEntry {
         }
 
         @Override
-        protected void serialize(Handler handler, ConfigurationSection section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta) {
+        protected void serialize(Handler handler, ConfigurationHashMap section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta) {
 
         }
 
         @Override
-        protected Object deserialize(Handler handler, ConfigurationSection section, String name, double amount, String operation) {
+        protected Object deserialize(Handler handler, ConfigurationHashMap section, String name, double amount, String operation) {
             return newAttributeModifier.execute(name, amount, operationOf.execute(null, operation));
         }
 
@@ -172,7 +171,7 @@ public abstract class AttributeEntry implements YamlItemEntry {
         }
 
         @Override
-        protected void serialize(Handler handler, ConfigurationSection section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta) {
+        protected void serialize(Handler handler, ConfigurationHashMap section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta) {
             super.serialize(handler, section, entry, itemStack, itemMeta);
             UUID uuid;
             try {
@@ -180,11 +179,11 @@ public abstract class AttributeEntry implements YamlItemEntry {
             } catch (Exception e) {
                 uuid = UUID.fromString(getName.execute(entry.getValue()));
             }
-            section.set("uuid", uuid.toString());
+            section.put("uuid", uuid.toString());
         }
 
         @Override
-        protected Object deserialize(Handler handler, ConfigurationSection section, String name, double amount, String operation) {
+        protected Object deserialize(Handler handler, ConfigurationHashMap section, String name, double amount, String operation) {
             if (!section.contains("uuid")) {
                 handler.deny();
                 return null;
@@ -226,18 +225,18 @@ public abstract class AttributeEntry implements YamlItemEntry {
         }
 
         @Override
-        protected void serialize(Handler handler, ConfigurationSection section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta) {
+        protected void serialize(Handler handler, ConfigurationHashMap section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta) {
             super.serialize(handler, section, entry, itemStack, itemMeta);
             Object slot = getEquipmentSlot.execute(entry.getValue());
             if (slot == null) {
-                section.set("slot", null);
+                section.put("slot", null);
             } else {
-                section.set("slot", enumName.execute(slot));
+                section.put("slot", enumName.execute(slot));
             }
         }
 
         @Override
-        protected Object deserialize(Handler handler, ConfigurationSection section, String name, double amount, String operation) {
+        protected Object deserialize(Handler handler, ConfigurationHashMap section, String name, double amount, String operation) {
             if (!section.contains("slot")) {
                 handler.deny();
                 return null;
@@ -283,13 +282,13 @@ public abstract class AttributeEntry implements YamlItemEntry {
         }
 
         @Override
-        protected void serialize(Handler handler, ConfigurationSection section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta) {
+        protected void serialize(Handler handler, ConfigurationHashMap section, Map.Entry<Object, Object> entry, ItemStack itemStack, ItemMeta itemMeta) {
             super.serialize(handler, section, entry, itemStack, itemMeta);
-            section.set("slot-group", Objects.toString(getSlotGroup.execute(entry.getValue())));
+            section.put("slot-group", Objects.toString(getSlotGroup.execute(entry.getValue())));
         }
 
         @Override
-        protected Object deserialize(Handler handler, ConfigurationSection section, String name, double amount, String operation) {
+        protected Object deserialize(Handler handler, ConfigurationHashMap section, String name, double amount, String operation) {
             if (!section.contains("slot-group")) {
                 handler.deny();
                 return null;

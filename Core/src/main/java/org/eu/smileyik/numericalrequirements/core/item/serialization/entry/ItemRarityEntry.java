@@ -1,15 +1,15 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClassPathBuilder;
 
-public class ItemRarityEntry implements YamlItemEntry {
+public class ItemRarityEntry implements ItemSerializationEntry {
     final boolean flag;
     private ReflectClass itemMetaClass;
     private ReflectClass itemRarity;
@@ -53,14 +53,14 @@ public class ItemRarityEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if ((boolean) itemMetaClass.execute("hasRarity", itemMeta)) {
-            section.set(getId(), itemRarity.execute("name", itemMetaClass.execute("getRarity", itemMeta)));
+            section.put(getId(), itemRarity.execute("name", itemMetaClass.execute("getRarity", itemMeta)));
         }
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if (section.contains(getId())) {
             itemMetaClass.execute("setRarity", itemMeta, itemRarity.execute("valueOf", null, section.getString(getId())));
         }

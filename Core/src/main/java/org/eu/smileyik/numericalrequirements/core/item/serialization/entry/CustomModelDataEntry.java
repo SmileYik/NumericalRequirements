@@ -1,25 +1,26 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClassPathBuilder;
 
-public class FireResistantEntry implements YamlItemEntry {
+public class CustomModelDataEntry implements ItemSerializationEntry {
     final boolean flag;
     private ReflectClass itemMetaClass;
 
-    public FireResistantEntry() {
+    public CustomModelDataEntry() {
         boolean flag1 = true;
         try {
             itemMetaClass = MySimpleReflect.getReflectClass(new ReflectClassPathBuilder()
                             .newGroup("org.bukkit.inventory.meta.ItemMeta#")
-                            .append("isFireResistant()")
-                            .append("setFireResistant(boolean)")
+                            .append("getCustomModelData()")
+                            .append("setCustomModelData(java.lang.Integer)")
+                            .append("hasCustomModelData()")
                             .endGroup()
                             .finish());
         } catch (NoSuchFieldException | ClassNotFoundException | NoSuchMethodException e) {
@@ -31,7 +32,7 @@ public class FireResistantEntry implements YamlItemEntry {
 
     @Override
     public String getId() {
-        return "fire-resistant";
+        return "custom-model-data";
     }
 
     @Override
@@ -45,14 +46,16 @@ public class FireResistantEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
-        section.set(getId(), itemMetaClass.execute("isFireResistant", itemMeta));
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
+        if ((boolean) itemMetaClass.execute("hasCustomModelData", itemMeta)) {
+            section.put(getId(), itemMetaClass.execute("getCustomModelData", itemMeta));
+        }
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if (section.contains(getId())) {
-            itemMetaClass.execute("setFireResistant", itemMeta, section.getBoolean(getId()));
+            itemMetaClass.execute("setCustomModelData", itemMeta, section.getInt(getId()));
         }
         return null;
     }

@@ -1,18 +1,18 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.reflect.builder.ReflectClassBuilder;
 
 import java.util.List;
 
-public abstract class PotionEntry implements YamlItemEntry {
+public abstract class PotionEntry implements ItemSerializationEntry {
     final boolean flag;
 
     protected PotionEntry() {
@@ -64,29 +64,29 @@ public abstract class PotionEntry implements YamlItemEntry {
         }
 
         @Override
-        public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+        public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
             try {
                 POTION_CLASS.cast(itemMeta);
             } catch (Exception e) {
                 return;
             }
             if ((boolean) POTION_META_CLASS.execute("hasCustomEffects", itemMeta)) {
-                ConfigurationSection effects = section.createSection("effects");
+                ConfigurationHashMap effects = section.createMap("effects");
                 List<PotionEffect> list =  (List<PotionEffect>) POTION_META_CLASS.execute("getCustomEffects", itemMeta);
                 int i = 1;
                 for (PotionEffect effect : list) {
                     String key = String.format("effect-%d", i++);
-                    ConfigurationSection potion = effects.createSection(key);
-                    potion.set("type", effect.getType().getName());
-                    potion.set("duration", effect.getDuration());
-                    potion.set("amplifier", effect.getAmplifier());
+                    ConfigurationHashMap potion = effects.createMap(key);
+                    potion.put("type", effect.getType().getName());
+                    potion.put("duration", effect.getDuration());
+                    potion.put("amplifier", effect.getAmplifier());
                 }
             }
 
             if ((boolean) POTION_META_CLASS.execute("hasColor", itemMeta)) {
                 Object color = POTION_META_CLASS.execute("getColor", itemMeta);
                 int rgb = (int) COLOR_CLASS.execute("asARGB", color);
-                section.set("color", rgbToString(rgb));
+                section.put("color", rgbToString(rgb));
             }
         }
 
@@ -106,16 +106,16 @@ public abstract class PotionEntry implements YamlItemEntry {
         }
 
         @Override
-        public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+        public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
             try {
                 POTION_CLASS.cast(itemMeta);
             } catch (Exception e) {
                 return null;
             }
-            if (section.isConfigurationSection("effects")) {
-                ConfigurationSection effects = section.getConfigurationSection("effects");
-                for (String key : effects.getKeys(false)) {
-                    ConfigurationSection potion = effects.getConfigurationSection(key);
+            if (section.isMap("effects")) {
+                ConfigurationHashMap effects = section.getMap("effects");
+                for (String key : effects.keySet()) {
+                    ConfigurationHashMap potion = effects.getMap(key);
                     String type = potion.getString("type");
                     int duration = potion.getInt("duration");
                     int amplifier = potion.getInt("amplifier");

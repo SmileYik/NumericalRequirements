@@ -1,17 +1,17 @@
-package org.eu.smileyik.numericalrequirements.core.item.serialization.yaml;
+package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClassPathBuilder;
 
-public class EnchantmentNewEntry implements YamlItemEntry {
+public class EnchantmentNewEntry implements ItemSerializationEntry {
 
     final boolean flag;
 
@@ -71,17 +71,17 @@ public class EnchantmentNewEntry implements YamlItemEntry {
     }
 
     @Override
-    public void serialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
+    public void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
         if (itemMeta.hasEnchants()) {
             itemMeta.getEnchants().forEach((k, v) -> {
-                section.set((String) namespaceKey.execute("getKey", keyed.execute("getKey", k)), v);
+                section.put((String) namespaceKey.execute("getKey", keyed.execute("getKey", k)), v);
             });
         }
     }
 
     @Override
-    public ItemStack deserialize(Handler handler, ConfigurationSection section, ItemStack itemStack, ItemMeta itemMeta) {
-        for (String key : section.getKeys(false)) {
+    public ItemStack deserialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
+        for (String key : section.keySet()) {
             Object nk = namespaceKey.execute("fromString", null, key);
             if (nk == null) {
                 I18N.warning("item.serialization.enchantment.unknown", key);
