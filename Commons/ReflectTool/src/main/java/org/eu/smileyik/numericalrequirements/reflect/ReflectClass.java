@@ -9,23 +9,29 @@ public class ReflectClass implements MySimpleReflect {
     private final Map<String, ReflectField> fields = new HashMap<>();
     private final Map<String, ReflectMethod<?>> methods = new HashMap<>();
     private final Map<String, Class<?>> classes = new HashMap<>();
+    private final Class<?> mainClass;
 
     protected ReflectClass(List<MySimpleReflect> reflects) {
+        Class<?> mainClass = null;
         for (MySimpleReflect it : reflects) {
             if (it instanceof ReflectMethod<?>) {
                 methods.put(it.getName(), (ReflectMethod<?>) it);
                 Class<?> declaringClass = ((ReflectMethod<?>) it).getMethod().getDeclaringClass();
                 classes.put(it.getName(), declaringClass);
+                if (mainClass == null) mainClass = declaringClass;
             } else if (it instanceof ReflectField) {
                 fields.put(it.getName(), (ReflectField) it);
                 Class<?> declaringClass = ((ReflectField) it).getField().getDeclaringClass();
                 classes.put(it.getName(), declaringClass);
+                if (mainClass == null) mainClass = declaringClass;
             } else if (it instanceof ReflectConstructor) {
                 constructors.put(it.getName(), (ReflectConstructor) it);
                 Class<?> declaringClass = ((ReflectConstructor) it).getConstructor().getDeclaringClass();
                 classes.put(it.getName(), declaringClass);
+                if (mainClass == null) mainClass = declaringClass;
             }
         }
+        this.mainClass = mainClass;
     }
 
     public Object newInstance(String constructor, Object... args) {
@@ -72,9 +78,13 @@ public class ReflectClass implements MySimpleReflect {
         return classes.get(className);
     }
 
+    public Class<?> getMainClass() {
+        return mainClass;
+    }
+
     @Override
     public String getName() {
-        return null;
+        return mainClass.getName();
     }
 
     @Override
