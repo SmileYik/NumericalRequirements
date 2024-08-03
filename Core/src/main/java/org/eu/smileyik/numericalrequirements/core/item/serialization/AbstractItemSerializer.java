@@ -2,24 +2,21 @@ package org.eu.smileyik.numericalrequirements.core.item.serialization;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerialization;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
-import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.entry.*;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class YamlItemSerialization implements ItemSerialization {
-    private final List<ItemSerializationEntry> entries;
+public abstract class AbstractItemSerializer implements ItemSerialization {
+    protected final List<ItemSerializationEntry> entries;
 
-    public YamlItemSerialization() {
+    public AbstractItemSerializer() {
         List<ItemSerializationEntry> entries = new ArrayList<>();
         entries.add(new AttributeEntry.Attribute1Entry());
         entries.add(new AttributeEntry.Attribute2Entry());
@@ -65,45 +62,32 @@ public class YamlItemSerialization implements ItemSerialization {
         });
     }
 
-    @Override
-    public String serialize(ItemStack itemStack) {
-        if (itemStack == null) {
-            return new YamlConfiguration().saveToString();
-        }
-
+    protected ConfigurationHashMap doSerialize(ItemStack itemStack) {
         ConfigurationHashMap config = new ConfigurationHashMap();
         ItemMeta meta = itemStack.getItemMeta();
         storeCommons(config, itemStack, meta);
 
         Set<String> ids = new HashSet<>();
         entries.forEach(entry -> {
-            if (!entry.isAvailable() || ids.contains(entry.getId())) return;
+            if (ids.contains(entry.getId())) return;
+
             ConfigurationHashMap section = config;
             if (entry.getKey() != null) {
                 section = section.createMap(entry.getKey());
             }
             SimpleHandler handler = new SimpleHandler();
             entry.serialize(handler, section, itemStack, meta);
+            if (section.isEmpty()) config.remove(entry.getKey());
             if (handler.isDeny()) {
-                section.put(entry.getKey(), null);
+                config.remove(entry.getKey());
             } else {
                 ids.add(entry.getId());
             }
         });
-        return YamlUtil.saveToString(YamlUtil.fromMap(config));
+        return config;
     }
 
-    @Override
-    public ItemStack deserialize(String string) {
-        ConfigurationSection configurationSection;
-        try {
-            configurationSection = YamlUtil.loadFromString(string);
-        } catch (InvalidConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-
-        ConfigurationHashMap config = YamlUtil.toMap(configurationSection);
-
+    protected ItemStack doDeserialize(ConfigurationHashMap config) {
         ItemStack itemStack = loadCommons(config);
         if (itemStack == null) {
             return null;
@@ -112,7 +96,7 @@ public class YamlItemSerialization implements ItemSerialization {
 
         Set<String> ids = new HashSet<>();
         for (ItemSerializationEntry entry : entries) {
-            if (!entry.isAvailable() || ids.contains(entry.getId())) continue;
+            if (ids.contains(entry.getId())) continue;
 
             ConfigurationHashMap section = config;
             if (entry.getKey() != null) {
@@ -140,7 +124,7 @@ public class YamlItemSerialization implements ItemSerialization {
         return itemStack;
     }
 
-    private ItemStack loadCommons(ConfigurationHashMap section) {
+    protected ItemStack loadCommons(ConfigurationHashMap section) {
         if (!section.contains("material")) {
             return null;
         }
@@ -157,7 +141,7 @@ public class YamlItemSerialization implements ItemSerialization {
         return stack;
     }
 
-    private void storeCommons(ConfigurationHashMap section, ItemStack itemStack, ItemMeta meta) {
+    protected void storeCommons(ConfigurationHashMap section, ItemStack itemStack, ItemMeta meta) {
         section.put("material", itemStack.getType().name());
         if (itemStack.getDurability() != 0) {
             section.put("durability", itemStack.getDurability());
@@ -169,7 +153,7 @@ public class YamlItemSerialization implements ItemSerialization {
         }
     }
 
-    private static class SimpleHandler implements ItemSerializationEntry.Handler {
+    protected static class SimpleHandler implements ItemSerializationEntry.Handler {
         private boolean flag = false;
 
         @Override

@@ -26,7 +26,7 @@ import org.eu.smileyik.numericalrequirements.core.api.item.tag.nbt.NBTTag;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemSerialization;
+import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemSerializer;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
@@ -47,7 +47,7 @@ public class ItemServiceImpl implements Listener, ItemService {
 
     private YamlConfiguration itemConfig;
     private final File itemFile;
-    private final ItemSerialization itemSerialization = new YamlItemSerialization();
+    private final ItemSerialization itemSerialization = new YamlItemSerializer();
     private final ConcurrentMap<String, ItemStack> itemStackCache = new ConcurrentHashMap<>();
 
     public ItemServiceImpl(NumericalRequirements plugin) {
