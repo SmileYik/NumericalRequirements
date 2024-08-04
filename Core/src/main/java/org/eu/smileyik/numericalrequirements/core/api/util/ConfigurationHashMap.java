@@ -4,31 +4,49 @@ import com.google.gson.*;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConfigurationHashMap extends HashMap<String, Object> {
-    public static final Object JSON_DESERIALIZER = (JsonDeserializer<ConfigurationHashMap>) (json, typeOfT, context) -> {
+    public static final Object OBJECT_DESERIALIZER = (JsonDeserializer<ConfigurationHashMap>) (json, typeOfT, context) -> {
         if (json instanceof JsonObject) {
             ConfigurationHashMap map = new ConfigurationHashMap();
             for (Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
                 JsonElement value = entry.getValue();
-                Class<?> clazz = value instanceof JsonObject ? ConfigurationHashMap.class : Object.class;
+                Class<?> clazz = value instanceof JsonObject ? ConfigurationHashMap.class : (value instanceof JsonArray ? List.class : Object.class);
                 map.putWithoutCheck(entry.getKey(), context.deserialize(value, clazz));
             }
             return map;
-        } else {
-            return context.deserialize(json, Object.class);
         }
+        if (json instanceof JsonArray) {
+            return context.deserialize(json, List.class);
+        }
+        return context.deserialize(json, Object.class);
     };
+    public static final Object LIST_DESERIALIZER = (JsonDeserializer<List<?>>) (json, typeOfT, context) -> {
+        if (json instanceof JsonArray) {
+            JsonArray array = json.getAsJsonArray();
+            if (array.size() > 0 && array.get(0) instanceof JsonObject) {
+                List<ConfigurationHashMap> list = new LinkedList<>();
+                for (JsonElement value : array) {
+                    list.add(context.deserialize(value, ConfigurationHashMap.class));
+                }
+                return list;
+            } else {
+                return context.deserialize(json, Object.class);
+            }
+        }
+        return context.deserialize(json, Object.class);
+    };
+
+
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(ConfigurationHashMap.class, JSON_DESERIALIZER)
+            .registerTypeAdapter(ConfigurationHashMap.class, OBJECT_DESERIALIZER)
+            .registerTypeAdapter(List.class, LIST_DESERIALIZER)
             .create();
 
     public static final Gson GSON_PRETTY = new GsonBuilder()
-            .registerTypeAdapter(ConfigurationHashMap.class, JSON_DESERIALIZER)
+            .registerTypeAdapter(ConfigurationHashMap.class, OBJECT_DESERIALIZER)
+            .registerTypeAdapter(List.class, LIST_DESERIALIZER)
             .setPrettyPrinting()
             .create();
 
