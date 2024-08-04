@@ -54,6 +54,27 @@ public interface ItemSerializerEntry {
      * @param itemStack
      * @param itemMeta
      */
+    default void serialize(ItemSerializer context, Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
+        serialize(handler, section, itemStack, itemMeta);
+    }
+
+    /**
+     * 将配置反序列化为物品，若在反序列化时需要产出新的物品，则将该新物品返回即可。
+     * @param section 配置片段
+     * @param itemStack
+     * @param itemMeta
+     * @return
+     */
+    default ItemStack deserialize(ItemSerializer context, Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta) {
+        return deserialize(handler, section, itemStack, itemMeta);
+    }
+
+    /**
+     * 将物品序列化。
+     * @param section 配置片段
+     * @param itemStack
+     * @param itemMeta
+     */
     void serialize(Handler handler, ConfigurationHashMap section, ItemStack itemStack, ItemMeta itemMeta);
 
     /**

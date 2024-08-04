@@ -34,6 +34,12 @@ public abstract class AbstractItemSerializer implements ItemSerializer {
         entries.add(new NBTEntry());
         entries.add(new PotionEntry.Potion1Entry());
         entries.add(new PotionEntry.Potion2Entry());
+        entries.add(new AxolotlBucketEntry());
+        entries.add(new Damageable());
+        entries.add(new RepairableEntry());
+        entries.add(new OminousBottleMetaEntry());
+        entries.add(new CrossbowMetaEntry());
+        entries.add(new BundleMetaEntry());
 
         DebugLogger.debug((d) -> {
             entries.forEach(it -> {
@@ -77,7 +83,7 @@ public abstract class AbstractItemSerializer implements ItemSerializer {
                 section = section.createMap(entry.getKey());
             }
             SimpleHandler handler = new SimpleHandler();
-            entry.serialize(handler, section, itemStack, meta);
+            entry.serialize(this, handler, section, itemStack, meta);
             if (section.isEmpty()) config.remove(entry.getKey());
             if (handler.isDeny()) {
                 config.remove(entry.getKey());
@@ -111,7 +117,7 @@ public abstract class AbstractItemSerializer implements ItemSerializer {
             SimpleHandler handler = new SimpleHandler();
             // DebugLogger.debug("Before: \n item: %s\nmeta: %s", itemStack, meta);
             // DebugLogger.debug("Serialization class: %s", entry.getClass().getName());
-            ItemStack deserialize = entry.deserialize(handler, section, itemStack, meta);
+            ItemStack deserialize = entry.deserialize(this, handler, section, itemStack, meta);
             if (!handler.isDeny()) {
                 itemStack.setItemMeta(meta);
                 meta = itemStack.getItemMeta();
