@@ -28,4 +28,9 @@ public class JsonItemSerializer extends AbstractItemSerializer {
     public boolean isPrettyPrint() {
         return prettyPrint;
     }
+
+    public String serialize(ItemStack itemStack, boolean prettyPrint) {
+        if (itemStack == null) return "{}";
+        return serializeToConfigurationHashMap(itemStack).toJson(prettyPrint);
+    }
 }
