@@ -22,8 +22,12 @@ status:
 
 # 物品相关设置
 item:
+  # 使用哪个物品管理器
+  type: org.eu.smileyik.numericalrequirements.core.item.relational.RelationalItemKeeper
+  # 如果使用 RelationalItemKeeper 作为物品管理器则需要设置数据源, 数据源在根节点的 datasource 字段下设置.
+  datasource: sqlite
   # 是否启用物品同步，依赖于NBT
-  sync: enable
+  sync: true
   # 物品序列化设置
   serialization:
     # 物品 NBT 信息序列化设置
@@ -153,3 +157,15 @@ player:
       max-pool-size: 8   # 最大线程数量
       keep-alive-time: 0 # 核心线程外的线程在空闲状态下保持存活的时间，单位毫秒
       queue: java.util.concurrent.LinkedBlockingQueue # 线程池所用队列
+
+datasource:
+  sqlite:
+    jdbc-url: jdbc:sqlite:${data_folder}/sqlite.db
+    driver: org.sqlite.SQLiteDataSource
+    properties:
+      cachePrepStmts: true
+  h2:
+    jdbc-url: jdbc:h2:${data_folder}/h2
+    driver: org.h2.jdbcx.JdbcDataSource
+    properties:
+      cachePrepStmts: true

@@ -38,7 +38,7 @@ public class SimpleItem {
         if (type.equals(TYPE_BUKKIT)) {
             section.set("item", itemStack);
         } else if (type.equals(TYPE_NREQ)) {
-            section.set("item", YamlUtil.fromMap(NumericalRequirements.getInstance().getItemService().getItemKeeper().storeItem(itemStack)));
+            section.set("item", YamlUtil.fromMap(NumericalRequirements.getInstance().getItemService().getItemKeeper().getSerializer().serializeToConfigurationHashMap(itemStack)));
             if (itemStack != null) section.set("amount", itemStack.getAmount());
         } else if (type.equals(TYPE_ID)) {
             section.set("id", id);
@@ -80,12 +80,13 @@ public class SimpleItem {
     }
 
     private static SimpleItem loadByNReq(ConfigurationSection section) {
+        ItemStack deserialize = NumericalRequirements.getInstance().getItemService().getItemKeeper().getSerializer().deserialize(
+                YamlUtil.toMap(section.getConfigurationSection("item"))
+        );
+        if (deserialize != null) deserialize.setAmount(section.getInt("amount", 1));
         return new SimpleItem(
                 TYPE_NREQ,
-                NumericalRequirements.getInstance().getItemService().getItemKeeper().loadItemFromYaml(
-                        section.getConfigurationSection("item"),
-                        section.getInt("amount", 1)
-                )
+                deserialize
         );
     }
 }

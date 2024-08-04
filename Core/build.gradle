@@ -24,7 +24,16 @@ dependencies {
     compileOnly 'org.jetbrains:annotations:24.0.0'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'io.netty:netty-all:4.0.23.Final'
+    // gson
+    compileOnly 'com.google.code.gson:gson:2.11.0'
 
+    // database driver
+    implementation 'org.xerial:sqlite-jdbc:3.34.0'
+
+    implementation 'com.j256.ormlite:ormlite-jdbc:6.1'
+    implementation 'com.zaxxer:HikariCP:4.0.3'
+
+    // spigot-api
     implementation 'org.spigotmc:spigot-api:1.9-R0.1-SNAPSHOT'
 
     implementation(project(":Core:Command"))

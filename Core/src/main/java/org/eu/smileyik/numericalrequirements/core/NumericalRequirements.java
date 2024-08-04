@@ -56,6 +56,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
                 loadAvailableWorlds();
                 setupDebugTools();
                 new I18N(this, getConfig().getString("language", null));
+                DataSource.init(this, getConfig().getConfigurationSection("datasource"));
                 networkService = new NetworkServiceImpl(this);
                 playerService = new YamlPlayerService(this);
                 effectService = new SimpleEffectService(this);
@@ -102,6 +103,7 @@ public class NumericalRequirements extends JavaPlugin implements org.eu.smileyik
         synchronized (this) {
             stopTest();
             HandlerList.unregisterAll(this);
+            DataSource.close();
             networkService.shutdown();
             playerService.shutdown();
             extensionService.shutdown();
