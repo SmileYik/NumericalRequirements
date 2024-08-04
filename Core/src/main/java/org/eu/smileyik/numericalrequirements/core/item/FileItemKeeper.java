@@ -58,7 +58,7 @@ public class FileItemKeeper implements ItemKeeper {
     private final Map<String, ItemStack> itemStackCache = Collections.synchronizedMap(new WeakHashMap<>());
     private final NumericalRequirements plugin;
     private final File dataFolder;
-    private final ConfigurationHashMap mainItems;
+    private final int mainItemsIdx;
     private final boolean sync;
 
     private Set<String> idCache;
@@ -68,17 +68,17 @@ public class FileItemKeeper implements ItemKeeper {
         this.dataFolder = plugin.getDataFolder();
         this.serializer.configure(config);
         reloadItems();
-        ConfigurationHashMap mainItems = null;
+        int mainItemsIndex = 0;
         if (!itemSources.isEmpty()) {
-            mainItems = itemSources.get(0);
-            for (ConfigurationHashMap itemSource : itemSources) {
+            for (int i = itemSources.size() - 1; i >= 1; i--) {
+                ConfigurationHashMap itemSource = itemSources.get(i);
                 if (itemSource.getBoolean(KEY_MAIN_FILE, false)) {
-                    mainItems = itemSource;
+                    mainItemsIndex = i;
                     break;
                 }
             }
         }
-        this.mainItems = mainItems;
+        this.mainItemsIdx = mainItemsIndex;
         this.sync = sync;
         DebugLogger.debug("sync item: %s", sync);
     }
@@ -216,7 +216,7 @@ public class FileItemKeeper implements ItemKeeper {
         if (itemStack == null) return;
         ConfigurationHashMap config = findItemById(itemId);
         if (config == null) {
-            config = mainItems.getMap(KEY_ITEMS);
+            config = itemSources.get(mainItemsIdx).getMap(KEY_ITEMS);
         } else {
             config = config.getParent();
         }
@@ -285,6 +285,7 @@ public class FileItemKeeper implements ItemKeeper {
     public synchronized void reloadItems() {
         itemStackCache.clear();
         itemSources.clear();
+        idCache = null;
         loadJsonItems(storeDefaultIfNotExists(new File(dataFolder, DEFAULT_JSON_ITEM_FILE)));
         loadYamlItems(storeDefaultIfNotExists(new File(dataFolder, DEFAULT_YAML_ITEM_FILE)));
     }
