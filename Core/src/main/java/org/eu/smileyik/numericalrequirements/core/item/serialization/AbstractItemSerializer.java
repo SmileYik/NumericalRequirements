@@ -4,19 +4,19 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerialization;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializer;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializerEntry;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.entry.*;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
 import java.util.*;
 
-public abstract class AbstractItemSerializer implements ItemSerialization {
-    protected static final List<ItemSerializationEntry> ENTRIES;
+public abstract class AbstractItemSerializer implements ItemSerializer {
+    protected static final List<ItemSerializerEntry> ENTRIES;
 
     static {
-        List<ItemSerializationEntry> entries = new ArrayList<>();
+        List<ItemSerializerEntry> entries = new ArrayList<>();
         entries.add(new AttributeEntry.Attribute1Entry());
         entries.add(new AttributeEntry.Attribute2Entry());
         entries.add(new AttributeEntry.Attribute3Entry());
@@ -42,7 +42,7 @@ public abstract class AbstractItemSerializer implements ItemSerialization {
         });
 
         entries.removeIf(it -> !it.isAvailable());
-        entries.sort(Comparator.comparingInt(ItemSerializationEntry::getPriority));
+        entries.sort(Comparator.comparingInt(ItemSerializerEntry::getPriority));
         ENTRIES = entries;
 
         DebugLogger.debug((d) -> {
@@ -62,7 +62,8 @@ public abstract class AbstractItemSerializer implements ItemSerialization {
         });
     }
 
-    protected ConfigurationHashMap doSerialize(ItemStack itemStack) {
+    @Override
+    public ConfigurationHashMap serializeToConfigurationHashMap(ItemStack itemStack) {
         ConfigurationHashMap config = new ConfigurationHashMap();
         ItemMeta meta = itemStack.getItemMeta();
         storeCommons(config, itemStack, meta);
@@ -87,7 +88,8 @@ public abstract class AbstractItemSerializer implements ItemSerialization {
         return config;
     }
 
-    protected ItemStack doDeserialize(ConfigurationHashMap config) {
+    @Override
+    public ItemStack deserialize(ConfigurationHashMap config) {
         ItemStack itemStack = loadCommons(config);
         if (itemStack == null) {
             return null;
@@ -95,7 +97,7 @@ public abstract class AbstractItemSerializer implements ItemSerialization {
         ItemMeta meta = itemStack.getItemMeta();
 
         Set<String> ids = new HashSet<>();
-        for (ItemSerializationEntry entry : ENTRIES) {
+        for (ItemSerializerEntry entry : ENTRIES) {
             if (ids.contains(entry.getId())) continue;
 
             ConfigurationHashMap section = config;
@@ -153,7 +155,7 @@ public abstract class AbstractItemSerializer implements ItemSerialization {
         }
     }
 
-    protected static class SimpleHandler implements ItemSerializationEntry.Handler {
+    protected static class SimpleHandler implements ItemSerializerEntry.Handler {
         private boolean flag = false;
 
         @Override

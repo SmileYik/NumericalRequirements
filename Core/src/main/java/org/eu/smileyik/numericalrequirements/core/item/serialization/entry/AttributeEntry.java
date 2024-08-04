@@ -3,7 +3,7 @@ package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 import com.google.common.collect.Multimap;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializerEntry;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class AttributeEntry implements ItemSerializationEntry {
+public abstract class AttributeEntry implements ItemSerializerEntry {
     protected ReflectMethod<String> enumName;
 
     protected ReflectMethod<Object> operationOf;

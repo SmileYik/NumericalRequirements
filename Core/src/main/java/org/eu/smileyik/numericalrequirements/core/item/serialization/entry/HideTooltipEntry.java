@@ -2,14 +2,14 @@ package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializerEntry;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClass;
 import org.eu.smileyik.numericalrequirements.reflect.ReflectClassPathBuilder;
 
-public class HideTooltipEntry implements ItemSerializationEntry {
+public class HideTooltipEntry implements ItemSerializerEntry {
     final boolean flag;
     private ReflectClass itemMetaClass;
 

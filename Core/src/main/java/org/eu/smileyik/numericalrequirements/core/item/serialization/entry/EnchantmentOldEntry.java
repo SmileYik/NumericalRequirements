@@ -4,10 +4,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializerEntry;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 
-public class EnchantmentOldEntry implements ItemSerializationEntry {
+public class EnchantmentOldEntry implements ItemSerializerEntry {
 
     @Override
     public String getId() {

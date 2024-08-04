@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializerEntry;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
@@ -15,7 +15,7 @@ import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 
 import java.util.*;
 
-public class NBTEntry implements ItemSerializationEntry {
+public class NBTEntry implements ItemSerializerEntry {
     final boolean flag;
     private Map<String, NBTTypeCast> castMap;
     private Map<Byte, NBTTypeSerialize> serializeMap;

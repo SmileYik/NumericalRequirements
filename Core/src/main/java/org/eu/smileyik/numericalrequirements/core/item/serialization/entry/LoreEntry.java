@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializerEntry;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LoreEntry implements ItemSerializationEntry {
+public class LoreEntry implements ItemSerializerEntry {
     @Override
     public String getId() {
         return "lore";

@@ -10,12 +10,12 @@ public class JsonItemSerializer extends AbstractItemSerializer {
     @Override
     public String serialize(ItemStack itemStack) {
         if (itemStack == null) return "{}";
-        return doSerialize(itemStack).toJson(prettyPrint);
+        return serializeToConfigurationHashMap(itemStack).toJson(prettyPrint);
     }
 
     @Override
     public ItemStack deserialize(String string) {
-        return doDeserialize(ConfigurationHashMap.fromJson(string));
+        return deserialize(ConfigurationHashMap.fromJson(string));
     }
 
     @Override

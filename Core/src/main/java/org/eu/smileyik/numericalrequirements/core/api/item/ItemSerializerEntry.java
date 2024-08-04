@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 
-public interface ItemSerializationEntry {
+public interface ItemSerializerEntry {
 
     interface Handler {
         void deny();

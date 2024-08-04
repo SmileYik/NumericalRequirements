@@ -3,7 +3,7 @@ package org.eu.smileyik.numericalrequirements.core.item.serialization.entry;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializerEntry;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ItemFlagEntry implements ItemSerializationEntry {
+public class ItemFlagEntry implements ItemSerializerEntry {
     final boolean flag;
     ReflectMethod<Object> valueOf;
     ReflectMethod<String> name;

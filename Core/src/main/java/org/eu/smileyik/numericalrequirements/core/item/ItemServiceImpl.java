@@ -3,8 +3,6 @@ package org.eu.smileyik.numericalrequirements.core.item;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,7 +12,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerialization;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.ConsumableTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.FunctionalTag;
@@ -24,19 +21,16 @@ import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.MergeableLore;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.nbt.NBTTag;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
-import org.eu.smileyik.numericalrequirements.core.item.serialization.YamlItemSerializer;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
+import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagTypeId;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class ItemServiceImpl implements Listener, ItemService {
     private final NumericalRequirements plugin;
@@ -45,20 +39,21 @@ public class ItemServiceImpl implements Listener, ItemService {
     private final Set<String> nbtTagSet = new HashSet<>();
     private final Set<String> loreTagSet = new HashSet<>();
 
-    private YamlConfiguration itemConfig;
-    private final File itemFile;
-    private final ItemSerialization itemSerialization = new YamlItemSerializer();
-    private final ConcurrentMap<String, ItemStack> itemStackCache = new ConcurrentHashMap<>();
-
+    private final ItemKeeper itemKeeper;
     public ItemServiceImpl(NumericalRequirements plugin) {
         this.plugin = plugin;
         typeTagMap.put(TAG_TYPE_NORMAL, new HashSet<>());
         typeTagMap.put(TAG_TYPE_CONSUME, new HashSet<>());
         typeTagMap.put(TAG_TYPE_FUNCTIONAL, new HashSet<>());
 
-        itemSerialization.configure(plugin.getConfig().getConfigurationSection("item.serialization"));
-        itemFile = new File(plugin.getDataFolder(), "items.yml");
-        reloadItems();
+        ConfigurationSection itemConfig = plugin.getConfig().getConfigurationSection("item");
+        String sync = itemConfig.getString("sync", "enable").toLowerCase();
+        itemKeeper = new FileItemKeeper(
+                plugin,
+                itemConfig.getConfigurationSection("serialization"),
+                sync.equals("enable") || sync.equals("true")
+        );
+
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -243,73 +238,31 @@ public class ItemServiceImpl implements Listener, ItemService {
 
     @Override
     public ItemStack loadItem(String id, int amount) {
-        ItemStack cache = getCachedItem(id);
-        if (cache == null) {
-            if (itemConfig.isConfigurationSection(id)) {
-                ConfigurationSection section = itemConfig.getConfigurationSection(id);
-                cache = itemSerialization.deserialize(YamlUtil.saveToString(section));
-                cache = updateCachedItem(id, cache, false);
-            }
-        } else {
-            cache = cache.clone();
-        }
-
-        if (cache == null) return null;
-        cache.setAmount(amount);
-        return cache;
+        ItemStack item = itemKeeper.loadItem(id);
+        if (item == null) return null;
+        item.setAmount(amount);
+        return item;
     }
 
     @Override
     public ItemStack loadItem(ConfigurationSection section, int amount) {
-        ItemStack deserialize = itemSerialization.deserialize(YamlUtil.saveToString(section));
-        if (deserialize == null) return null;
-        deserialize.setAmount(amount);
-        return deserialize;
+        return itemKeeper.loadItemFromYaml(section, amount);
     }
 
     @Override
     public void storeItem(String id, ItemStack stack) {
-        try {
-            String serialize = itemSerialization.serialize(stack);
-            ConfigurationSection section = YamlUtil.loadFromString(serialize);
-            itemConfig.set(id, section);
-            saveItemFile();
-            updateCachedItem(id, stack, true);
-        } catch (InvalidConfigurationException e) {
-            throw new RuntimeException(e);
-        }
+        itemKeeper.storeItem(id, stack);
     }
 
     @Override
     public ConfigurationSection storeItem(ItemStack stack) {
-        try {
-            String serialize = itemSerialization.serialize(stack);
-            return YamlUtil.loadFromString(serialize);
-        } catch (InvalidConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private synchronized ItemStack getCachedItem(String id) {
-        return itemStackCache.get(id);
-    }
-
-    private synchronized ItemStack updateCachedItem(String id, ItemStack itemStack, boolean isStore) {
-        if (itemStack == null || isStore && !idTagMap.containsKey(id)) {
-            return null;
-        }
-        NBTItem cast = NBTItemHelper.cast(itemStack.clone());
-        if (cast != null) {
-            cast.getTag().setString(NBT_KEY_ID, id);
-            itemStack = cast.getItemStack();
-        }
-        itemStackCache.put(id, itemStack);
-        return itemStack;
+        ConfigurationHashMap configurationHashMap = itemKeeper.storeItem(stack);
+        return YamlUtil.fromMap(configurationHashMap);
     }
 
     @Override
     public Collection<String> getItemIds() {
-        return Collections.unmodifiableCollection(itemConfig.getKeys(false));
+        return Collections.unmodifiableCollection(itemKeeper.getItemIds());
     }
 
     @Override
@@ -319,16 +272,8 @@ public class ItemServiceImpl implements Listener, ItemService {
         if (nbtItem == null) return null;
         NBTTagCompound tag = nbtItem.getTag();
         if (tag == null) return null;
-        if (!tag.hasKey(NBT_KEY_ID)) return null;
+        if (!tag.hasKeyOfType(NBT_KEY_ID, NBTTagTypeId.STRING)) return null;
         return tag.getString(NBT_KEY_ID);
-    }
-
-    private void saveItemFile() {
-        try {
-            itemConfig.save(itemFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private synchronized boolean useItem(NumericalPlayer player, ItemStack item) {
@@ -341,28 +286,23 @@ public class ItemServiceImpl implements Listener, ItemService {
 
     @Override
     public synchronized void reloadItems() {
-        if (!itemFile.exists()) {
-            plugin.saveResource("items.yml", false);
-        }
-        itemStackCache.clear();
-        itemConfig = YamlConfiguration.loadConfiguration(itemFile);
+        itemKeeper.reloadItems();
     }
 
     @Override
     public void shutdown() {
-        saveItemFile();
+        itemKeeper.saveItems();
+        itemKeeper.clear();
         idTagMap.clear();
         nbtTagSet.clear();
         loreTagSet.clear();
         typeTagMap.clear();
-        itemStackCache.clear();
     }
 
     @Override
     public synchronized boolean updateItem(ItemStack item) {
+        if (!itemKeeper.isSyncItem(item)) return false;
         String id = getItemId(item);
-        if (id == null) return false;
-        if (!itemConfig.getBoolean(String.format("%s.sync", id), true)) return false;
         ItemStack itemStack = loadItem(id, item.getAmount());
         if (itemStack == null || itemStack.isSimilar(item)) return false;
         item.setItemMeta(itemStack.getItemMeta());

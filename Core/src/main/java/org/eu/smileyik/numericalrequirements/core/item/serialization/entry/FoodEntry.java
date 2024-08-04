@@ -4,7 +4,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializationEntry;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializerEntry;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
@@ -13,7 +13,7 @@ import org.eu.smileyik.numericalrequirements.reflect.ReflectClassPathBuilder;
 
 import java.util.List;
 
-public class FoodEntry implements ItemSerializationEntry {
+public class FoodEntry implements ItemSerializerEntry {
     final boolean flag;
 
     ReflectClass itemMetaClass;

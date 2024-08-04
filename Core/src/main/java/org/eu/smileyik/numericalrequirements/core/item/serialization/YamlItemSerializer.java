@@ -15,7 +15,7 @@ public class YamlItemSerializer extends AbstractItemSerializer {
             return new YamlConfiguration().saveToString();
         }
 
-        return YamlUtil.saveToString(YamlUtil.fromMap(doSerialize(itemStack)));
+        return YamlUtil.saveToString(YamlUtil.fromMap(serializeToConfigurationHashMap(itemStack)));
     }
 
     @Override
@@ -28,6 +28,6 @@ public class YamlItemSerializer extends AbstractItemSerializer {
             return null;
         }
 
-        return doDeserialize(YamlUtil.toMap(configurationSection));
+        return deserialize(YamlUtil.toMap(configurationSection));
     }
 }
