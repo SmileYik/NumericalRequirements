@@ -3,19 +3,14 @@ package org.eu.smileyik.numericalrequirements.core.item;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemKeeper;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializer;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
 import org.eu.smileyik.numericalrequirements.core.item.serialization.JsonItemSerializer;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
-import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
-import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagTypeId;
-import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
-import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,17 +51,17 @@ public class FileItemKeeper implements ItemKeeper {
     private final ItemSerializer serializer = new JsonItemSerializer();
     private final List<ConfigurationHashMap> itemSources = new LinkedList<>();
     private final Map<String, ItemStack> itemStackCache = Collections.synchronizedMap(new WeakHashMap<>());
-    private final NumericalRequirements plugin;
+    private final Plugin plugin;
     private final File dataFolder;
     private final int mainItemsIdx;
     private final boolean sync;
 
     private Set<String> idCache;
 
-    public FileItemKeeper(NumericalRequirements plugin, ConfigurationSection config, boolean sync) {
+    public FileItemKeeper(Plugin plugin, ConfigurationSection config) {
         this.plugin = plugin;
         this.dataFolder = plugin.getDataFolder();
-        this.serializer.configure(config);
+        this.serializer.configure(config.getConfigurationSection("serialization"));
         reloadItems();
         int mainItemsIndex = 0;
         if (!itemSources.isEmpty()) {
@@ -79,7 +74,8 @@ public class FileItemKeeper implements ItemKeeper {
             }
         }
         this.mainItemsIdx = mainItemsIndex;
-        this.sync = sync;
+        String sync = config.getString("sync", "enable").toLowerCase();
+        this.sync = sync.equals("enable") || sync.equals("true");
         DebugLogger.debug("sync item: %s", sync);
     }
 
@@ -144,40 +140,6 @@ public class FileItemKeeper implements ItemKeeper {
     }
 
     @Override
-    public ItemStack loadItemFromJson(String json) {
-        return loadItemFromJson(json, 1);
-    }
-
-    @Override
-    public ItemStack loadItemFromJson(String json, int amount) {
-        ItemStack deserialize = serializer.deserialize(json);
-        deserialize.setAmount(amount);
-        return deserialize;
-    }
-
-    @Override
-    public ItemStack loadItemFromYaml(ConfigurationSection section) {
-        return loadItemFromYaml(section, 1);
-    }
-
-    @Override
-    public ItemStack loadItemFromYaml(ConfigurationSection section, int amount) {
-        return loadItem(YamlUtil.toMap(section), amount);
-    }
-
-    @Override
-    public ItemStack loadItem(ConfigurationHashMap map) {
-        return loadItem(map, 1);
-    }
-
-    @Override
-    public ItemStack loadItem(ConfigurationHashMap map, int amount) {
-        ItemStack deserialize = serializer.deserialize(map);
-        deserialize.setAmount(amount);
-        return deserialize;
-    }
-
-    @Override
     public synchronized ItemStack loadItem(String itemId) {
         ItemStack itemStack = itemStackCache.get(itemId);
         if (itemStack != null) return itemStack.clone();
@@ -187,17 +149,7 @@ public class FileItemKeeper implements ItemKeeper {
         if (deserialize == null) return null;
 
         // set item id
-        NBTItem cast = NBTItemHelper.cast(deserialize);
-        if (cast != null) {
-            NBTTagCompound tag = cast.getTag();
-            if (tag != null) {
-                tag.setString(ItemService.NBT_KEY_ID, itemId);
-                itemStack = cast.getItemStack();
-                if (itemStack != null) {
-                    deserialize = itemStack;
-                }
-            }
-        }
+        ItemKeeper.setItemId(deserialize, itemId);
 
         itemStackCache.put(itemId, deserialize);
         return deserialize.clone();
@@ -227,26 +179,8 @@ public class FileItemKeeper implements ItemKeeper {
     }
 
     @Override
-    public ConfigurationHashMap storeItem(ItemStack itemStack) {
-        return serializer.serializeToConfigurationHashMap(itemStack);
-    }
-
-    @Override
     public ItemSerializer getSerializer() {
         return serializer;
-    }
-
-    @Override
-    public String getItemId(ItemStack itemStack) {
-        if (itemStack == null) return null;
-        NBTItem cast = NBTItemHelper.cast(itemStack);
-        if (cast == null) return null;
-        NBTTagCompound tag = cast.getTag();
-        if (tag == null) return null;
-        if (tag.hasKeyOfType(ItemService.NBT_KEY_ID, NBTTagTypeId.STRING)) {
-            return tag.getString(ItemService.NBT_KEY_ID);
-        }
-        return null;
     }
 
     @Override

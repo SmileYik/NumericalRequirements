@@ -2,57 +2,17 @@ package org.eu.smileyik.numericalrequirements.core.api.item;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
+import org.bukkit.plugin.Plugin;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
+import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
+import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagTypeId;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 public interface ItemKeeper {
-
-    /**
-     * 从json读取一个物品.
-     * @param json
-     * @return
-     */
-    ItemStack loadItemFromJson(String json);
-
-    /**
-     * 从json读取物品.
-     * @param json
-     * @param amount
-     * @return
-     */
-    ItemStack loadItemFromJson(String json, int amount);
-
-    /**
-     * 从yaml读取1个物品
-     * @param section
-     * @return
-     */
-    ItemStack loadItemFromYaml(ConfigurationSection section);
-
-    /**
-     * 从yaml读取物品
-     * @param section
-     * @param amount
-     * @return
-     */
-    ItemStack loadItemFromYaml(ConfigurationSection section, int amount);
-
-    /**
-     * 从ConfigurationHashMap中读取1个物品
-     * @param map
-     * @return
-     */
-    ItemStack loadItem(ConfigurationHashMap map);
-
-    /**
-     * 从ConfigurationHashMap中读取物品
-     * @param map
-     * @param amount
-     * @return
-     */
-    ItemStack loadItem(ConfigurationHashMap map, int amount);
-
     /**
      * 根据物品ID读取物品. 将会返回读取到的物品的副本.
      * @param itemId
@@ -72,13 +32,6 @@ public interface ItemKeeper {
     void storeItem(String itemId, ItemStack itemStack);
 
     /**
-     * 保存物品到ConfigurationHashMap
-     * @param itemStack
-     * @return
-     */
-    ConfigurationHashMap storeItem(ItemStack itemStack);
-
-    /**
      * 获取物品序列化器.
      * @return
      */
@@ -89,7 +42,17 @@ public interface ItemKeeper {
      * @param itemStack
      * @return
      */
-    String getItemId(ItemStack itemStack);
+    default String getItemId(ItemStack itemStack) {
+        if (itemStack == null) return null;
+        NBTItem cast = NBTItemHelper.cast(itemStack);
+        if (cast == null) return null;
+        NBTTagCompound tag = cast.getTag();
+        if (tag == null) return null;
+        if (tag.hasKeyOfType(ItemService.NBT_KEY_ID, NBTTagTypeId.STRING)) {
+            return tag.getString(ItemService.NBT_KEY_ID);
+        }
+        return null;
+    }
 
     /**
      * 该物品是否启用物品同步.
@@ -118,4 +81,30 @@ public interface ItemKeeper {
      * 清理所有物品
      */
     void clear();
+
+    static void setItemId(ItemStack itemStack, String itemId) {
+        if (itemStack == null) return;
+        NBTItem cast = NBTItemHelper.cast(itemStack);
+        if (cast != null) {
+            NBTTagCompound tag = cast.getTag();
+            if (tag != null) {
+                tag.setString(ItemService.NBT_KEY_ID, itemId);
+                ItemStack copy = cast.getItemStack();
+                if (copy != null) {
+                    itemStack.setItemMeta(copy.getItemMeta());
+                }
+            }
+        }
+    }
+
+    static ItemKeeper newKeeper(Plugin plugin, ConfigurationSection config) {
+        String string = config.getString("type");
+        try {
+            return (ItemKeeper) Class.forName(string).getDeclaredConstructor(Plugin.class, ConfigurationSection.class).newInstance(plugin, config);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException |
+                 ClassNotFoundException | ClassCastException e) {
+            DebugLogger.debug(e);
+        }
+        return null;
+    }
 }

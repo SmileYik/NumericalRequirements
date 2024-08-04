@@ -46,12 +46,10 @@ public class ItemServiceImpl implements Listener, ItemService {
         typeTagMap.put(TAG_TYPE_FUNCTIONAL, new HashSet<>());
 
         ConfigurationSection itemConfig = plugin.getConfig().getConfigurationSection("item");
-        String sync = itemConfig.getString("sync", "enable").toLowerCase();
-        itemKeeper = new FileItemKeeper(
-                plugin,
-                itemConfig.getConfigurationSection("serialization"),
-                sync.equals("enable") || sync.equals("true")
-        );
+        if (!itemConfig.contains("type")) {
+            itemConfig.set("type", FileItemKeeper.class.getName());
+        }
+        itemKeeper = ItemKeeper.newKeeper(plugin, itemConfig);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
