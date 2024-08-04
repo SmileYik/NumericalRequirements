@@ -3,6 +3,7 @@ package org.eu.smileyik.numericalrequirements.multiblockcraft;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
 
 public class SimpleItem {
     public static final String TYPE_EMPTY = "empty";
@@ -37,7 +38,7 @@ public class SimpleItem {
         if (type.equals(TYPE_BUKKIT)) {
             section.set("item", itemStack);
         } else if (type.equals(TYPE_NREQ)) {
-            section.set("item", NumericalRequirements.getInstance().getItemService().storeItem(itemStack));
+            section.set("item", YamlUtil.fromMap(NumericalRequirements.getInstance().getItemService().getItemKeeper().storeItem(itemStack)));
             if (itemStack != null) section.set("amount", itemStack.getAmount());
         } else if (type.equals(TYPE_ID)) {
             section.set("id", id);
@@ -62,7 +63,7 @@ public class SimpleItem {
     private static SimpleItem loadByID(ConfigurationSection section) {
         return new SimpleItem(
                 TYPE_ID,
-                NumericalRequirements.getInstance().getItemService().loadItem(
+                NumericalRequirements.getInstance().getItemService().getItemKeeper().loadItem(
                         section.getString("id"),
                         section.getInt("amount", 1)
                 ),
@@ -81,7 +82,7 @@ public class SimpleItem {
     private static SimpleItem loadByNReq(ConfigurationSection section) {
         return new SimpleItem(
                 TYPE_NREQ,
-                NumericalRequirements.getInstance().getItemService().loadItem(
+                NumericalRequirements.getInstance().getItemService().getItemKeeper().loadItemFromYaml(
                         section.getConfigurationSection("item"),
                         section.getInt("amount", 1)
                 )

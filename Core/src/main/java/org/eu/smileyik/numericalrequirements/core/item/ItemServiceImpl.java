@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemKeeper;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.ConsumableTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.FunctionalTag;
@@ -21,9 +22,7 @@ import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.MergeableLore;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.nbt.NBTTag;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
-import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagTypeId;
@@ -237,32 +236,8 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     @Override
-    public ItemStack loadItem(String id, int amount) {
-        ItemStack item = itemKeeper.loadItem(id);
-        if (item == null) return null;
-        item.setAmount(amount);
-        return item;
-    }
-
-    @Override
-    public ItemStack loadItem(ConfigurationSection section, int amount) {
-        return itemKeeper.loadItemFromYaml(section, amount);
-    }
-
-    @Override
-    public void storeItem(String id, ItemStack stack) {
-        itemKeeper.storeItem(id, stack);
-    }
-
-    @Override
-    public ConfigurationSection storeItem(ItemStack stack) {
-        ConfigurationHashMap configurationHashMap = itemKeeper.storeItem(stack);
-        return YamlUtil.fromMap(configurationHashMap);
-    }
-
-    @Override
-    public Collection<String> getItemIds() {
-        return Collections.unmodifiableCollection(itemKeeper.getItemIds());
+    public ItemKeeper getItemKeeper() {
+        return itemKeeper;
     }
 
     @Override
@@ -285,11 +260,6 @@ public class ItemServiceImpl implements Listener, ItemService {
     }
 
     @Override
-    public synchronized void reloadItems() {
-        itemKeeper.reloadItems();
-    }
-
-    @Override
     public void shutdown() {
         itemKeeper.saveItems();
         itemKeeper.clear();
@@ -303,7 +273,7 @@ public class ItemServiceImpl implements Listener, ItemService {
     public synchronized boolean updateItem(ItemStack item) {
         if (!itemKeeper.isSyncItem(item)) return false;
         String id = getItemId(item);
-        ItemStack itemStack = loadItem(id, item.getAmount());
+        ItemStack itemStack = itemKeeper.loadItem(id);
         if (itemStack == null || itemStack.isSimilar(item)) return false;
         item.setItemMeta(itemStack.getItemMeta());
         DebugLogger.debug(e -> DebugLogger.debug(e, "更新物品：%s", id));

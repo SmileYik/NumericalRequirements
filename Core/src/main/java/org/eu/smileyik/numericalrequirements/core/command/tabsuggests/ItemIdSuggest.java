@@ -20,6 +20,6 @@ public class ItemIdSuggest implements TabSuggest {
 
     @Override
     public List<String> suggest() {
-        return new ArrayList<>(plugin.getItemService().getItemIds());
+        return new ArrayList<>(plugin.getItemService().getItemKeeper().getItemIds());
     }
 }

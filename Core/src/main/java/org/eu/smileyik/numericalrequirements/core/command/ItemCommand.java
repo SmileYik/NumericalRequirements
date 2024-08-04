@@ -192,7 +192,7 @@ public class ItemCommand {
             needPlayer = false
     )
     public void reload(CommandSender sender, String[] args) {
-        NumericalRequirements.getInstance().getItemService().reloadItems();
+        NumericalRequirements.getInstance().getItemService().getItemKeeper().reloadItems();
         sender.sendMessage(I18N.trp("command", "command.item.reload.reloaded"));
     }
 
@@ -212,7 +212,7 @@ public class ItemCommand {
             sender.sendMessage(I18N.trp("command", "command.item.error.not-number", args[1]));
             return;
         }
-        ItemStack itemStack = NumericalRequirements.getInstance().getItemService().loadItem(args[0], amount);
+        ItemStack itemStack = NumericalRequirements.getInstance().getItemService().getItemKeeper().loadItem(args[0], amount);
         if (itemStack == null) {
             sender.sendMessage(I18N.trp("command", "command.item.error.item-not-found", args[0]));
             return;
@@ -247,7 +247,7 @@ public class ItemCommand {
             sender.sendMessage(I18N.trp("command", "command.item.error.not-number", args[2]));
             return;
         }
-        ItemStack itemStack = NumericalRequirements.getInstance().getItemService().loadItem(args[1], amount);
+        ItemStack itemStack = NumericalRequirements.getInstance().getItemService().getItemKeeper().loadItem(args[1], amount);
         if (itemStack == null) {
             sender.sendMessage(I18N.trp("command", "command.item.error.item-not-found", args[1]));
             return;
@@ -276,7 +276,7 @@ public class ItemCommand {
             sender.sendMessage(I18N.trp("command", "command.item.error.no-item-in-hand"));
             return;
         }
-        NumericalRequirements.getInstance().getItemService().storeItem(args[0], itemInMainHand);
+        NumericalRequirements.getInstance().getItemService().getItemKeeper().storeItem(args[0], itemInMainHand);
         sender.sendMessage(I18N.trp("command", "command.item.store.success", args[0]));
     }
 }

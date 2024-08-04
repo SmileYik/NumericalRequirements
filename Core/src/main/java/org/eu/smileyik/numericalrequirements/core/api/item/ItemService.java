@@ -1,13 +1,11 @@
 package org.eu.smileyik.numericalrequirements.core.api.item;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.ItemTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -83,30 +81,7 @@ public interface ItemService {
 
     Pair<LoreTag, LoreValue> analyzeLore(String lore, byte ... tagTypes);
 
-    /**
-     * 通过ID加载一个物品。
-     * @param id 物品ID
-     * @param amount 物品数量
-     * @return 指定的物品，不存在返回null.
-     */
-    ItemStack loadItem(String id, int amount);
-
-    ItemStack loadItem(ConfigurationSection section, int amount);
-
-    /**
-     * 存储物品到配置文件
-     * @param id 要存储的物品ID
-     * @param stack 要存储的物品
-     */
-    void storeItem(String id, ItemStack stack);
-
-    ConfigurationSection storeItem(ItemStack stack);
-
-    /**
-     * 获取物品ID
-     * @return
-     */
-    Collection<String> getItemIds();
+    ItemKeeper getItemKeeper();
 
     /**
      * 获取物品ID，如果该物品不存在ID则返回null
@@ -121,8 +96,6 @@ public interface ItemService {
      * @return 如果更新成功返回true, 无需更新或无法更新等其他情况返回false.
      */
     boolean updateItem(ItemStack itemStack);
-
-    void reloadItems();
 
     void shutdown();
 }

@@ -16,23 +16,23 @@ public class ItemSerializationTest {
     @NeedTest
     public void itemDeserializationTest() {
         ItemService itemService = NumericalRequirements.getInstance().getItemService();
-        itemService.reloadItems();
-        Collection<String> itemIds = itemService.getItemIds();
+        itemService.getItemKeeper().reloadItems();
+        Collection<String> itemIds = itemService.getItemKeeper().getItemIds();
         System.out.println(itemIds);
-        System.out.println(itemService.loadItem("id", 1));
+        System.out.println(itemService.getItemKeeper().loadItem("id", 1));
     }
 
     @NeedTest
     public void copyItemTest() {
         ItemService itemService = NumericalRequirements.getInstance().getItemService();
-        itemService.reloadItems();
-        Collection<String> itemIds = itemService.getItemIds();
+        itemService.getItemKeeper().reloadItems();
+        Collection<String> itemIds = itemService.getItemKeeper().getItemIds();
         System.out.println(itemIds);
-        ItemStack itemStack = itemService.loadItem("id", 1);
+        ItemStack itemStack = itemService.getItemKeeper().loadItem("id", 1);
         System.out.println(itemStack);
-        itemService.storeItem("id2", itemStack);
+        itemService.getItemKeeper().storeItem("id2", itemStack);
         System.out.println(itemIds);
-        ItemStack itemStack2 = itemService.loadItem("id2", 1);
+        ItemStack itemStack2 = itemService.getItemKeeper().loadItem("id2", 1);
         System.out.println(itemStack2);
     }
 
@@ -62,8 +62,8 @@ public class ItemSerializationTest {
         JsonItemSerializer serializer = new JsonItemSerializer();
         serializer.configure(getConfigurationNotPretty());
         ItemService itemService = NumericalRequirements.getInstance().getItemService();
-        itemService.reloadItems();
-        ItemStack itemStack = itemService.loadItem("id", 1);
+        itemService.getItemKeeper().reloadItems();
+        ItemStack itemStack = itemService.getItemKeeper().loadItem("id", 1);
         System.out.println(itemStack);
         String json = serializer.serialize(itemStack);
         System.out.println(json);
@@ -84,8 +84,8 @@ public class ItemSerializationTest {
         JsonItemSerializer serializer = new JsonItemSerializer();
         serializer.configure(getConfiguration());
         ItemService itemService = NumericalRequirements.getInstance().getItemService();
-        itemService.reloadItems();
-        ItemStack itemStack = itemService.loadItem("id", 1);
+        itemService.getItemKeeper().reloadItems();
+        ItemStack itemStack = itemService.getItemKeeper().loadItem("id", 1);
         System.out.println(itemStack);
         String json = serializer.serialize(itemStack);
         System.out.println(json);

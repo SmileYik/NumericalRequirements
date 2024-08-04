@@ -113,7 +113,7 @@ public class GetLiquid implements Listener {
         if (enableBiomeWater) {
             waterId = section.getString(String.format("biome.%s", prev.getBiome().name()), defaultWaterId);
         }
-        ItemStack itemStack = itemService.loadItem(waterId, 1);
+        ItemStack itemStack = itemService.getItemKeeper().loadItem(waterId, 1);
         if (itemStack == null) {
             I18N.warning("extensions.thirst.get-liquid.item-not-found", waterId);
             return;

@@ -1,8 +1,7 @@
-package org.eu.smileyik.numericalrequirements.core.item;
+package org.eu.smileyik.numericalrequirements.core.api.item;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializer;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 
 import java.util.Collection;
@@ -60,6 +59,8 @@ public interface ItemKeeper {
      * @return
      */
     ItemStack loadItem(String itemId);
+
+    ItemStack loadItem(String itemId, int amount);
 
     /**
      * 保存物品到指定物品id上.

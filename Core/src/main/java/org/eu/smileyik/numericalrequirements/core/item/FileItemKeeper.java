@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemKeeper;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemSerializer;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
@@ -200,6 +201,14 @@ public class FileItemKeeper implements ItemKeeper {
 
         itemStackCache.put(itemId, deserialize);
         return deserialize.clone();
+    }
+
+    @Override
+    public ItemStack loadItem(String itemId, int amount) {
+        ItemStack itemStack = loadItem(itemId);
+        if (itemStack == null) return null;
+        itemStack.setAmount(amount);
+        return itemStack;
     }
 
     @Override
