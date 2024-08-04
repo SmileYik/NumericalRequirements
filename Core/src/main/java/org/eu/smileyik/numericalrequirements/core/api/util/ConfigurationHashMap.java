@@ -287,6 +287,10 @@ public class ConfigurationHashMap extends HashMap<String, Object> {
         return getList(key, Float.class);
     }
 
+    public List<ConfigurationHashMap> getMapList(String key) {
+        return getList(key, ConfigurationHashMap.class);
+    }
+
     public String toJson() {
         return toJson(false);
     }
@@ -297,5 +301,27 @@ public class ConfigurationHashMap extends HashMap<String, Object> {
 
     public static ConfigurationHashMap fromJson(String json) {
         return GSON.fromJson(json, ConfigurationHashMap.class);
+    }
+
+    public static class Builder {
+        private final ConfigurationHashMap map = new ConfigurationHashMap();
+
+        public Builder put(String key, Object value) {
+            map.put(key, value);
+            return this;
+        }
+
+        public ConfigurationHashMap build() {
+            return map;
+        }
+
+        public static ConfigurationHashMap asMap(Object ...obj) {
+            ConfigurationHashMap map = new ConfigurationHashMap();
+            int length = obj.length;
+            for (int i = 0; i < length; i += 2) {
+                map.put(obj[i].toString(), obj[i + 1]);
+            }
+            return map;
+        }
     }
 }
