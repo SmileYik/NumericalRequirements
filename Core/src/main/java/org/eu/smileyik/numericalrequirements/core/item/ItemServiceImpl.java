@@ -25,7 +25,6 @@ import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
-import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagTypeId;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 
@@ -238,17 +237,6 @@ public class ItemServiceImpl implements Listener, ItemService {
         return itemKeeper;
     }
 
-    @Override
-    public String getItemId(ItemStack itemStack) {
-        if (itemStack == null) return null;
-        NBTItem nbtItem = NBTItemHelper.cast(itemStack);
-        if (nbtItem == null) return null;
-        NBTTagCompound tag = nbtItem.getTag();
-        if (tag == null) return null;
-        if (!tag.hasKeyOfType(NBT_KEY_ID, NBTTagTypeId.STRING)) return null;
-        return tag.getString(NBT_KEY_ID);
-    }
-
     private synchronized boolean useItem(NumericalPlayer player, ItemStack item) {
         Map<ItemTag<?>, List<Object>> map =
                 analyzeItem(item, (byte) (TAG_TYPE_NBT | TAG_TYPE_LORE | TAG_TYPE_CONSUME));
@@ -270,7 +258,7 @@ public class ItemServiceImpl implements Listener, ItemService {
     @Override
     public synchronized boolean updateItem(ItemStack item) {
         if (!itemKeeper.isSyncItem(item)) return false;
-        String id = getItemId(item);
+        String id = ItemService.getItemId(item);
         ItemStack itemStack = itemKeeper.loadItem(id);
         if (itemStack == null || itemStack.isSimilar(item)) return false;
         item.setItemMeta(itemStack.getItemMeta());

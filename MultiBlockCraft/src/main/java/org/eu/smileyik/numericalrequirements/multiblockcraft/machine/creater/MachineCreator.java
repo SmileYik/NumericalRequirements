@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BlockVector;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.Msg;
-import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
@@ -272,7 +272,7 @@ public class MachineCreator implements Machine {
     }
 
     private static SimpleItem getSimpleItem(ItemStack item) {
-        String itemId = NumericalRequirements.getInstance().getItemService().getItemId(item);
+        String itemId = ItemService.getItemId(item);
         if (itemId != null) {
             return new SimpleItem(SimpleItem.TYPE_ID, item, itemId, item.getAmount());
         } else {

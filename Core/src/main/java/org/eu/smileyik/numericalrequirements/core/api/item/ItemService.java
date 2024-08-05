@@ -5,6 +5,10 @@ import org.eu.smileyik.numericalrequirements.core.api.item.tag.ItemTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreTag;
 import org.eu.smileyik.numericalrequirements.core.api.item.tag.lore.LoreValue;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
+import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagCompound;
+import org.eu.smileyik.numericalrequirements.nms.nbt.NBTTagTypeId;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
+import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
 
 import java.util.List;
 import java.util.Map;
@@ -88,7 +92,15 @@ public interface ItemService {
      * @param itemStack
      * @return
      */
-    String getItemId(ItemStack itemStack);
+    static String getItemId(ItemStack itemStack) {
+        if (itemStack == null) return null;
+        NBTItem nbtItem = NBTItemHelper.cast(itemStack);
+        if (nbtItem == null) return null;
+        NBTTagCompound tag = nbtItem.getTag();
+        if (tag == null) return null;
+        if (!tag.hasKeyOfType(NBT_KEY_ID, NBTTagTypeId.STRING)) return null;
+        return tag.getString(NBT_KEY_ID);
+    }
 
     /**
      * 更新物品。

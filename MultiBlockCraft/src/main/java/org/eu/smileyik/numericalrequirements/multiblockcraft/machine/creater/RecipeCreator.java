@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.Msg;
-import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.MultiBlockCraftExtension;
 import org.eu.smileyik.numericalrequirements.multiblockcraft.SimpleItem;
@@ -100,7 +100,7 @@ public class RecipeCreator implements Listener, Machine {
         int idx = 0;
         for (Integer inputSlot : machine.getInputSlots()) {
             ItemStack item = inv.getItem(inputSlot);
-            String itemId = NumericalRequirements.getInstance().getItemService().getItemId(item);
+            String itemId = ItemService.getItemId(item);
             if (itemId != null) {
                 inputs[idx] = new SimpleItem(SimpleItem.TYPE_ID, item, itemId, item.getAmount());
             } else {
@@ -115,7 +115,7 @@ public class RecipeCreator implements Listener, Machine {
         SimpleItem[] outputs = new SimpleItem[machine.getOutputSlots().size()];
         for (Integer outputSlot : machine.getOutputSlots()) {
             ItemStack item = inv.getItem(outputSlot);
-            String itemId = NumericalRequirements.getInstance().getItemService().getItemId(item);
+            String itemId = ItemService.getItemId(item);
             if (itemId != null) {
                 outputs[idx] = new SimpleItem(SimpleItem.TYPE_ID, item, itemId, item.getAmount());
             } else {
