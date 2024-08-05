@@ -5,7 +5,6 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import org.bukkit.entity.Player;
-import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.NMSPlayerChannelHandler;
 import org.eu.smileyik.numericalrequirements.nms.network.packet.Packet;
@@ -30,7 +29,7 @@ public class PlayerChannelHandler extends ChannelDuplexHandler implements NMSPla
                 }
             }
         } catch (Throwable t) {
-            I18N.warning("Error handling packet in: %s", t.getMessage());
+            DebugLogger.debug("Error handling packet in: %s", t);
             DebugLogger.debug(t);
         }
         if (msg != null) super.channelRead(ctx, msg);
@@ -47,7 +46,7 @@ public class PlayerChannelHandler extends ChannelDuplexHandler implements NMSPla
                 }
             }
         } catch (Throwable t) {
-            I18N.severe("Error handling packet out: %s", t.getMessage());
+            DebugLogger.debug("Error handling packet out: %s", t);
             DebugLogger.debug(t);
         }
         if (msg != null) super.write(ctx, msg, promise);

@@ -3,6 +3,7 @@ package org.eu.smileyik.numericalrequirements.core.network;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.eu.smileyik.numericalrequirements.nms.network.packet.Packet;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -28,7 +29,21 @@ public class PacketToString {
         if (clazz.getSimpleName().contains("BlockStateList")) return "[blocks]";
         if (checked.contains(obj)) return "";
         if (clazz.isEnum() || Enum.class.isAssignableFrom(clazz)) return obj.toString();
-        // if (aClass.isArray()) return Arrays.toString(Array.obj);
+        if (clazz.isArray()) {
+            if (Array.getLength(obj) == 0) return "[]";
+            if (!Array.get(obj, 0).getClass().getName().contains("minecraft")) return obj.toString();
+            List<String> list = new ArrayList<>();
+            for (Object o : (Object[]) obj) {
+                list.add(toString(o.getClass(), o, checked));
+            }
+            return list.toString();
+        } else if (List.class.isAssignableFrom(clazz)) {
+            List<String> list = new ArrayList<>();
+            for (Object o : (List<?>) obj) {
+                list.add(toString(o.getClass(), o, checked));
+            }
+            return list.toString();
+        }
         if (!fieldCache.containsKey(clazz)) {
             Class<?> next = clazz;
             List<Field> fields = new ArrayList<>();
@@ -47,7 +62,12 @@ public class PacketToString {
         List<String> strings = new ArrayList<>();
         for (Field field : fields) {
             Object o = field.get(obj);
-            String oStr = o == null ? "null" : (o.getClass().getName().contains("minecraft") ? toString(o.getClass(), o, checked) : String.valueOf(o));
+            String oStr = null;
+            if (o != null && (o.getClass().isArray() || o.getClass().getName().contains("minecraft") || List.class.isAssignableFrom(o.getClass()))) {
+                oStr = toString(o.getClass(), o, checked);
+            } else {
+                oStr = String.valueOf(o);
+            }
             strings.add(String.format("%s: %s", field.getName(), oStr));
             checked.add(obj);
         }
