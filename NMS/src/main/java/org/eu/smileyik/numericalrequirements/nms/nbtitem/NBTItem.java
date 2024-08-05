@@ -35,4 +35,6 @@ public interface NBTItem {
      * @return
      */
     boolean hasTag();
+
+    NMSItemStack getNMSItemStack();
 }

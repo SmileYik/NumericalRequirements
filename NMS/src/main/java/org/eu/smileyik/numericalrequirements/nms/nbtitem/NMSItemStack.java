@@ -31,7 +31,7 @@ public class NMSItemStack {
         this.instance = instance;
     }
 
-    protected Object getInstance() {
+    public Object getInstance() {
         return instance;
     }
 

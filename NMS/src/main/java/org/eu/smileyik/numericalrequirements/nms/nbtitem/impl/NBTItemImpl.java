@@ -52,4 +52,9 @@ public class NBTItemImpl implements NBTItem {
         item = CraftItemStack.asBukkitCopy(nmsItem);
         return item;
     }
+
+    @Override
+    public NMSItemStack getNMSItemStack() {
+        return nmsItem;
+    }
 }
