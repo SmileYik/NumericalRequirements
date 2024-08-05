@@ -1,0 +1,5 @@
+net.minecraft.core.IRegistry{
+    @{
+        W<blocks> // public static final net.minecraft.core.RegistryBlocks net.minecraft.core.IRegistry.W;
+    }
+}

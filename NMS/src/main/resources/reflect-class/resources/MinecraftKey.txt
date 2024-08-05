@@ -1,0 +1,10 @@
+net.minecraft.resources.MinecraftKey{
+    {
+        <newWithNamespace>(java.lang.String, java.lang.String) // public net.minecraft.resources.MinecraftKey(java.lang.String,java.lang.String);
+        <new>(java.lang.String) // public net.minecraft.resources.MinecraftKey(java.lang.String);
+    }
+    #{
+        getNamespace<getNamespace>() // public java.lang.String net.minecraft.resources.MinecraftKey.getNamespace();
+        getKey<getKey>() // public java.lang.String net.minecraft.resources.MinecraftKey.getKey();
+    }
+}

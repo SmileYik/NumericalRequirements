@@ -1,0 +1,6 @@
+net.minecraft.core.BlockPosition{
+    {
+        <newByDouble>(double, double, double) // public net.minecraft.core.BlockPosition(double,double,double);
+        <newByInt>(int, int, int) // public net.minecraft.core.BlockPosition(int,int,int);
+    }
+}

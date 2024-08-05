@@ -1,0 +1,6 @@
+net.minecraft.network.protocol.game.PacketPlayOutBlockChange{
+    {
+        <newByWorld>(net.minecraft.world.level.IBlockAccess, net.minecraft.core.BlockPosition) // public net.minecraft.network.protocol.game.PacketPlayOutBlockChange(net.minecraft.world.level.IBlockAccess,net.minecraft.core.BlockPosition);
+        <newByBlockData>(net.minecraft.core.BlockPosition, net.minecraft.world.level.block.state.IBlockData) // public net.minecraft.network.protocol.game.PacketPlayOutBlockChange(net.minecraft.core.BlockPosition,net.minecraft.world.level.block.state.IBlockData);
+    }
+}

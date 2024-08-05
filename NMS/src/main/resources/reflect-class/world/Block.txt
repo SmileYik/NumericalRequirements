@@ -1,0 +1,5 @@
+net.minecraft.world.level.block.Block{
+    #{
+        getBlockData<getBlockData>() // public final net.minecraft.world.level.block.state.IBlockData net.minecraft.world.level.block.Block.getBlockData();
+    }
+}

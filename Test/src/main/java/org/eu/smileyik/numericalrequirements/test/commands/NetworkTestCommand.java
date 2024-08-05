@@ -9,15 +9,18 @@ import org.eu.smileyik.numericalrequirements.core.network.NetworkService;
 import org.eu.smileyik.numericalrequirements.core.network.PacketListener;
 import org.eu.smileyik.numericalrequirements.core.network.PacketToString;
 import org.eu.smileyik.numericalrequirements.core.network.PlayerChannelHandler;
+import org.eu.smileyik.numericalrequirements.nms.core.BlockPosition;
 import org.eu.smileyik.numericalrequirements.nms.craftbukkit.CraftWorld;
 import org.eu.smileyik.numericalrequirements.nms.entity.EntityArmorStand;
 import org.eu.smileyik.numericalrequirements.nms.entity.EnumItemSlot;
 import org.eu.smileyik.numericalrequirements.nms.mojang.Pair;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItem;
 import org.eu.smileyik.numericalrequirements.nms.nbtitem.NBTItemHelper;
+import org.eu.smileyik.numericalrequirements.nms.network.packet.PacketPlayOutBlockChange;
 import org.eu.smileyik.numericalrequirements.nms.network.packet.PacketPlayOutEntityEquipment;
 import org.eu.smileyik.numericalrequirements.nms.network.packet.PacketPlayOutEntityMetadata;
 import org.eu.smileyik.numericalrequirements.nms.network.packet.PacketPlayOutSpawnEntityLiving;
+import org.eu.smileyik.numericalrequirements.nms.world.Block;
 import org.eu.smileyik.numericalrequirements.test.TestCommand;
 
 import java.util.Collections;
@@ -144,5 +147,16 @@ public class NetworkTestCommand {
         networkService.broadcastPacket(packetSpawn);
         networkService.broadcastPacket(packetMetadata);
         networkService.broadcastPacket(packetEquipment);
+    }
+
+    public void sendFakeBlock(String[] args) {
+        Server server = NumericalRequirements.getPlugin().getServer();
+        NetworkService networkService = NumericalRequirements.getInstance().getNetworkService();
+        World world = server.getWorld("World");
+        networkService.broadcastPacket(PacketPlayOutBlockChange.createByBlock(BlockPosition.newInstance(
+                Integer.parseInt(args[0]),
+                Integer.parseInt(args[1]),
+                Integer.parseInt(args[2])
+        ), Block.getBlockWrapper(args[3])));
     }
 }

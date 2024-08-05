@@ -1,0 +1,5 @@
+net.minecraft.core.RegistryBlocks{
+    #{
+        get<get>(net.minecraft.resources.MinecraftKey) // public java.lang.Object net.minecraft.core.RegistryBlocks.get(net.minecraft.resources.MinecraftKey);
+    }
+}
