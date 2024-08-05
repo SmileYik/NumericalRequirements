@@ -63,4 +63,10 @@ public interface NetworkService {
      * 关闭服务
      */
     void shutdown();
+
+    /**
+     * 玩家断开连接.
+     * @param playerName
+     */
+    void playerDisconnect(String playerName);
 }

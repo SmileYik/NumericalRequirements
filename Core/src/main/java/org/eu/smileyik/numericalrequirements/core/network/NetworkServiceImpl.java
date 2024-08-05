@@ -37,15 +37,11 @@ public class NetworkServiceImpl implements Listener, NetworkService {
             if (channel.isOpen()) return;
             playerChannelHandlers.remove(player.getName());
         }
-        PlayerChannelHandler playerChannelHandler = new PlayerChannelHandler();
+        PlayerChannelHandler playerChannelHandler = new PlayerChannelHandler(this);
         if (NMSNetwork.registerChannelListener(player, "nreq-core-listener", playerChannelHandler)) {
             DebugLogger.debug("Registered channel listener for player: %s", player.getName());
             playerChannelHandlers.putIfAbsent(player.getName(), playerChannelHandler);
         }
-    }
-
-    private synchronized void unlisten(Player player) {
-        playerChannelHandlers.remove(player.getName());
     }
 
     @Override
@@ -96,6 +92,11 @@ public class NetworkServiceImpl implements Listener, NetworkService {
     public void shutdown() {
         PlayerChannelHandler.clearPacketListeners();
         playerChannelHandlers.clear();
+    }
+
+    @Override
+    public synchronized void playerDisconnect(String playerName) {
+        playerChannelHandlers.remove(playerName);
     }
 
     @EventHandler(ignoreCancelled = true)

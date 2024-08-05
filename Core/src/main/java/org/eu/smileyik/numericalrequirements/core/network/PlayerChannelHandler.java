@@ -15,8 +15,14 @@ import java.util.*;
 public class PlayerChannelHandler extends ChannelDuplexHandler implements NMSPlayerChannelHandler {
     private static final Map<String, Set<PacketListener>> packetListenerMap = new HashMap<>();
 
+    private String playerName;
     private Player player;
     private Channel channel;
+    private final NetworkService networkService;
+
+    public PlayerChannelHandler(NetworkService networkService) {
+        this.networkService = networkService;
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -50,6 +56,15 @@ public class PlayerChannelHandler extends ChannelDuplexHandler implements NMSPla
             DebugLogger.debug(t);
         }
         if (msg != null) super.write(ctx, msg, promise);
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        networkService.playerDisconnect(playerName);
+        DebugLogger.debug("Player %s disconnecting: %s", playerName, ctx.channel().remoteAddress());
+        player = null;
+        channel = null;
+        super.channelUnregistered(ctx);
     }
 
     /**
@@ -86,18 +101,23 @@ public class PlayerChannelHandler extends ChannelDuplexHandler implements NMSPla
     }
 
     @Override
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    @Override
     public Channel getChannel() {
         return channel;
     }
 
     @Override
+    public void setPlayer(Player player) {
+        this.playerName = player.getName();
+        this.player = player;
+    }
+
+    @Override
     public void setChannel(Channel channel) {
         this.channel = channel;
+    }
+
+    public NetworkService getNetworkService() {
+        return networkService;
     }
 
     public void sendPacket(Packet packet) {
