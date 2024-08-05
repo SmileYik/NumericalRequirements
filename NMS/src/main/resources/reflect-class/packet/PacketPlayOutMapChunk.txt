@@ -1,0 +1,6 @@
+net.minecraft.network.protocol.game.PacketPlayOutMapChunk{
+    #{
+        c<getX>() // public int net.minecraft.network.protocol.game.PacketPlayOutMapChunk.c();
+        d<getZ>() // public int net.minecraft.network.protocol.game.PacketPlayOutMapChunk.d();
+    }
+}

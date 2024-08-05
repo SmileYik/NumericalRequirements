@@ -1,0 +1,8 @@
+net.minecraft.network.protocol.game.PacketPlayOutUnloadChunk{
+    {
+        <newInstance>(int, int) // public net.minecraft.network.protocol.game.PacketPlayOutUnloadChunk(int,int);
+    #{
+        b<getX>() // public int net.minecraft.network.protocol.game.PacketPlayOutUnloadChunk.b();
+        c<getZ>() // public int net.minecraft.network.protocol.game.PacketPlayOutUnloadChunk.c();
+    }
+}
