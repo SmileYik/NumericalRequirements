@@ -9,7 +9,7 @@ import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 import java.io.IOException;
 import java.util.List;
 
-public class PacketPlayOutEntityEquipment implements ReflectClassBase {
+public class PacketPlayOutEntityEquipment implements Packet, ReflectClassBase {
     private static final String SCRIPT_PATH = "/version-script/packet/PacketPlayOutEntityEquipment.txt";
     private static final ReflectClass CLASS;
 

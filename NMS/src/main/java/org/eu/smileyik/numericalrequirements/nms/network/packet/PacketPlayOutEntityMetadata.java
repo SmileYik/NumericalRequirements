@@ -10,7 +10,7 @@ import org.eu.smileyik.numericalrequirements.versionscript.VersionScript;
 
 import java.io.IOException;
 
-public class PacketPlayOutEntityMetadata implements ReflectClassBase {
+public class PacketPlayOutEntityMetadata implements Packet, ReflectClassBase {
     private static final String SCRIPT_PATH = "/version-script/packet/PacketPlayOutEntityMetadata.txt";
     private static final ReflectClass CLASS;
 
