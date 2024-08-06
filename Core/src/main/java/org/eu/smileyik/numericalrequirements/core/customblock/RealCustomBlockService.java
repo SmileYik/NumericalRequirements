@@ -63,6 +63,9 @@ public class RealCustomBlockService extends AbstractRealCustomBlockService {
     private void loadCustomBlocks() {
         File dataFolder = plugin.getDataFolder();
         File customBlocksFile = new File(dataFolder, "custom-blocks.yml");
+        if (!customBlocksFile.exists()) {
+            plugin.saveResource("custom-blocks.yml", false);
+        }
         YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(customBlocksFile);
         for (String key : yamlConfiguration.getKeys(false)) {
             ConfigurationSection section = yamlConfiguration.getConfigurationSection(key);

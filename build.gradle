@@ -16,7 +16,7 @@ pluginFixCount().forEach((k, v) -> {
     totalFix += v
 })
 
-version = "1.0.${totalFix}"
+version = "1.1.${totalFix}"
 
 static def pluginFixCount() {
     [

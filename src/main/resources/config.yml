@@ -20,11 +20,44 @@ status:
   # 没有权限的玩家在使用查询状态指令时，查询信息缓存多久，单位毫秒
   cache: 10000
 
+
+#######################################################
+#
+#                    数据源配置
+#
+######################################################
+# 数据源的设置格式大致如下
+#datasource:
+#  # 数据源名称, 之后修改需要标注数据源的配置时, 可以将此字符串作为参数填上去, 在这里是 sqlite
+#  sqlite:
+#    # 数据库链接, 必填
+#    jdbc-url: jdbc:sqlite:${data_folder}/sqlite.db
+#    # 数据库驱动, 可选, 如果不想手动指定驱动, 则可以直接删除, 就像下面 h2 一样
+#    driver: org.sqlite.JDBC
+#    # 其他配置项, 配置参考 https://github.com/brettwooldridge/HikariCP
+#    properties:
+#      cachePrepStmts: true
+#  # 设置一个名为 h2 的数据源, 根据 jdbc-url 自动获取驱动
+#  h2:
+#    jdbc-url: jdbc:h2:${data_folder}/h2
+#    properties:
+#      cachePrepStmts: true
+datasource: {}
+
 # 物品相关设置
 item:
   # 使用哪个物品管理器
-  type: org.eu.smileyik.numericalrequirements.core.item.relational.RelationalItemKeeper
-  # 如果使用 RelationalItemKeeper 作为物品管理器则需要设置数据源, 数据源在根节点的 datasource 字段下设置.
+  # 现有的物品管理器有以下两种:
+  #   org.eu.smileyik.numericalrequirements.core.item.FileItemKeeper
+  #   org.eu.smileyik.numericalrequirements.core.item.relational.RelationalItemKeeper
+  # FileItemKeeper: 该管理器将使用 Yaml 配置文件以及 Json 配置文件管理物品,有效的物品文件为 items.yml 以及 items.json 两个.
+  #                 在存储新的物品文件时, 在默认情况下将会优先存储至 items.json 中. 此外, 该物品管理器具有简易的物品缓存以加快
+  #                 读取物品的速度. 该物品管理器不需要额外的配置项
+  # RelationalItemKeeper: 该管理器使用关系型数据库对物品进行管理, 相比于 FileItemKeeper, 速度可能会更快, 并且同样拥有较为简易
+  #                       的物品缓存. 该物品管理器需要额外进行配置, 以设置数据源.
+  type: org.eu.smileyik.numericalrequirements.core.item.FileItemKeeper
+  # 如果使用 RelationalItemKeeper 作为物品管理器则需要为其设置数据源, 数据源在根节点的 datasource 字段下设置.
+  # 如果你使用 FileItemKeeper 作为物品管理器则可以忽略该配置.
   datasource: sqlite
   # 是否启用物品同步，依赖于NBT
   sync: true
@@ -158,14 +191,19 @@ player:
       keep-alive-time: 0 # 核心线程外的线程在空闲状态下保持存活的时间，单位毫秒
       queue: java.util.concurrent.LinkedBlockingQueue # 线程池所用队列
 
-datasource:
-  sqlite:
-    jdbc-url: jdbc:sqlite:${data_folder}/sqlite.db
-    driver: org.sqlite.SQLiteDataSource
-    properties:
-      cachePrepStmts: true
-  h2:
-    jdbc-url: jdbc:h2:${data_folder}/h2
-    driver: org.h2.jdbcx.JdbcDataSource
-    properties:
-      cachePrepStmts: true
+
+
+#######################################################
+#
+#                    自定义方块设置
+#
+######################################################
+custom-block:
+  # 是否启用自定义方块服务
+  enable: true
+  # 自定义方块服务类型.
+  # 目前可选的自定义方块服务类型有以下几种:
+  #   org.eu.smileyik.numericalrequirements.core.customblock.RealCustomBlockService
+  #
+  # RealCustomBlockService: 该类型的自定义方块服务将会在服务器中生成真实的方块以及真实的实体来达到自定义方块的效果.
+  type: org.eu.smileyik.numericalrequirements.core.customblock.RealCustomBlockService
