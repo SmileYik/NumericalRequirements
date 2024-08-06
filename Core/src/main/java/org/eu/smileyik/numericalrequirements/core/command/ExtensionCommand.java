@@ -3,7 +3,6 @@ package org.eu.smileyik.numericalrequirements.core.command;
 import org.bukkit.command.CommandSender;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionService;
 import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionTask;
 import org.eu.smileyik.numericalrequirements.core.api.util.Pair;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
@@ -21,7 +20,6 @@ import java.util.Collection;
         permission = "NumericalRequirements.Admin"
 )
 public class ExtensionCommand {
-    final ExtensionService extensionService = NumericalRequirements.getInstance().getExtensionService();
 
     @CommandI18N("command.extension")
     @Command(
@@ -35,7 +33,7 @@ public class ExtensionCommand {
             sender.sendMessage(I18N.trp("command", "command.extension.error.no-valid-args"));
             return;
         }
-        ExtensionTask task = extensionService.getTaskByTaskId(args[0]);
+        ExtensionTask task = NumericalRequirements.getInstance().getExtensionService().getTaskByTaskId(args[0]);
         if (task == null) {
             sender.sendMessage(I18N.trp("command", "command.extension.error.not-found-task", args[0]));
             return;
@@ -50,7 +48,7 @@ public class ExtensionCommand {
             args = {"task"}
     )
     public void taskInfo(CommandSender sender, String[] args) {
-        ExtensionTask task = extensionService.getTaskByTaskId(args[0]);
+        ExtensionTask task = NumericalRequirements.getInstance().getExtensionService().getTaskByTaskId(args[0]);
         if (task == null) {
             sender.sendMessage(I18N.trp("command", "command.extension.error.not-found-task", args[0]));
             return;
@@ -79,7 +77,7 @@ public class ExtensionCommand {
 
             }
         }
-        Collection<ExtensionTask> registeredTasks = extensionService.getRegisteredTasks();
+        Collection<ExtensionTask> registeredTasks = NumericalRequirements.getInstance().getExtensionService().getRegisteredTasks();
         Pair<Integer, Integer> pagePair = getPageNumber(registeredTasks, page, 5);
         Collection<ExtensionTask> list = getPage(registeredTasks, page, 5);
 

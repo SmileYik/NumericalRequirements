@@ -4,8 +4,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.eu.smileyik.numericalrequirements.core.I18N;
-import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.Msg;
+import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectPlayer;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementFormatter;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
@@ -41,16 +41,8 @@ public class RootCommand {
             permission = "NumericalRequirements.Admin"
     )
     public void reload(CommandSender sender, String[] strs) {
-        NumericalRequirements plugin = NumericalRequirements.getInstance();
-
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
-//            p.spawnParticle(Particle.HEART, p.getEyeLocation(), 1);
-//            p.playEffect(EntityEffect.HURT);
-        }
-
-        plugin.onDisable();
-        plugin.onEnable();
+        NumericalRequirements.getPlugin().onDisable();
+        NumericalRequirements.getPlugin().onEnable();
     }
 
     @CommandI18N("command.NumericalRequirements")
@@ -62,7 +54,7 @@ public class RootCommand {
             needPlayer = false
     )
     public void statusConsole(CommandSender sender, String[] args) {
-        Player player = NumericalRequirements.getInstance().getServer().getPlayer(args[0]);
+        Player player = NumericalRequirements.getPlugin().getServer().getPlayer(args[0]);
         if (player == null) {
             sender.sendMessage(I18N.trp("command", "command.NumericalRequirements.error.cant-found-player", args[0]));
             return;
@@ -109,9 +101,9 @@ public class RootCommand {
         }
         if (statusTemplate == null) {
             String status = String.join("\n",
-                    NumericalRequirements.getInstance().getConfig().getStringList("status.msg"));
+                    NumericalRequirements.getPlugin().getConfig().getStringList("status.msg"));
             statusTemplate = ChatColor.translateAlternateColorCodes('&', status);
-            cacheTime = NumericalRequirements.getInstance().getConfig().getLong("status.cache", 10000);
+            cacheTime = NumericalRequirements.getPlugin().getConfig().getLong("status.cache", 10000);
         }
 
         String status = MessageFormat.format(ElementFormatter.replacePlaceholder(p, statusTemplate), p.getPlayer().getName(), collect);

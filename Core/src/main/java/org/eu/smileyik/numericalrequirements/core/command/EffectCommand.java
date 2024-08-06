@@ -2,15 +2,12 @@ package org.eu.smileyik.numericalrequirements.core.command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.effect.Effect;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectData;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
-import org.eu.smileyik.numericalrequirements.core.api.player.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.Command;
 import org.eu.smileyik.numericalrequirements.core.command.annotation.CommandI18N;
 
@@ -24,10 +21,6 @@ import java.util.Arrays;
         permission = "NumericalRequirements.Admin"
 )
 public class EffectCommand {
-    private final NumericalRequirements api = NumericalRequirements.getInstance();
-    private final Plugin plugin = (Plugin) api;
-    private final EffectService effectService = api.getEffectService();
-    private final PlayerService playerService = api.getPlayerService();
 
     @CommandI18N("command.effect")
     @Command(
@@ -45,18 +38,18 @@ public class EffectCommand {
             sender.sendMessage(I18N.trp("command", "command.effect.error.no-target-effect"));
             return;
         }
-        Player player = plugin.getServer().getPlayer(args[0]);
+        Player player = NumericalRequirements.getPlugin().getServer().getPlayer(args[0]);
         if (player == null) {
             sender.sendMessage(I18N.trp("command", "command.effect.error.player-not-online", args[0]));
             return;
         }
-        NumericalPlayer numericalPlayer = playerService.getNumericalPlayer(player);
+        NumericalPlayer numericalPlayer = NumericalRequirements.getInstance().getPlayerService().getNumericalPlayer(player);
         if (numericalPlayer == null) {
             sender.sendMessage(I18N.trp("command", "command.effect.error.player-not-load", args[0]));
             return;
         }
 
-        Effect effect = effectService.findEffectById(args[1]);
+        Effect effect = NumericalRequirements.getInstance().getEffectService().findEffectById(args[1]);
         if (effect == null) {
             sender.sendMessage(I18N.trp("command", "command.effect.error.not-found-effect", args[1]));
             return;

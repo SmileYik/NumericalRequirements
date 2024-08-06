@@ -29,7 +29,7 @@ public abstract class Extension {
     }
 
     public org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements getApi() {
-        return plugin;
+        return plugin.getManager();
     }
 
     public File getDataFolder() {

@@ -8,12 +8,13 @@ import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionService
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.player.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.command.CommandService;
+import org.eu.smileyik.numericalrequirements.core.customblock.CustomBlockService;
 import org.eu.smileyik.numericalrequirements.core.extension.placeholderapi.PlaceholderApiExtension;
 import org.eu.smileyik.numericalrequirements.core.network.NetworkService;
 
 public interface NumericalRequirements {
     static NumericalRequirements getInstance() {
-        return org.eu.smileyik.numericalrequirements.core.NumericalRequirements.getInstance();
+        return org.eu.smileyik.numericalrequirements.core.NumericalRequirements.getInstance().getManager();
     }
 
     static Plugin getPlugin() {
@@ -39,6 +40,8 @@ public interface NumericalRequirements {
     CommandService getCommandService();
 
     NetworkService getNetworkService();
+
+    CustomBlockService getCustomBlockService();
 
     void runTask(Runnable task);
 

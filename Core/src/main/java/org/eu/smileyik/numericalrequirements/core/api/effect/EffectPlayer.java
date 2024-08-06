@@ -1,7 +1,7 @@
 package org.eu.smileyik.numericalrequirements.core.api.effect;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.player.NumericalPlayer;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundle;
 import org.eu.smileyik.numericalrequirements.core.effect.impl.EffectBundle.EffectBundleData;

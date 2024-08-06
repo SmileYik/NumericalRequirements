@@ -41,7 +41,7 @@ public class ElementServiceImpl implements ElementService, Listener {
         }
         element.onRegister();
         registeredElements.add(element);
-        plugin.getPlaceholderApiExtension().addPlaceholder(element);
+        plugin.getManager().getPlaceholderApiExtension().addPlaceholder(element);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ElementServiceImpl implements ElementService, Listener {
         }
         element.onUnregister();
         registeredElements.remove(elementById);
-        plugin.getPlaceholderApiExtension().removePlaceholder(element);
+        plugin.getManager().getPlaceholderApiExtension().removePlaceholder(element);
     }
 
     @Override

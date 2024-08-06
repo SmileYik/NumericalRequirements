@@ -1,6 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.command.tabsuggests;
 
-import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.command.TabSuggest;
 
 import java.util.List;

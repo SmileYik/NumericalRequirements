@@ -63,7 +63,7 @@ public class SimpleEffectService implements Listener, EffectService {
         Effect removed = idEffectMap.remove(effect.getId().toLowerCase());
         effect.onUnregister();
         if (removed != null) {
-            plugin.getPlayerService().removeDisabledKey();
+            plugin.getManager().getPlayerService().removeDisabledKey();
         }
     }
 

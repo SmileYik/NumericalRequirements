@@ -2,7 +2,6 @@ package org.eu.smileyik.numericalrequirements.core.command.tabsuggests;
 
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
-import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
 import org.eu.smileyik.numericalrequirements.core.command.DefaultTabSuggest;
 
 import java.util.ArrayList;
@@ -10,8 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class EffectBundleSuggest implements DefaultTabSuggest {
-
-    private final EffectService effectService = NumericalRequirements.getInstance().getEffectService();
 
     @Override
     public boolean matches(String[] args, int commandIdx) {
@@ -23,7 +20,7 @@ public class EffectBundleSuggest implements DefaultTabSuggest {
     @Override
     public List<String> suggest(String[] args, int commandIdx) {
         if (args.length == commandIdx + 4) {
-            return new ArrayList<>(effectService.getEffectBundleIds());
+            return new ArrayList<>(NumericalRequirements.getInstance().getEffectService().getEffectBundleIds());
         } else if (args.length == commandIdx + 5) {
             return Collections.singletonList(I18N.tr("command.tab-suggest.seconds"));
         }

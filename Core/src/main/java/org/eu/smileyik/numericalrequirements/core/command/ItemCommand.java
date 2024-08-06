@@ -28,9 +28,6 @@ import java.util.*;
         permission = "NumericalRequirements.Admin"
 )
 public class ItemCommand {
-    private final NumericalRequirements api = NumericalRequirements.getInstance();
-    private final ItemService itemService = api.getItemService();
-
     @CommandI18N("command.item")
     @Command(
             value = "add",
@@ -49,7 +46,7 @@ public class ItemCommand {
             player.sendMessage(I18N.trp("command", "command.item.error.no-tag-id"));
             return;
         }
-        ItemTag<?> itemTag = itemService.getItemTagById(args[0]);
+        ItemTag<?> itemTag = NumericalRequirements.getInstance().getItemService().getItemTagById(args[0]);
         if (itemTag == null) {
             player.sendMessage(I18N.trp("command", "command.item.error.not-valid-tag", args[0]));
             return;
@@ -84,12 +81,12 @@ public class ItemCommand {
         if (tag instanceof MergeableLore) {
             for (int i = 0; i < size; ++i) {
                 String line = lore.get(i);
-                Pair<LoreTag, LoreValue> pair1 = itemService.analyzeLore(line, ItemService.TAG_TYPE_ALL_LORE);
+                Pair<LoreTag, LoreValue> pair1 = NumericalRequirements.getInstance().getItemService().analyzeLore(line, ItemService.TAG_TYPE_ALL_LORE);
                 if (pair1 == null || pair1.getFirst() != tag) {
                     continue;
                 }
                 Pair<LoreTag, LoreValue> pair2 =
-                        itemService.analyzeLore(tag.buildLore(list), ItemService.TAG_TYPE_ALL_LORE);
+                        NumericalRequirements.getInstance().getItemService().analyzeLore(tag.buildLore(list), ItemService.TAG_TYPE_ALL_LORE);
                 if (pair2 == null) {
                     continue;
                 }
@@ -123,7 +120,7 @@ public class ItemCommand {
             player.sendMessage(I18N.trp("command", "command.item.error.no-item-in-hand"));
             return;
         }
-        LoreTag tag = (LoreTag) itemService.getItemTagById(args[0]);
+        LoreTag tag = (LoreTag) NumericalRequirements.getInstance().getItemService().getItemTagById(args[0]);
         if (tag == null) {
             player.sendMessage(I18N.trp("command", "command.item.error.not-valid-tag", args[0]));
             return;
@@ -162,10 +159,10 @@ public class ItemCommand {
         if (lore == null) {
             return;
         }
-        Map<LoreTag, List<LoreValue>> result = itemService.analyzeLore(lore, ItemService.TAG_TYPE_ALL_LORE);
+        Map<LoreTag, List<LoreValue>> result = NumericalRequirements.getInstance().getItemService().analyzeLore(lore, ItemService.TAG_TYPE_ALL_LORE);
         List<String> newLore = new ArrayList<>();
         for (String line : lore) {
-            Pair<LoreTag, LoreValue> pair = itemService.analyzeLore(line, ItemService.TAG_TYPE_ALL_LORE);
+            Pair<LoreTag, LoreValue> pair = NumericalRequirements.getInstance().getItemService().analyzeLore(line, ItemService.TAG_TYPE_ALL_LORE);
             if (pair == null) {
                 newLore.add(line);
                 continue;

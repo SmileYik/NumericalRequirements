@@ -45,7 +45,7 @@ public class CommandService implements CommandExecutor, TabExecutor {
             if (clazz.isAnnotationPresent(CommandI18N.class)) {
                 commandI18N = clazz.getAnnotation(CommandI18N.class);
             }
-            Object instance = clazz.getConstructor().newInstance();
+            Object instance = clazz.getDeclaredConstructor().newInstance();
             CommandMethod commandMethod = new CommandMethod(command, commandI18N, instance, null);
             map.put(command.value(), commandMethod);
             if (command.parentCommand().isEmpty()) {

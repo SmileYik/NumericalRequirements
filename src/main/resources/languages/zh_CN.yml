@@ -107,6 +107,8 @@ command:
     amplifier: "[输入药水强度(正数)]"
 log:
   info:
+    real-custom-block-service-enable: "真实实体式自定义方块服务已启用."
+    custom-block-is-not-compatible-your-server-version: "自定义方块功能不兼容该版本的服务器, 已自动禁用!"
     on-enable: "NumericalRequirements 启动！"
     lua-effect:
       enabled: "Lua 脚本效果拓展加载完毕！"
@@ -115,6 +117,8 @@ log:
       enabled: "多方块机器拓展已加载"
       machine-service-enabled: "多方块机器服务已启用"
   warning:
+    load-custom-block-failed: "加载自定义方块 {0} 时发生错误, 你可以打开 debug 查看相应的错误信息."
+    wrong-custom-block-service-type: "{0} 并不是一个有效的自定义方块服务类型, 将使用 {1} 类型!"
     language-not-fount: "没有找到有关 [{0}] 地域的语言文件！"
     failed-create-directors: "创建文件夹失败！"
     thread:
@@ -136,6 +140,7 @@ log:
         get-liquid:
           item-not-found: "未找到物品 {0}"
   severe:
+    initialization-database-failed: "初始化数据源 {0} 失败!"
     extensions:
       lua-effect:
         run-closure-failed: "运行Lua闭包失败, {1}({0})"
