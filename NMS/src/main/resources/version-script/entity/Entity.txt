@@ -1,1 +1,2 @@
-true; /reflect-class/entity/Entity.txt
+$1 >= 17; /reflect-class/entity/Entity_1_17.txt
+true; /reflect-class/entity/Entity_1_8.txt
