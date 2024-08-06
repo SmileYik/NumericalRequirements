@@ -21,25 +21,36 @@ public class DataSource {
             if (!config.isConfigurationSection(key)) continue;
             ConfigurationSection section = config.getConfigurationSection(key);
             if (!section.contains("jdbc-url")) continue;
-            if (!section.contains("driver")) continue;
             HikariDataSource hikariDataSource = null;
             try {
                 HikariConfig hikariConfig = new HikariConfig();
                 hikariConfig.setJdbcUrl(section.getString("jdbc-url").replace("${data_folder}", plugin.getDataFolder().toString()));
                 if (section.contains("username")) hikariConfig.setUsername(section.getString("username"));
                 if (section.contains("password")) hikariConfig.setPassword(section.getString("password"));
+                if (section.contains("driver")) {
+                    String string = section.getString("driver");
+                    hikariConfig.setDriverClassName(string);
+                    try {
+                        Class.forName(string);
+                    } catch (ClassNotFoundException e) {
+
+                    }
+                }
                 if (section.isConfigurationSection("properties")) {
                     ConfigurationSection properties = section.getConfigurationSection("properties");
                     for (String propertiesKey : properties.getKeys(false)) {
                         hikariConfig.addDataSourceProperty(propertiesKey, properties.getString(propertiesKey));
                     }
                 }
-                hikariConfig.setDriverClassName(section.getString("driver"));
+                if (hikariConfig.getJdbcUrl().contains("sqlite")) {
+                    hikariConfig.setConnectionTestQuery("SELECT 1");
+                }
                 hikariDataSource = new HikariDataSource(hikariConfig);
                 DATA_SOURCE_MAP.put(key, hikariDataSource);
                 CONNECTION_SOURCE_MAP.put(key, new DataSourceConnectionSource(hikariDataSource, hikariDataSource.getJdbcUrl()));
             } catch (Exception e) {
                 I18N.severe("initialization-database-failed", key);
+                e.printStackTrace();
                 DebugLogger.debug(e);
                 CONNECTION_SOURCE_MAP.remove(key);
                 DATA_SOURCE_MAP.remove(key);
