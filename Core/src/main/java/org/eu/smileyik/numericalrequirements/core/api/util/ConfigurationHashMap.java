@@ -2,6 +2,7 @@ package org.eu.smileyik.numericalrequirements.core.api.util;
 
 import com.google.gson.*;
 import org.bukkit.ChatColor;
+import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -289,6 +290,35 @@ public class ConfigurationHashMap extends HashMap<String, Object> {
 
     public List<ConfigurationHashMap> getMapList(String key) {
         return getList(key, ConfigurationHashMap.class);
+    }
+
+    public <T extends ConfigurationHashMapSerializable> T get(String key, Class<T> clazz) {
+        if (!isMap(key)) return null;
+        T t = null;
+        try {
+            t = clazz.getDeclaredConstructor().newInstance();
+        } catch (Throwable e) {
+            DebugLogger.debug(e);
+            return null;
+        }
+        t.fromConfigurationHashMap(getMap(key));
+        return t;
+    }
+
+    public <T extends ConfigurationHashMapSerializable> List<T> getValueList(String key, Class<T> clazz) {
+        List<ConfigurationHashMap> mapList = getMapList(key);
+        List<T> result = new ArrayList<>();
+        for (ConfigurationHashMap map : mapList) {
+            try {
+                T t = clazz.getDeclaredConstructor().newInstance();
+                t.fromConfigurationHashMap(map);
+                result.add(t);
+            } catch (Throwable e) {
+                DebugLogger.debug(e);
+                continue;
+            }
+        }
+        return result;
     }
 
     public String toJson() {

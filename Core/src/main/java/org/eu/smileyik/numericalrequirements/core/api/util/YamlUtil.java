@@ -8,6 +8,9 @@ import org.bukkit.configuration.file.YamlRepresenter;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class YamlUtil {
@@ -29,6 +32,32 @@ public class YamlUtil {
                 section.set(key, fromMap((Map<String, Object>) value));
             } else {
                 section.set(key, value);
+            }
+        });
+        return section;
+    }
+
+    public static ConfigurationSection fromOOMap(Map<?, ?> map) {
+        ConfigurationSection section = new YamlConfiguration();
+        map.forEach((key, value) -> {
+            if (value instanceof Map) {
+                section.set(key.toString(), fromOOMap((Map<?, ?>) value));
+            } else if (value instanceof Collection) {
+                Collection<?> collection = (Collection<?>) value;
+                if (collection.isEmpty()) {
+                    section.set(key.toString(), collection);
+                    return;
+                }
+                Object first = collection.iterator().next();
+                if (first instanceof ConfigurationHashMapSerializable) {
+                    List<ConfigurationHashMap> list = new ArrayList<>();
+                    list.add(((ConfigurationHashMapSerializable) first).toConfigurationHashMap());
+                    section.set(key.toString(), list);
+                    return;
+                }
+                section.set(key.toString(), collection);
+            } else {
+                section.set(key.toString(), value);
             }
         });
         return section;
