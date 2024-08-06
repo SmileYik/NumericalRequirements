@@ -59,17 +59,12 @@ shadowJar {
         exclude(dependency("com.google.code.gson:gson:"))
         exclude(dependency("net.md-5:bungeecord-chat:"))
         exclude(dependency("com.google.code.gson:gson:"))
-
         exclude(dependency(":junit*:"))
         exclude(dependency(":LuaInMinecraftBukkit:"))
-        exclude(dependency {
-            it.moduleGroup.startsWith("org") && !it.moduleGroup.startsWith("org.eu") ||
-                    it.moduleGroup.startsWith("net.m") ||
-                    it.moduleGroup.startsWith("com.google")
-        })
-    }
+        exclude(dependency("org.jetbrains:annotations"))
+        exclude(dependency("org.luaj::"))
 
-    // relocate('net.bytebuddy', "org.eu.smileyik.numericalrequirements")
+    }
 
     doLast {
         delete "${buildDir}/libs/${archivesBaseName}-${version}-final.jar"
