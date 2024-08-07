@@ -160,7 +160,6 @@ public class SimpleMachineDataService implements MachineDataService, Listener {
 
     private synchronized void onChunkLoad(Chunk chunk) {
         String chunkId = getChunkId(chunk);
-        DebugLogger.debug("load chunk: %s", chunkId);
         chunkMachineMap.getOrDefault(chunkId, Collections.emptySet()).forEach(this::loadMachineData);
     }
 
@@ -172,7 +171,6 @@ public class SimpleMachineDataService implements MachineDataService, Listener {
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent event) {
         String chunkId = getChunkId(event.getChunk());
-        DebugLogger.debug("unload chunk: %s", chunkId);
         chunkMachineMap.getOrDefault(chunkId, Collections.emptySet()).forEach(identifier -> {
             DebugLogger.debug("unload machine data: %s", identifier);
             MachineData machineData = machineDataMap.get(identifier);
