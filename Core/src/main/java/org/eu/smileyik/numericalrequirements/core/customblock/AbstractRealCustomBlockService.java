@@ -2,6 +2,7 @@ package org.eu.smileyik.numericalrequirements.core.customblock;
 
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -43,10 +44,21 @@ public abstract class AbstractRealCustomBlockService extends AbstractCustomBlock
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public synchronized void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getClickedBlock() == null) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getAction() != Action.LEFT_CLICK_BLOCK) return;
 
+        Pos pos = new Pos(event.getClickedBlock().getLocation());
+        CustomBlock customBlock = getCustomBlockByPos(pos);
+        if (customBlock == null) return;
+
+        event.setCancelled(true);
+        if (event.getAction() == Action.RIGHT_CLICK_AIR) {
+            customBlock.rightClick(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace());
+        } else {
+            customBlock.leftClick(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace());
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

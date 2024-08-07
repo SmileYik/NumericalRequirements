@@ -1,9 +1,9 @@
 package org.eu.smileyik.numericalrequirements.core.customblock;
 
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -27,11 +27,11 @@ public interface CustomBlock {
      */
     void setId(String id);
 
-    /**
-     * 当与玩家交互.
-     * @param event
-     */
-    default void onInteract(PlayerInteractEvent event) {
+    default void rightClick(Player player, Location clickedLocation, BlockFace clickedBlockFace) {
+
+    }
+
+    default void leftClick(Player player, Location clickedLocation, BlockFace clickedBlockFace) {
 
     }
 
