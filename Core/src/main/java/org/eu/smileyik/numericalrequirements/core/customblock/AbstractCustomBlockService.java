@@ -1,6 +1,9 @@
 package org.eu.smileyik.numericalrequirements.core.customblock;
 
 import org.bukkit.Chunk;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.CustomBlock;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.CustomBlockService;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.Pos;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,13 +1,13 @@
-package org.eu.smileyik.numericalrequirements.core.customblock;
+package org.eu.smileyik.numericalrequirements.core.api.customblock;
 
 import org.bukkit.Location;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
 
 public class Pos {
-    final String world;
-    final int x;
-    final int y;
-    final int z;
+    private final String world;
+    private final int x;
+    private final int y;
+    private final int z;
 
 
     public Pos(String world, int x, int y, int z) {
@@ -38,6 +38,22 @@ public class Pos {
                 NumericalRequirements.getInstance().getServer().getWorld(world),
                 x + 0.5, y, z + 0.5
         );
+    }
+
+    public String getWorld() {
+        return world;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getZ() {
+        return z;
     }
 
     @Override

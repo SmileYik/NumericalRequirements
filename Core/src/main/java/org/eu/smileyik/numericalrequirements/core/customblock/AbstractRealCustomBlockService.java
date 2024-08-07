@@ -11,6 +11,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.CustomBlock;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.Pos;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 
 public abstract class AbstractRealCustomBlockService extends AbstractCustomBlockService implements Listener {

@@ -16,7 +16,7 @@ version = "1.1.${totalFix}"
 
 static def pluginFixCount() {
     [
-        core: 3,
+        core: 4,
         thirst: 0,
         luaEffect: 0,
         multiBlockCraft: 0

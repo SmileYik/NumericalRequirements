@@ -1,9 +1,11 @@
-package org.eu.smileyik.numericalrequirements.core.customblock;
+package org.eu.smileyik.numericalrequirements.core.api.customblock;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
+import org.eu.smileyik.numericalrequirements.core.api.util.YamlUtil;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -47,6 +49,8 @@ public interface CustomBlock {
      */
     void remove(Pos pos);
 
+    void remove(Pos pos, boolean isUnload);
+
     /**
      * 掉落掉落物品.
      * @param player
@@ -58,14 +62,17 @@ public interface CustomBlock {
      * 从配置文件中加载.
      * @param section
      */
-    void load(ConfigurationSection section);
+    default void load(ConfigurationHashMap section) {
+        setId(section.getString("id"));
+    }
 
     /**
      * 保存至配置文件
      * @param section
      */
-    default void save(ConfigurationSection section) {
-        section.set("type", getClass().getName());
+    default void save(ConfigurationHashMap section) {
+        section.put("type", getClass().getName());
+        section.put("id", getId());
     }
 
     /**
@@ -81,10 +88,14 @@ public interface CustomBlock {
      * @throws IllegalAccessException
      */
     static CustomBlock loadFromConfigurationSection(ConfigurationSection section) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        String string = section.getString("type");
+        return loadFromConfigurationHashMap(YamlUtil.toMap(section));
+    }
+
+    static CustomBlock loadFromConfigurationHashMap(ConfigurationHashMap map) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        String string = map.getString("type");
         if (string == null) return null;
         CustomBlock newInstance = (CustomBlock) Class.forName(string).getDeclaredConstructor().newInstance();
-        newInstance.load(section);
+        newInstance.load(map);
         return newInstance;
     }
 }

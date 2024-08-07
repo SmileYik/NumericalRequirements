@@ -2,39 +2,55 @@ package org.eu.smileyik.numericalrequirements.core.customblock;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.Pos;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMapSerializable;
 
+import javax.persistence.Id;
 import java.util.Objects;
 import java.util.UUID;
 
 @DatabaseTable(tableName = "nreq_custom_block_data")
 public class CustomBlockData implements ConfigurationHashMapSerializable {
-    @DatabaseField(id = true, generatedId = true)
+    @Id
+    @DatabaseField(generatedId = true)
     private UUID id;
     @DatabaseField
     private String world;
-    @DatabaseField
-    private int blockX;
-    @DatabaseField
-    private int blockY;
-    @DatabaseField
-    private int blockZ;
-    @DatabaseField
+    @DatabaseField(columnName = "block-x")
+    private Integer blockX;
+    @DatabaseField(columnName = "block-y")
+    private Integer blockY;
+    @DatabaseField(columnName = "block-z")
+    private Integer blockZ;
+    @DatabaseField(columnName = "custom-block-id")
     private String customBlockId;
-    @DatabaseField
-    private int chunkX;
-    @DatabaseField
-    private int chunkZ;
+    @DatabaseField(columnName = "chunk-x")
+    private Integer chunkX;
+    @DatabaseField(columnName = "chunk-z")
+    private Integer chunkZ;
 
     public CustomBlockData() {
 
     }
 
+    public CustomBlockData(Chunk chunk) {
+        this.world = chunk.getWorld().getName();
+        this.chunkX = chunk.getX();
+        this.chunkZ = chunk.getZ();
+    }
+
+    public CustomBlockData(Pos pos) {
+        this.world = pos.getWorld();
+        this.blockX = pos.getX();
+        this.blockY = pos.getY();
+        this.blockZ = pos.getZ();
+    }
+
     public CustomBlockData(String world, int blockX, int blockY, int blockZ, String customBlockId, int chunkX, int chunkZ) {
-        this.id = UUID.randomUUID();
         this.world = world;
         this.blockX = blockX;
         this.blockY = blockY;
@@ -46,10 +62,10 @@ public class CustomBlockData implements ConfigurationHashMapSerializable {
 
     public CustomBlockData(Pos pos, String customBlockId) {
         this(
-                pos.world,
-                pos.x,
-                pos.y,
-                pos.z,
+                pos.getWorld(),
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
                 customBlockId,
                 pos.toLocation().getChunk().getX(),
                 pos.toLocation().getChunk().getZ()
@@ -87,7 +103,7 @@ public class CustomBlockData implements ConfigurationHashMapSerializable {
         this.world = world;
     }
 
-    public int getBlockX() {
+    public Integer getBlockX() {
         return blockX;
     }
 
@@ -95,7 +111,7 @@ public class CustomBlockData implements ConfigurationHashMapSerializable {
         this.blockX = blockX;
     }
 
-    public int getBlockY() {
+    public Integer getBlockY() {
         return blockY;
     }
 
@@ -103,7 +119,7 @@ public class CustomBlockData implements ConfigurationHashMapSerializable {
         this.blockY = blockY;
     }
 
-    public int getBlockZ() {
+    public Integer getBlockZ() {
         return blockZ;
     }
 
@@ -119,7 +135,7 @@ public class CustomBlockData implements ConfigurationHashMapSerializable {
         this.customBlockId = customBlockId;
     }
 
-    public int getChunkX() {
+    public Integer getChunkX() {
         return chunkX;
     }
 
@@ -127,7 +143,7 @@ public class CustomBlockData implements ConfigurationHashMapSerializable {
         this.chunkX = chunkX;
     }
 
-    public int getChunkZ() {
+    public Integer getChunkZ() {
         return chunkZ;
     }
 
@@ -159,6 +175,21 @@ public class CustomBlockData implements ConfigurationHashMapSerializable {
         if (configurationHashMap.containsKey("custom-block-id")) customBlockId = configurationHashMap.getString("custom-block-id");
         if (configurationHashMap.containsKey("chunk-x")) chunkX = configurationHashMap.getInt("chunk-x");
         if (configurationHashMap.containsKey("chunk-z")) chunkZ = configurationHashMap.getInt("chunk-z");
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("CustomBlockData{");
+        sb.append("id=").append(id);
+        sb.append(", world='").append(world).append('\'');
+        sb.append(", blockX=").append(blockX);
+        sb.append(", blockY=").append(blockY);
+        sb.append(", blockZ=").append(blockZ);
+        sb.append(", customBlockId='").append(customBlockId).append('\'');
+        sb.append(", chunkX=").append(chunkX);
+        sb.append(", chunkZ=").append(chunkZ);
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override

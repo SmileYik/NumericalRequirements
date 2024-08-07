@@ -2,13 +2,13 @@ package org.eu.smileyik.numericalrequirements.core.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.CustomBlockService;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementService;
 import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionService;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.player.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.command.CommandService;
-import org.eu.smileyik.numericalrequirements.core.customblock.CustomBlockService;
 import org.eu.smileyik.numericalrequirements.core.extension.placeholderapi.PlaceholderApiExtension;
 import org.eu.smileyik.numericalrequirements.core.network.NetworkService;
 
@@ -41,6 +41,10 @@ public interface NumericalRequirements {
 
     NetworkService getNetworkService();
 
+    /**
+     * 可能为null.
+     * @return
+     */
     CustomBlockService getCustomBlockService();
 
     void runTask(Runnable task);

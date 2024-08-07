@@ -1,17 +1,19 @@
-package org.eu.smileyik.numericalrequirements.core.customblock;
+package org.eu.smileyik.numericalrequirements.core.api.customblock;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
 import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
+import org.eu.smileyik.numericalrequirements.core.api.util.ConfigurationHashMap;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +31,7 @@ public class ArmorStandCustomBlock implements CustomBlock {
 
     private String id;
     private String blockItemId;
-    private final Map<Pos, ArmorStand> armorStands = new HashMap<>();
+    private final Map<Pos, ArmorStand> armorStands = Collections.synchronizedMap(new HashMap<>());
 
     @Override
     public String getBlockItemId() {
@@ -52,21 +54,25 @@ public class ArmorStandCustomBlock implements CustomBlock {
      * @param location
      * @param pos
      */
-    private void syncPlace(ItemStack itemStack, Location location, Pos pos) {
+    private synchronized void syncPlace(ItemStack itemStack, Location location, Pos pos) {
         synchronized (armorStands) {
             Block b = location.getBlock();
             b.setType(itemStack.getType());
             b.getState().setType(itemStack.getType());
+
+            removeUnregisterArmorStand(pos, location);
+
             ArmorStand armorStand = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
             armorStand.setVisible(false);
             armorStand.setMarker(true);
             armorStand.setHelmet(itemStack);
             armorStands.put(pos, armorStand);
+            DebugLogger.debug("placed armor stand at %s", pos);
         }
     }
 
     @Override
-    public void place(Pos pos) {
+    public synchronized void place(Pos pos) {
         // 如果该方块位置已经有了一个盔甲架, 则直接放弃放置.
         synchronized (armorStands) {
             if (armorStands.containsKey(pos)) {
@@ -84,11 +90,13 @@ public class ArmorStandCustomBlock implements CustomBlock {
      * @param remove
      * @param pos
      */
-    private void syncRemove(ArmorStand remove, Pos pos) {
+    private synchronized void syncRemove(ArmorStand remove, Pos pos, boolean isUnload) {
         try {
-            Block block = pos.toLocation().getBlock();
-            block.setType(AIR);
-            block.getState().setType(AIR);
+            if (!isUnload) {
+                Block block = pos.toLocation().getBlock();
+                block.setType(AIR);
+                block.getState().setType(AIR);
+            }
             // 防止标记删除时, 盔甲架显示的物品还在.
             remove.setHelmet(null);
 
@@ -96,13 +104,35 @@ public class ArmorStandCustomBlock implements CustomBlock {
             remove.setHealth(0);
             remove.damage(999999);
             remove.remove();
+
+            Location location = pos.toEntityLocation();
+            removeUnregisterArmorStand(pos, location);
+
+            DebugLogger.debug("removed armor stand at %s", pos);
         } catch (Throwable e) {
             DebugLogger.debug(e);
         }
     }
 
+    private void removeUnregisterArmorStand(Pos pos, Location location) {
+        for (Entity nearbyEntity : location.getWorld().getNearbyEntities(location, 0.5, 0.5, 0.5)) {
+            if (nearbyEntity instanceof ArmorStand) {
+                Location other = nearbyEntity.getLocation();
+                if (other.getBlockX() == location.getBlockX() && other.getBlockY() == location.getBlockY() && other.getBlockZ() == location.getBlockZ()) {
+                    nearbyEntity.remove();
+                    DebugLogger.debug("removed unregister armor stand at %s", pos);
+                }
+            }
+        }
+    }
+
     @Override
     public void remove(Pos pos) {
+        remove(pos, false);
+    }
+
+    @Override
+    public synchronized void remove(Pos pos, boolean isUnload) {
         ArmorStand armorStand = null;
         synchronized (armorStands) {
             armorStand = armorStands.remove(pos);
@@ -110,9 +140,9 @@ public class ArmorStandCustomBlock implements CustomBlock {
         final ArmorStand remove = armorStand;
         if (remove != null) {
             if (NumericalRequirements.getPlugin().getServer().isPrimaryThread()) {
-                syncRemove(remove, pos);
+                syncRemove(remove, pos, isUnload);
             } else {
-                NumericalRequirements.getInstance().runTask(() -> syncRemove(remove, pos));
+                NumericalRequirements.getInstance().runTask(() -> syncRemove(remove, pos, isUnload));
             }
         }
     }
@@ -127,13 +157,14 @@ public class ArmorStandCustomBlock implements CustomBlock {
     }
 
     @Override
-    public void load(ConfigurationSection section) {
+    public void load(ConfigurationHashMap section) {
+        CustomBlock.super.load(section);
         this.blockItemId = section.getString("block-item-id");
     }
 
     @Override
-    public void save(ConfigurationSection section) {
+    public void save(ConfigurationHashMap section) {
         CustomBlock.super.save(section);
-        section.set("block-item-id", blockItemId);
+        section.put("block-item-id", blockItemId);
     }
 }

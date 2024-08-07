@@ -5,6 +5,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.CustomBlock;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.Pos;
 import org.eu.smileyik.numericalrequirements.debug.DebugLogger;
 import org.jetbrains.annotations.NotNull;
 
@@ -124,12 +126,12 @@ public class RealCustomBlockService extends AbstractRealCustomBlockService {
         Map<String, List<String>> posList = new HashMap<>();
         pos2CustomBlockId.forEach((pos, id) -> {
             if (!posList.containsKey(id)) posList.put(id, new ArrayList<>());
-            posList.get(id).add(String.format("%s:%d:%d:%d", pos.world, pos.x, pos.y, pos.z));
+            posList.get(id).add(String.format("%s:%d:%d:%d", pos.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
         });
         unloadCustomBlocks.forEach((key, map) -> {
             map.forEach((pos, id) -> {
                 if (!posList.containsKey(id)) posList.put(id, new ArrayList<>());
-                posList.get(id).add(String.format("%s:%d:%d:%d", pos.world, pos.x, pos.y, pos.z));
+                posList.get(id).add(String.format("%s:%d:%d:%d", pos.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
             });
         });
         posList.forEach(yamlConfiguration::set);
@@ -213,7 +215,10 @@ public class RealCustomBlockService extends AbstractRealCustomBlockService {
             Map<Pos, String> posStringMap = unloadCustomBlocks.get(chunkId);
             remove.forEach(pos -> {
                 CustomBlock customBlockByPos = getCustomBlockByPos(pos);
-                breakCustomBlock(customBlockByPos, pos);
+                if (unregisterCustomBlockData(new CustomBlockData(pos, customBlockByPos.getId()))) {
+                    DebugLogger.debug("break custom block %s, %s", customBlockByPos.getId(), pos);
+                    customBlockByPos.remove(pos, true);
+                }
                 posStringMap.put(pos, customBlockByPos.getId());
             });
         }

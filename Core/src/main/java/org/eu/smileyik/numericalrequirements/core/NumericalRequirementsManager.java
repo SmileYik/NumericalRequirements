@@ -2,6 +2,7 @@ package org.eu.smileyik.numericalrequirements.core;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.api.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.api.customblock.CustomBlockService;
 import org.eu.smileyik.numericalrequirements.core.api.effect.EffectService;
 import org.eu.smileyik.numericalrequirements.core.api.element.ElementService;
 import org.eu.smileyik.numericalrequirements.core.api.extension.ExtensionService;
@@ -9,7 +10,6 @@ import org.eu.smileyik.numericalrequirements.core.api.item.ItemService;
 import org.eu.smileyik.numericalrequirements.core.api.player.PlayerService;
 import org.eu.smileyik.numericalrequirements.core.command.*;
 import org.eu.smileyik.numericalrequirements.core.command.tabsuggests.*;
-import org.eu.smileyik.numericalrequirements.core.customblock.CustomBlockService;
 import org.eu.smileyik.numericalrequirements.core.effect.SimpleEffectService;
 import org.eu.smileyik.numericalrequirements.core.element.ElementServiceImpl;
 import org.eu.smileyik.numericalrequirements.core.element.formatter.ElementFormatterPlaceholderCallback;

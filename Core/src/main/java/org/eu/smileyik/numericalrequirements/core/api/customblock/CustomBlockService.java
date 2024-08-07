@@ -1,8 +1,9 @@
-package org.eu.smileyik.numericalrequirements.core.customblock;
+package org.eu.smileyik.numericalrequirements.core.api.customblock;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.NumericalRequirements;
+import org.eu.smileyik.numericalrequirements.core.customblock.RealCustomBlockService;
 import org.eu.smileyik.numericalrequirements.reflect.MySimpleReflect;
 
 import java.lang.reflect.InvocationTargetException;

@@ -2,10 +2,10 @@
 #  block-1:
 #    # 自定义方块种类
 #    # 目前拥有的种类如下:
-#    #    org.eu.smileyik.numericalrequirements.core.customblock.ArmorStandCustomBlock
+#    #    org.eu.smileyik.numericalrequirements.core.api.customblock.ArmorStandCustomBlock
 #    #
 #    # ArmorStandCustomBlock: 根据所给予的物品ID所对应的物品生成一个在服务器中真实存在的实体和方块组合而成的自定义方块.
 #    #                        使用该类型需要材质包加成, 并且指定的物品需要含有 CustomModelData
-#    type: org.eu.smileyik.numericalrequirements.core.customblock.ArmorStandCustomBlock
+#    type: org.eu.smileyik.numericalrequirements.core.api.customblock.ArmorStandCustomBlock
 #    # 指定的物品ID, 该物品将会通过插件自带的物品管理器中获取.
 #    block-item-id: test-block
