@@ -114,8 +114,6 @@ public class NumericalRequirementsManager implements NumericalRequirements {
     }
 
     public void shutdown() {
-        DataSource.close();
-
         networkService.shutdown();
         playerService.shutdown();
         extensionService.shutdown();
@@ -139,6 +137,7 @@ public class NumericalRequirementsManager implements NumericalRequirements {
 
         }
         I18N.clear();
+        DataSource.close();
     }
 
     private void loadAvailableWorlds() {
