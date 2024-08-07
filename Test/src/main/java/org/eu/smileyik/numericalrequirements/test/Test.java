@@ -239,7 +239,7 @@ public class Test {
                             TestCommand declaredAnnotation = clazz.getDeclaredAnnotation(TestCommand.class);
                             testCommandServer.registerCommandClass(clazz, declaredAnnotation.value());
                         }
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         e.printStackTrace();
                     }
                 }

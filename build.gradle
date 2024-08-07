@@ -1,7 +1,3 @@
-import java.util.jar.JarFile
-import java.util.jar.JarOutputStream
-import java.util.zip.ZipEntry
-
 plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'java'
@@ -47,7 +43,19 @@ dependencies {
     implementation project(":Core")
     implementation project(":MultiBlockCraft")
     implementation project(":Thirst")
-    implementation project(":Test")
+    implementation project(":LuaEffect")
+    compileOnly project(":Test")
+}
+
+def changeVersion() {
+    file("${buildDir}/resources/main").eachFile {
+        if (!it.name.endsWith("yml")) return
+        def text = it.readLines().join("\n")
+        for (final def entry in pluginVersions()) {
+            text = text.replace(String.format("\${%sVersion}", entry.key), entry.value)
+        }
+        it.write(text)
+    }
 }
 
 shadowJar {
@@ -63,42 +71,10 @@ shadowJar {
         exclude(dependency(":LuaInMinecraftBukkit:"))
         exclude(dependency("org.jetbrains:annotations"))
         exclude(dependency("org.luaj::"))
-
     }
 
-    doLast {
-        delete "${buildDir}/libs/${archivesBaseName}-${version}-final.jar"
-
-        JarFile inFile = new JarFile(new File("${buildDir}/libs/${archivesBaseName}-${version}-all.jar"))
-        JarOutputStream jos = new JarOutputStream(new FileOutputStream(new File("${buildDir}/libs/${archivesBaseName}-${version}-final.jar")))
-        def entries = inFile.entries()
-        while (entries.hasMoreElements()) {
-            def element = entries.nextElement()
-            jos.putNextEntry(new ZipEntry(element.getName()))
-            def stream = inFile.getInputStream(element)
-            if (element.getName().toLowerCase().endsWith(".yml")) {
-                def lines = stream.newReader().readLines()
-                for (int i = 0; i < lines.size(); ++i) {
-                    def line = lines.get(i)
-                    for (final def entry in pluginVersions()) {
-                        line = line.replace(String.format("\${%sVersion}", entry.key), entry.value)
-                    }
-                    lines.set(i, line)
-                }
-                def content = lines.join("\n").getBytes()
-                jos.write(content, 0, content.length)
-            } else {
-                byte[] bytes = new byte[8196]
-                int len = 0
-                while ((len = stream.read(bytes)) != -1) {
-                    jos.write(bytes, 0, len)
-                }
-            }
-            jos.flush()
-            stream.close()
-        }
-        jos.close()
-        inFile.close()
+    doFirst {
+        changeVersion()
     }
 }
 
@@ -116,7 +92,7 @@ task deleteOldBuilds(type: Delete) {
 task copyTask(type: Copy) {
     dependsOn(shadowJar)
     dependsOn(deleteOldBuilds)
-    from "${buildDir}/libs/${archivesBaseName}-${version}-final.jar"
+    from "${buildDir}/libs/${archivesBaseName}-${version}-all.jar"
     into "${projectDir}/server/plugins/"
 
     doLast {
