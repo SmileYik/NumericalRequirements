@@ -41,10 +41,10 @@ dependencies {
 
     implementation project(":Commons:ReflectTool")
     implementation project(":Core")
-    implementation project(":MultiBlockCraft")
-    implementation project(":Thirst")
-    implementation project(":LuaEffect")
-    compileOnly project(":Test")
+    implementation project(":Extensions:MultiBlockCraft")
+    implementation project(":Extensions:Thirst")
+    implementation project(":Extensions:LuaEffect")
+    implementation project(":Test")
 }
 
 def changeVersion() {

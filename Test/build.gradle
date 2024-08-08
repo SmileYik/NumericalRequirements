@@ -21,9 +21,9 @@ dependencies {
     implementation project(":Commons:DebugTool")
     implementation project(":Core:Command")
     implementation project(":Core")
-    implementation project(":Thirst")
-    implementation project(":LuaEffect")
-    implementation project(":MultiBlockCraft")
+    implementation project(":Extensions:Thirst")
+    implementation project(":Extensions:LuaEffect")
+    implementation project(":Extensions:MultiBlockCraft")
     compileOnly 'org.eu.smileyik:LuaInMinecraftBukkit:1.7.4-SNAPSHOT'
 }
 

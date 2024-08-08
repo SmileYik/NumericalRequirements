@@ -1,11 +1,5 @@
 rootProject.name = 'NumericalRequirements'
-include 'Thirst'
-include 'Core'
-include 'Core:Command'
-findProject(':Core:Command')?.name = 'Command'
-include 'LuaEffect'
-include 'MultiBlockCraft'
-include 'Test'
+
 include 'Commons'
 include 'Commons:ReflectTool'
 findProject(':Commons:ReflectTool')?.name = 'ReflectTool'
@@ -13,5 +7,21 @@ include 'Commons:DebugTool'
 findProject(':Commons:DebugTool')?.name = 'DebugTool'
 include 'Commons:VersionScript'
 findProject(':Commons:VersionScript')?.name = 'VersionScript'
+
 include 'NMS'
 
+include 'Core'
+include 'Core:Command'
+findProject(':Core:Command')?.name = 'Command'
+
+include 'Extensions'
+include 'Extensions:Thirst'
+findProject(':Extensions:Thirst')?.name = 'Thirst'
+
+include 'Extensions:MultiBlockCraft'
+findProject(':Extensions:MultiBlockCraft')?.name = 'MultiBlockCraft'
+
+include 'Extensions:LuaEffect'
+findProject(':Extensions:LuaEffect')?.name = 'LuaEffect'
+
+include 'Test'

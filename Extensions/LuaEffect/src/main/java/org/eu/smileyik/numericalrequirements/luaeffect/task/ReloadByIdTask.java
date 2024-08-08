@@ -3,11 +3,9 @@ package org.eu.smileyik.numericalrequirements.luaeffect.task;
 import org.bukkit.command.CommandSender;
 import org.eu.smileyik.numericalrequirements.core.I18N;
 import org.eu.smileyik.numericalrequirements.core.command.DefaultTabSuggest;
-import org.eu.smileyik.numericalrequirements.core.command.TabSuggest;
 import org.eu.smileyik.numericalrequirements.luaeffect.LuaEffectExtension;
 import org.eu.smileyik.numericalrequirements.luaeffect.effect.LuaEffect;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
