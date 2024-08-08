@@ -1,6 +1,6 @@
-> 最后更新于2024年08月07日 | [历史记录](https://github.com/SmileYik/NumericalRequirements/commits/master/docs/Config.yml.md)
+> 最后更新于2024年08月08日 | [历史记录](https://github.com/SmileYik/NumericalRequirements/commits/master/docs/Config.yml.md)
 >
-> 该页内容可能会随着版本的迭代更新而发生一些改变, 当前页面所讲述的是插件 **1.1.1** 版本及以上版本的内容.
+> 该页内容可能会随着版本的迭代更新而发生一些改变, 当前页面所讲述的是插件 **1.1.4** 版本及以上版本的内容.
 
 本页是插件核心的配置说明. 插件的核心配置的配置使用的是YAML格式, 
 其配置文件在 `/plugins/NumericalRequirements/config.yml` 中.
@@ -484,3 +484,9 @@ player:
 `RealCustomBlockService`: `org.eu.smileyik.numericalrequirements.core.customblock.RealCustomBlockService`
 
 该类型的自定义方块服务将会在服务器中生成真实的方块与实体组合成一个自定义方块.
+
+##### RelationalRealCustomBlockService
+
+`RelationalRealCustomBlockService`: `org.eu.smileyik.numericalrequirements.core.customblock.RelationalRealCustomBlockService`
+
+关系型数据库版本的 RealCustomBlockService.
