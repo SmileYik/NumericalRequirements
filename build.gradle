@@ -36,6 +36,20 @@ repositories {
     mavenCentral()
 }
 
+allprojects {
+    repositories {
+        // Spigot-API
+        maven {
+            url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        }
+        // LuaInMinecraftBukkit
+        maven {
+            url "https://maven.smileyik.eu.org:8081/public"
+        }
+
+    }
+}
+
 dependencies {
     testImplementation 'junit:junit:4.13.1'
 

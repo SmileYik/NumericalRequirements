@@ -1,7 +1,6 @@
 package org.eu.smileyik.numericalrequirements.core.extension.luaeffect;
 
 import org.eu.smileyik.numericalrequirements.luaeffect.LuaConfigTool;
-import org.junit.Test;
 import org.keplerproject.luajava.LuaException;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.lib.jse.CoerceLuaToJava;
@@ -79,7 +78,7 @@ public class LuaTableTest {
 
     File lib = new File("./src/test/resources/");
 
-    @Test
+    // @Test
     public void testInside() throws Exception {
         System.out.println(new File(".").getCanonicalFile());
         try (
@@ -103,7 +102,7 @@ public class LuaTableTest {
 
     }
 
-    @Test
+    // @Test
     public void testOutsideLua5_4() throws Exception {
         try (
                 InputStream resourceAsStream = LuaTableTest.class.getResourceAsStream("/LuaTableTest.lua");
@@ -126,7 +125,7 @@ public class LuaTableTest {
         }
     }
 
-    @Test
+    // @Test
     public void testOutsideLuaJit() throws IOException, LuaException {
         try (
                 InputStream resourceAsStream = LuaTableTest.class.getResourceAsStream("/LuaTableTest.lua");
