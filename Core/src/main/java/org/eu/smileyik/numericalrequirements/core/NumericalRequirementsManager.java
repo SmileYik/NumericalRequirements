@@ -114,14 +114,14 @@ public class NumericalRequirementsManager implements NumericalRequirements {
     }
 
     public void shutdown() {
-        networkService.shutdown();
-        playerService.shutdown();
-        extensionService.shutdown();
-        commandService.shutdown();
-        effectService.shutdown();
-        elementService.shutdown();
-        itemService.shutdown();
-        customBlockService.shutdown();
+        if (networkService != null) networkService.shutdown();
+        if (playerService != null) playerService.shutdown();
+        if (extensionService != null) extensionService.shutdown();
+        if (commandService != null) commandService.shutdown();
+        if (effectService != null) effectService.shutdown();
+        if (elementService != null) elementService.shutdown();
+        if (itemService != null) itemService.shutdown();
+        if (customBlockService != null) customBlockService.shutdown();
 
         if (metrics != null) {
             metrics.shutdown();
